@@ -2,7 +2,7 @@
 
 // se debe validar si estamos recibiendo variable de Entorno en la nuebe
 
-export const PORT = process.env.PORT || 3000
+export const PORT = process.env.PORT || 3006
 
 // si se tiene variable de entorno se toma PORT, sino 3000
 
