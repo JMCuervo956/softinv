@@ -3,24 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="resources/css/style.css">
-    <title>Asamblea</title>
-<!--    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> -->
-    <%- include('partials/head') %> <!-- <link rel="stylesheet" href="main.css"> /// partial para repetir en cada una de las paginas -->
+    <title>Preguntas</title>
 </head>
 <body>
- <!---->   
-    <div class="content">
-        <% if (login) { %>
-            <%- include('partials/navigat') %>  
-            <h6> Usuario conectado es : <strong><%= name %></strong></h1>
-            <a href="logout" class="btn-logout">logout</a>
-        <% } else { %> 
-            <%- include('partials/navigation') %>  
-            <h6><strong><%= name %></strong></h1>
-            <a href="login" class="btn-login" >Ir a login</a>
-        <% } %>
-    </div>
-    <%- include('partials/footer') %>   
+    <h1>Listado de Preguntas</h1>
+    <ul>
+        <% preguntas.forEach(function(pregunta) { %>
+            <li><%= pregunta.texto %></li>
+        <% }); %>
+    </ul>
 </body>
 </html>
