@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asamblea</title>
+    <!-- Enlace a Bootstrap CSS desde CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- cabecera -->
+    <%- include('partials/head') %> <!-- <link rel="stylesheet" href="main.css"> /// partial para repetir en cada una de las paginas -->
+
+    <style>
+        .disabled-link {
+            pointer-events: none; /* Desactiva clics */
+            cursor: not-allowed; /* Cambia el cursor para indicar inhabilitación */
+            opacity: 0.65; /* Cambia la opacidad para apariencia de inhabilitación */
+        }
+    </style>
+
+</head>
+
+<body>
+    <%- include('partials/navigation') %>  
+    <h6>Usuario: <%= id %>   -  PREGUNTAS</h1>
+        <div class="content">
+        <div class="container mt-1">
+            <H1></H1>
+            <h1></h1>
+            <table  border="0px" class="table table-bordered table-hover " style="width: 100%;" >
+                <thead>
+                    <tr>
+                        <th style="width: 2%;">id</th>
+                        <th style="width: 50%;">Texto</th>
+                        <th style="width: 60%;">
+                            <!-- Botón para añadir nuevo registro -->
+                            <a href="/" class="btn btn-primary btn-sm "> - Salir - </a>
+                        </th>                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (data && data.length > 0) { %>
+                            <% data.forEach(function(item) { %>
+                                <tr>
+                                    <td><%= item.id %></td>
+                                    <td><%= item.texto %></td>
+                                    <td>
+                                        <!-- Botón de Ver 
+                                        <a href="/ver/<%= item.id %>" class="btn btn-warning btn-sm">SI</a>
+                                        <a href="/ver" class="btn btn-warning btn-sm " >Votar</a>
+    -->                                            
+
+                                        <a href="/ver" class="btn btn-warning btn-sm" btn-secondary w-50>SI</a>
+
+                                        <!--Botón de Ver -->
+                                        <a href="/ver" class="btn btn-info btn-sm" btn-secondary w-50>NO</a>
+                                        <H1></H1>
+                                        <!--Botón de Editar--> 
+                                        <a href="/ver" class="btn btn-secondary btn-sm">BLANCO</a>
+                                        
+                                        <!-- Botón de Eliminar 
+    
+                                        <form action="/eliminar/<%= item.id %>" method="POST" style="display:inline;">
+                                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                        </form>
+
+                                        -->
+                                    </td>
+
+                               
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <!-- <p>No hay datos disponibles.</p> -->
+                                 <div>
+                                    <td colspan="4" >No hay datos disponibles</td>   
+                                </div>
+                            </tr>
+                    <% } %>
+                </table>
+        </div>
+
+        <!-- Enlace a Bootstrap JS y dependencias desde CDN -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </div>
+    <%- include('partials/footer') %>
+</body>
+</html>

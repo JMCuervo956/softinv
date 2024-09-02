@@ -9,22 +9,11 @@
 
 </head>
 <body>
-        <%- include('partials/navigation') %>
+        <%- include('partials/navigat') %>
     <div class="content">
         <div class="register-form"> 
             <h4>Ingreso</h1>
-            <form action="/auth" method='POST'>
-                <label for="user" >Usuario</label>           
-                <input type="text" name="user" required>
-                <label for="pass" >password</label>           
-                <input type="password" name="pass" required> 
-                <div style="display: inline;">
-                    <h5></h5>
-                    <input type="submit" class="btn-login" value="Login">
-                </div>
-            </form>    
         </div>
-
      </div>   
     <%- include('partials/footer') %>  
 </body>
