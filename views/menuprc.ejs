@@ -5,16 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
     <title>Asamblea</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <%- include('partials/head') %> <!-- <link rel="stylesheet" href="main.css"> /// partial para repetir en cada una de las paginas -->
 
 </head>
-<body>
-        <%- include('partials/navigat') %>
+<body class="body.imagen">
+    <%- include('partials/navigat') %>
     <div class="content">
-        <div class="register-form"> 
-            <h4>Ingreso</h1>
-        </div>
-     </div>   
+        <div class="register-formIzq">
+                <div style="display: inline;">
+                    <h5></h5>
+                    <input type="submit" class="btn-salir" value="Usuarios">
+                </div>
+
+                <div style="display: inline;">
+                    <h5></h5>
+                    <input type="submit" class="btn-salir" value="Votaciones">
+                </div>
+
+                <div style="display: inline;">
+                    <h5></h5>
+                    <input type="submit" class="btn-salir" value="Salir">
+                </div>
+         </div>
+    </div> 
     <%- include('partials/footer') %>  
 </body>
 </html>

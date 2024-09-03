@@ -79,7 +79,26 @@ form{
     text-align: left !important;
     box-shadow: 0 19px 30px rgb(0,0,0,0.30), 0 15px 12px rgb(0,0,0,0.22) ; /* sombras */ 
 }
-    
+ 
+.register-formIzq{
+    width:150px;
+    margin: 15px;
+    padding: 10px; /* 20px 20px 20px 20px; Espacio : Sup, der, inf, izq */
+    margin-top: 15px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 8px; 
+    text-align:  center;
+    box-shadow: 0 19px 30px rgb(0,0,0,0.50), 0 15px 12px rgb(0,0,0,0.22) ; /* sombras */ 
+}
+
+
+body.imagen {
+    background-image: url('/img/lmagenIni.jpg'); /* Ruta de la imagen */
+    background-size: cover;  /* Ajusta la imagen para cubrir todo el área */
+    background-position: center;  /* Centra la imagen */
+    background-repeat: no-repeat;  /* No repetir la imagen */
+}
+
 /*
 .form_register{
     width: 300px;
@@ -181,6 +200,26 @@ form button:hover{
     border-radius: 5px;
 }
 
+.btn-salir:hover, .btn-salir:active{
+    color: #fff;
+    background-color: #089733;
+    border-color: #61428f;
+    border-radius: 15px;
+}
+
+.btn-salir{
+    width: 100%;
+    padding: 2px;
+    background-color: #4d4c52be;
+    border: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-size: 12px;    
+    color: #ffffff;
+    border-radius: 15px;
+    }
+    
+
 
 /*
 
@@ -254,9 +293,9 @@ color: #ffffff;
         border-color: #61428f;
     }
     
-    .btn-register:focus{
-        box-shadow: 0 0 0 3px rgba(9, 68, 12, 0.25)
-    }    
+.btn-register:focus{
+    box-shadow: 0 0 0 3px rgba(9, 68, 12, 0.25)
+}    
 
 /*
 .btn-cancel{

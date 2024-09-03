@@ -28,7 +28,7 @@ app.set('views', path.join(__dirname, '../views'));
 
 // Ruta para la página principal
 
-
+ 
 app.get('/', async (req, res) => {
     try {
         // Ejecuta la consulta a la base de datos
@@ -40,16 +40,28 @@ app.get('/', async (req, res) => {
         res.status(500).json({ error: 'Error interno del servidor' });
     } 
 });
-
+ 
 app.get('/menuprc', (req, res)=>{
     res.render('menuprc'); 
+})
+
+app.get('/registros', (req, res)=>{
+    res.render('registros'); 
+})
+
+app.get('/register', (req, res)=>{
+    res.render('register'); 
 })
 
 // 11. Autenticacion 
     
 app.post('/auth', (req, res) => {
-        res.render('menuprc');
-    });
+    res.render('menuprc');
+});
+
+app.post('/regist', (req, res) => {
+    res.render('menuprc');  
+});   
 
 app.listen(PORT, () => {
     console.log('Server en port', PORT);
