@@ -1,4 +1,4 @@
-
+ 
 // 1. - Invocamos a express   
 import express from 'express';
 import session from 'express-session';
@@ -24,8 +24,8 @@ function showAlert() {
         timer: 1500 // Duración en milisegundos (1500 ms = 1.5 segundos)
     });
 }
-
-
+ 
+ 
 
 // Definir __dirname manualmente en un entorno ESM 
 const __filename = fileURLToPath(import.meta.url);
@@ -142,9 +142,7 @@ app.post('/auth', async (req, res) => {
 // post
 
 app.post('/register', async (req, res) => {
-//    res.render('menuprc');  
-
-try {
+    try {
         const user = req.body.user;
         const name = req.body.name;
         const rol = req.body.rol;
@@ -153,33 +151,43 @@ try {
 
         // Verificar si algún valor es undefined
         if (!user || !name || !rol || !pass) {
-            return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+            return res.json({
+                status: 'error',
+                title: 'Error',
+                message: 'Todos los campos son obligatorios'
+            })
         }
 
         // Log para depuración
         const [rows] = await pool.execute('SELECT * FROM users WHERE user = ?', [user]);
 
         if (rows.length > 0) {
-            // El usuario ya existe
-            return res.status(400).json({ message: 'El usuario ya existe' });
+            return res.json({
+                status: 'error',
+                title: 'Error',
+                message: 'Usuario ya Existe'
+            });
         }
 
         // Insertar nuevo usuario
         await pool.execute('INSERT INTO users (user, name, rol, pass) VALUES (?, ?, ?, ?)', [user, name, rol, passwordHash]);
-        res.render('menuprc',{
-                alert: true,
-                alertTitle: "Registro",
-                alertMessage:"! Correcto",
-                alertIcon:'success',
-                showConfirmButton:false,
-                timer:2500,
-                ruta:''
-           });        
-    } catch (error) {
-        res.status(500).json({ message: 'Error en el servidor' });
-    }
-})
 
+        res.json({
+            status: 'success',
+            title: 'Registro Exitoso',
+            message: '¡Usuario registrado correctamente!'
+        });
+
+
+    } catch (error) {
+        res.json({
+            status: 'success',
+            title: 'Registro Exitoso',
+            message: '¡Error en el servidor! BD'
+        });
+
+    }
+});
 
 
 app.listen(PORT, () => {
