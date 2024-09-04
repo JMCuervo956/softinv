@@ -69,13 +69,13 @@ app.get('/menuprc', (req, res)=>{
 })
 
 app.get('/registros', (req, res)=>{
-    res.render('registros'); 
+    res.render('registros');  
 })
 
 app.get('/register', (req, res)=>{
     res.render('register'); 
 })
-
+ 
 // 11. Autenticacion 
 
 app.post('/auth', async (req, res) => {
@@ -90,20 +90,42 @@ app.post('/auth', async (req, res) => {
         const [rows] = await pool.execute('SELECT * FROM users WHERE user = ?', [user]);
 
         if (rows.length === 0) {
-            return res.status(401).json({ error: 'Usuario no encontrado' });
+            res.render('login',{
+
+                alert: true,
+                alertTitle: "Conexion Exitosa",
+                alertMessage:"!LOGIN Correcto",
+                alertIcon:'success',
+                showConfirmButton:false,
+                timer:500,
+                ruta:'',
+    
+                }
+                )
+
         }
   
         const userRecord = rows[0];
         const passwordMatch = await bcryptjs.compare(pass, userRecord.pass);
         
         if (!passwordMatch) {
-            return res.status(401).json({ error: 'Contraseña incorrecta' });
+            res.render('login',{
+
+                alert: true,
+                alertTitle: "Conexion Exitosa",
+                alertMessage:"!LOGIN Correcto",
+                alertIcon:'success',
+                showConfirmButton:false,
+                timer:500,
+                ruta:'',
+    
+                }
+                )
+
         }
 
         req.session.loggedin = true;
         req.session.user = user;
-//        res.json({ success: true });
-
         res.render('menuprc',{
 
             alert: true,
@@ -116,6 +138,7 @@ app.post('/auth', async (req, res) => {
 
             }
             )
+
     } catch (error) {
         console.error('Error al ejecutar la consulta:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
@@ -125,9 +148,46 @@ app.post('/auth', async (req, res) => {
 // pregunta
 // post
 
-app.post('/regist', (req, res) => {
-    res.render('menuprc');  
-});   
+app.post('/register', async (req, res) => {
+//    res.render('menuprc');  
+
+try {
+        const user = req.body.user;
+        const name = req.body.name;
+        const rol = req.body.rol;
+        const pass = req.body.pass;
+        let passwordHash = await bcryptjs.hash(pass, 8);
+
+        // Verificar si algún valor es undefined
+        if (!user || !name || !rol || !pass) {
+            return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+        }
+
+        // Log para depuración
+        const [rows] = await pool.execute('SELECT * FROM users WHERE user = ?', [user]);
+
+        if (rows.length > 0) {
+            // El usuario ya existe
+            return res.status(400).json({ message: 'El usuario ya existe' });
+        }
+
+        // Insertar nuevo usuario
+        await pool.execute('INSERT INTO users (user, name, rol, pass) VALUES (?, ?, ?, ?)', [user, name, rol, passwordHash]);
+        res.render('menuprc',{
+                alert: true,
+                alertTitle: "Registro",
+                alertMessage:"! Correcto",
+                alertIcon:'success',
+                showConfirmButton:false,
+                timer:2500,
+                ruta:''
+           });        
+    } catch (error) {
+        res.status(500).json({ message: 'Error en el servidor' });
+    }
+})
+
+
 
 app.listen(PORT, () => {
     console.log('Server en port', PORT);
