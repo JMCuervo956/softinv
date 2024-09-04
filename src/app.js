@@ -14,6 +14,18 @@ import { validateCredentials } from './auth.js';
 import Swal from 'sweetalert2';
 //import 'sweetalert2/src/sweetalert2.scss'
 
+// Función para mostrar la alerta
+function showAlert() {
+    Swal.fire({
+        title: 'Conexión Exitosa',
+        text: '!LOGIN Correcto',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1500 // Duración en milisegundos (1500 ms = 1.5 segundos)
+    });
+}
+
+
 
 // Definir __dirname manualmente en un entorno ESM 
 const __filename = fileURLToPath(import.meta.url);
@@ -82,6 +94,7 @@ app.post('/auth', async (req, res) => {
     const user = req.body.user;
     const pass = req.body.pass;
 
+    // Verificar si se han proporcionado todos los campos
     if (!user || !pass) {
         return res.status(400).json({ error: 'Please fill in all fields!' });
     }
@@ -89,61 +102,41 @@ app.post('/auth', async (req, res) => {
     try {
         const [rows] = await pool.execute('SELECT * FROM users WHERE user = ?', [user]);
 
+        // Verificar si se encontró el usuario
         if (rows.length === 0) {
-            res.render('login',{
-
-                alert: true,
-                alertTitle: "Conexion Exitosa",
-                alertMessage:"!LOGIN Correcto",
-                alertIcon:'success',
-                showConfirmButton:false,
-                timer:500,
-                ruta:'',
-    
-                }
-                )
-
+            return res.json({
+                status: 'error',
+                title: 'Error',
+                message: 'Usuario no encontrado'
+            });
         }
-  
+
         const userRecord = rows[0];
         const passwordMatch = await bcryptjs.compare(pass, userRecord.pass);
-        
+
+        // Verificar si la contraseña es correcta
         if (!passwordMatch) {
-            res.render('login',{
-
-                alert: true,
-                alertTitle: "Conexion Exitosa",
-                alertMessage:"!LOGIN Correcto",
-                alertIcon:'success',
-                showConfirmButton:false,
-                timer:500,
-                ruta:'',
-    
-                }
-                )
-
+            return res.json({
+                status: 'error',
+                title: 'Error',
+                message: 'Contraseña incorrecta'
+            });
         }
-
+ 
+        // Autenticación exitosa
         req.session.loggedin = true;
         req.session.user = user;
-        res.render('menuprc',{
-
-            alert: true,
-            alertTitle: "Conexion Exitosa",
-            alertMessage:"!LOGIN Correcto",
-            alertIcon:'success',
-            showConfirmButton:false,
-            timer:500,
-            ruta:'',
-
-            }
-            )
+        return res.json({
+            status: 'success',
+            title: 'Conexión Exitosa',
+            message: '!LOGIN Correcto!'
+        });
 
     } catch (error) {
         console.error('Error al ejecutar la consulta:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        return res.status(500).json({ error: 'Error interno del servidor' });
     }
-}); 
+});
 
 // pregunta
 // post
