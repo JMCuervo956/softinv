@@ -6,26 +6,26 @@
     <link rel="stylesheet" href="/css/style.css">
     <title>Asamblea</title>
     <%- include('partials/head') %> <!-- <link rel="stylesheet" href="main.css"> /// partial para repetir en cada una de las paginas -->
-
 </head>
 <body>
-        <%- include('partials/navigation') %>
+    <%- include('partials/navigation') %>
     <div class="content">
         <div class="register-form"> 
-            <h4>Ingreso</h1>
-            <form action="/auth" method='POST'>
-                <label for="user" >Usuario</label>           
-                <input type="text" name="user" required>
-                <label for="pass" >password</label>           
-                <input type="password" name="pass" required> 
-                <div style="display: inline;">
-                    <h5></h5>
-                    <input type="submit" class="btn-login" value="Login">
-                </div>
-            </form>    
+                <form id="loginForm" action="/auth" method='POST'>
+                    <label for="user" >Usuario</label>           
+                    <input type="text" name="user" required>
+                    <label for="pass" >password</label>           
+                    <input type="password" name="pass" required> 
+                    <div style="display: inline;">
+                        <h5></h5>
+                        <input type="submit" class="btn-login" value="Login">
+                    </div>
+                </form>    
         </div>
-
-     </div>   
+    </div>   
     <%- include('partials/footer') %>  
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/src/main.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </body>
 </html>
