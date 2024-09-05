@@ -73,7 +73,17 @@ app.get('/', async (req, res) => {
     } catch (error) {
         console.error('Error al ejecutar la consulta:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
-    } 
+    }  
+});
+
+// Ruta para renderizar la galería de imágenes
+app.get('/fondo', (req, res) => {
+    const images = [
+        { src: '/public/img/sti.png', alt: 'Imagen 1' },
+        { src: '/images/image2.jpg', alt: 'Imagen 2' },
+        { src: '/images/image3.jpg', alt: 'Imagen 3' }
+    ];
+    res.render('gallery', { images });
 });
  
 app.get('/menuprc', (req, res)=>{
