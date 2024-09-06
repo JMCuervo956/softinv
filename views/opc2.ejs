@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Votacion</title>
+    <%- include('partials/head') %> <!-- <link rel="stylesheet" href="main.css"> /// partial para repetir en cada una de las paginas -->
+</head>
+
+<body class="body.imagen">
+    <%- include('partials/navigation') %>
+    <h1></h1>
+    <h2 style="font-family: 'Arial', sans-serif; font-size: 30px; color: rgb(216, 19, 45); font-weight: bold;"> <%= data[0].texto %> </h2>
+    <div class="content">
+<!--        <div class="register-formIzq1">   -->
+                    <% if (data && data.length > 0) { %>
+                            <!-- Mostrar el texto de la primera pregunta -->
+                        <div class="register-formIzq1">  
+                                <div style="font-size: 20px;"> 
+                                <form action="/procesar-seleccion" method="POST">
+                                    <% data.forEach(function(item) { %>
+                                        <div>
+                                            <input type="radio" name="pregunta" value="<%= item.id %>">
+                                            <label><%= item.tipo %></label>
+                                        </div>
+                                    <% }); %>
+                                    <br>
+<!--                                    <button type="submit" >Enviar</button>   -->
+                                    <a href="/menuprc" class="btn-cancel">Cancelar</a><input type="submit" class="btn-save" value="Votar">
+                                </form>
+                                </div>     
+                         </div>            
+                    <% } else { %>
+                        <p>No hay preguntas disponibles en este momento.</p>
+                    <% } %>
+<!--        </div>              -->
+     </div>   
+     <%- include('partials/footer') %>  
+</body>
+</html>

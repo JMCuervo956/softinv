@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Selecciona Preguntas</title>
+    <%- include('partials/head') %> <!-- <link rel="stylesheet" href="main.css"> /// partial para repetir en cada una de las paginas -->
+</head>
+<body>
+    <%- include('partials/navigation') %>
+    <h1></h1>
+    <h2 style="font-family: 'Arial', sans-serif; font-size: 30px; color: rgb(216, 19, 45); font-weight: bold;"> <%= data[0].texto %> </h2>
+    <div class="content">
+
+                    <% if (data && data.length > 0) { %>
+                        <div class="register-formIzq1">  
+                            <div style="font-size: 20px;"> 
+                                <form action="/procesar-seleccion" method="POST">
+                                    <% data.forEach(function(item) { %>
+                                        <div>
+                                            <input type="checkbox" name="preguntas" value="<%= item.id %>">
+                        <!--                    <label><%= item.texto %> (Fecha: <%= item.fecha %>)</label>  -->
+                                            <label><%= item.tipo %></label>
+                                        </div>
+                                    <% }); %>
+                                    <br>
+                                    <a href="/menuprc" class="btn-cancel">Cancelar</a><input type="submit" class="btn-save" value="Votar">
+                                </form>
+                             </div>   
+                         </div>    
+                    <% } else { %>
+                        <p>No hay preguntas disponibles en este momento.</p>
+                    <% } %>
+    </div>
+</body>
+</html>

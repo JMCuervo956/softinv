@@ -203,6 +203,91 @@ app.post('/register', async (req, res) => {
 app.listen(PORT, () => {
     console.log('Server en port', PORT);
 }); 
-      
+     
+
+app.get('/seleccion', async (req, res) => {
+    try {
+//        console.log('Conexión exitosa, respuesta de la base de datos:', rows);
+
+        const [rows] = await pool.execute("select * from preguntas");
+
+
+        // Verifica si se están obteniendo los datos correctamente
+        console.log(rows);  // Agrega este log para revisar los datos
+        
+//        res.send('Conexión a la base de datos exitosa');
+
+        res.render('seleccion', { data: rows });
+
+
+    } catch (error) {
+        console.error('Error conectando a la base de datos:', error);
+        res.status(500).send('Error conectando a la base de datos.');
+    }
+});
+
+
+app.get('/opcbtn', async (req, res) => {
+    try {
+//        console.log('Conexión exitosa, respuesta de la base de datos:', rows);
+
+        const [rows] = await pool.execute("select * from preguntas");
+
+
+        // Verifica si se están obteniendo los datos correctamente
+        console.log(rows);  // Agrega este log para revisar los datos
+        
+//        res.send('Conexión a la base de datos exitosa');
+
+        res.render('opcbtn', { data: rows });
+
+
+    } catch (error) {
+        console.error('Error conectando a la base de datos:', error);
+        res.status(500).send('Error conectando a la base de datos.');
+    }
+});
 
  
+app.get('/opc1', async (req, res) => {
+    try {
+//        console.log('Conexión exitosa, respuesta de la base de datos:', rows);
+
+        const [rows] = await pool.execute("select * from preguntas where id=1");
+
+
+        // Verifica si se están obteniendo los datos correctamente
+        console.log(rows);  // Agrega este log para revisar los datos
+        
+//        res.send('Conexión a la base de datos exitosa');
+
+        res.render('opc1', { data: rows });
+
+
+    } catch (error) {
+        console.error('Error conectando a la base de datos:', error);
+        res.status(500).send('Error conectando a la base de datos.');
+    }
+});
+
+
+app.get('/opc2', async (req, res) => {
+    try {
+//        console.log('Conexión exitosa, respuesta de la base de datos:', rows);
+
+        const [rows] = await pool.execute("select * from preguntas where estado=1");
+
+
+        // Verifica si se están obteniendo los datos correctamente
+        console.log(rows);  // Agrega este log para revisar los datos
+        
+//        res.send('Conexión a la base de datos exitosa');
+
+        res.render('opc2', { data: rows });
+
+
+    } catch (error) {
+        console.error('Error conectando a la base de datos:', error);
+        res.status(500).send('Error conectando a la base de datos.');
+    }
+});

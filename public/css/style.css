@@ -135,6 +135,16 @@ form{
     box-shadow: 0 19px 30px rgb(0,0,0,0.50), 0 15px 12px rgb(0,0,0,0.22) ; /* sombras */ 
 }
 
+.register-formIzq1{
+    width:500px;
+    margin: 15px;
+    padding: 10px; /* 20px 20px 20px 20px; Espacio : Sup, der, inf, izq */
+    margin-top: 15px;
+    font-size: 20px; 
+    box-shadow: 0 19px 30px rgb(0,0,0,0.50), 0 15px 12px rgb(0,0,0,0.22) ; /* recuado y sombras */ 
+    text-align: left;
+}
+
 body.imagen {
     background-image: url('/img/lmagenIni.jpg'); /* Ruta de la imagen */
     background-size: cover;  /* Ajusta la imagen para cubrir todo el área */
