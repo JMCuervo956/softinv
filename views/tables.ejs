@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla Dinámica</title>
+    <style>
+        /* Estilos para hacer la tabla responsiva y agradable a la vista */
+        .table-container {
+            width: 100%;
+            overflow-x: auto; /* Permite desplazamiento horizontal en pantallas pequeñas */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 16px;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="table-container">
+        <table id="dynamicTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Edad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Filas se insertarán aquí dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <script type="module" src="/main.js"></script>
+</body>
+</html>

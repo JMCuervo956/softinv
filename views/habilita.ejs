@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario Dinámico con Botones</title>
+    <script type="module" src="/main.js" defer></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <%- include('partials/head') %>
+</head>
+<body>
+    <%- include('partials/navigation') %>  
+        <div class="content" >
+            <div class="register-formPgta"> 
+                <form id="dynamicForm">
+                    <button type="button" id="enableTextInputButton" class="mi-boton-especial">Ingresar Pregunta</button>
+                    <br><br> 
+                    <input type="text" id="textInput" disabled placeholder="Pregunta" style="font-size: 14px; height: 25px; line-height: 25px;" >
+                    <br><br> 
+                    <button type="button" id="enableTextInputButton" style="font-size: 14px"; >Confirmar</button>
+                </form>
+            </div>       
+            <div class="register-formPgta"> 
+                <form id="dynamicForm">
+                    <button type="button" id="disableTextInputButton" class="mi-boton-especial" disabled>Opciones</button>
+                    <br><br>
+                    <input type="text" id="textInput2" disabled placeholder="Opcion" style="font-size: 14px; height: 25px; line-height: 25px;">
+                </form>
+                <br>
+                <form id="dynamicForm">
+                    <button type="button" id="submitButton" disabled>Registrar</button>
+                </form>
+            </div>
+        </div>
+    <%- include('partials/footer') %>  
+</body>
+</html>
+
+<script>
+
+// Selección de los elementos del DOM
+const enableTextInputButton = document.getElementById('enableTextInputButton');
+const disableTextInputButton = document.getElementById('disableTextInputButton');
+const textInput = document.getElementById('textInput');
+const submitButton = document.getElementById('submitButton');
+//  const enableSubmitButton = document.getElementById('enableSubmitButton');
+const disableSubmitButton = document.getElementById('disableSubmitButton');
+const finalSubmitButton = document.getElementById('finalSubmitButton');
+
+// Habilitar el campo de texto y habilitar el botón de deshabilitar
+enableTextInputButton.addEventListener('click', () => {
+    textInput.disabled = false;  // Habilitar campo de texto
+    enableTextInputButton.disabled = true;  // Deshabilitar el botón de habilitar
+    //disableTextInputButton.disabled = false;  // Habilitar el botón de deshabilitar
+    console.error('boton opciones');
+
+});
+
+// Deshabilitar el campo de texto y habilitar el botón de habilitar
+disableTextInputButton.addEventListener('click', () => {
+    textInput.disabled = true;  // Deshabilitar campo de texto
+    disableTextInputButton.disabled = true;  // Deshabilitar el botón de deshabilitar
+    enableTextInputButton.disabled = false;  // Habilitar el botón de habilitar
+    submitButton.disabled = true;  // Deshabilitar el botón de enviar si el campo se vacía
+    textInput2.disabled = false;  // Deshabilitar campo de texto
+});
+
+// Habilitar el botón "submitButton" cuando hay texto en el campo
+textInput.addEventListener('input', () => {
+    submitButton.disabled = textInput.value.trim() === '';  // Habilitar si hay texto
+    disableTextInputButton.style.backgroundColor = '#f44336'
+    
+});
+
+// Habilitar el botón final de envío
+enableSubmitButton.addEventListener('click', () => {
+    finalSubmitButton.disabled = false;  // Habilitar botón de envío final
+    enableSubmitButton.disabled = true;  // Deshabilitar el botón de habilitar
+    disableSubmitButton.disabled = false;  // Habilitar el botón de deshabilitar
+});
+
+// Deshabilitar el botón final de envío
+disableSubmitButton.addEventListener('click', () => {
+    finalSubmitButton.disabled = true;  // Deshabilitar botón de envío final
+    disableSubmitButton.disabled = true;  // Deshabilitar el botón de deshabilitar
+    enableSubmitButton.disabled = false;  // Habilitar el botón de habilitar
+});
+
+
+
+</script>

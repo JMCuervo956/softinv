@@ -98,6 +98,23 @@ app.get('/register', (req, res)=>{
     res.render('register'); 
 })
  
+app.get('/regpgtas', (req, res)=>{
+    res.render('regpgtas'); 
+})
+
+app.get('/AdicionaPgtas', (req, res)=>{
+    res.render('AdicionaPgtas'); 
+})
+
+app.get('/tables', (req, res)=>{
+    res.render('tables'); 
+})
+
+app.get('/habilita', (req, res)=>{
+    res.render('habilita'); 
+})
+
+
 // 11. Autenticacion 
 
 app.post('/auth', async (req, res) => {
@@ -291,3 +308,49 @@ app.get('/opc2', async (req, res) => {
         res.status(500).send('Error conectando a la base de datos.');
     }
 });
+
+
+// Backend (Servidor) para procesar preguntas y opciones
+
+// Ruta para procesar los datos del formulario
+
+app.post('/procesar-preguntas-opciones', async (req, res) => {
+    const preguntas = [];
+    const c1 = 1;
+    const c2 = Date;
+    const c3 = 0;
+
+    // Recorremos cada pregunta y sus opciones
+    for (let key in req.body) {
+        if (key.startsWith('pregunta')) {
+            const index = key.replace('pregunta', '');
+            const pregunta = req.body[key];
+            const opciones = req.body['opcionPregunta' + index] || []; // Capturamos las opciones como array
+            preguntas.push({
+                pregunta: pregunta,
+                opciones: Array.isArray(opciones) ? opciones : [opciones] // Si es una sola opción, la convertimos en array
+            });
+        }
+    }
+    
+    // Procesar cada pregunta y sus opciones usando una función interna
+    preguntas.forEach((item, index) => {
+        item.opciones.forEach((opcion, opcionIndex) => {
+            // Función interna para manejar cada pregunta y opción
+            const procesar = () => {
+                console.log(`Pregunta ${index + 1}: ${item.pregunta}`);
+                console.log(`  Opción ${opcionIndex + 1}: ${opcion}`);
+                // Aquí puedes insertar lógica adicional para procesar cada opción
+                grabar(item.pregunta, opcion);
+            };
+            procesar();
+        });
+    });
+
+    const [result] = await pool.execute('INSERT INTO preguntas (id, texto, tipo, fecha, estado) VALUES (?, ?, ?, ?, ?)', [c1, `${item.pregunta}`, `${opcion}`, c2, c3]);
+    res.send('Preguntas y opciones capturadas correctamente');
+});
+
+
+
+

@@ -19,7 +19,12 @@
                         <h5></h5>
                         <input type="submit" id="btnUsuarios" class="btn-salir" value="Usuarios">
                     </div>
-    
+
+                    <div style="display: inline;">
+                        <h5></h5>
+                        <input type="submit" id="habilita" class="btn-salir" value="Preguntas">
+                    </div>
+                    
                     <div style="display: inline;">
                         <h5></h5>
                         <input type="submit" id="btnVotaciones" class="btn-salir" value="Votaciones">
@@ -49,7 +54,12 @@
             // Acción para el botón "Usuarios"
             window.location.href = '/register'; // Redirige a la página de usuarios
         });
-    
+
+        document.getElementById('habilita').addEventListener('click', function() {
+            // Acción para el botón "Registro de Preguntas"
+            window.location.href = '/habilita'; // Redirige a la página de usuarios
+        });
+        
         document.getElementById('btnVotaciones').addEventListener('click', function() {
             // Acción para el botón "Votaciones"
             window.location.href = '/opc1'; // Redirige a la página de votaciones

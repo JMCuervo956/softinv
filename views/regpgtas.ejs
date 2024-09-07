@@ -1,0 +1,69 @@
+<!-- register.html -->
+<!DOCTYPE html>
+<html lang="es">    
+<head>
+    <meta charset="UTF-8">
+    <title>Registro</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- Incluye SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <%- include('partials/head') %>
+</head>
+<body>
+    <%- include('partials/navigation') %>  
+    <div class="register-formP"> 
+        <h4>Registro de Preguntas</h4>
+    </div>
+
+    <div class="register-formP"> 
+        <input type="text" name="user" class="input-large" placeholder="Pregunta" required>
+        <h1></h1>
+        <input type="text" name="name" class="input-large" placeholder="Opcion" required>
+
+    </div>
+
+    <div class="content">
+        <div class="register-form"> 
+            <form id="registerForm" action="/register" method='POST'> 
+                <div class="contenedor__login-register">
+                    <h1></h1>
+                    <div style="display: inline;">
+                        <h5></h5>
+                        <a href="/menuprc" class="btn-cancel">Cancelar</a><input type="submit" class="btn-save" value="Registrar">
+                    </div>
+                </div>       
+            </form>    
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
+
+            const formData = new FormData(this);
+            const response = await fetch('/register', {
+                method: 'POST',
+                body: new URLSearchParams(formData)
+            });
+
+            const result = await response.json();
+
+            Swal.fire({
+                title: result.title || 'Error',
+                text: result.message || 'Hubo un problema',
+                icon: result.status,
+                showConfirmButton: true,
+                timer: result.status === 'success' ? 2500 : null // Timer solo para éxito
+            }).then(() => {
+                if (result.status === 'success') {
+                    window.location.href = '/menuprc'; // Redirigir al usuario si es necesario
+                }
+            });
+        });
+    </script>
+    <%- include('partials/footer') %>  
+
+</body>
+</html>

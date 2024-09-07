@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capturar Preguntas y Opciones</title>
+</head>
+<body>
+    <h1>Formulario de Preguntas y Opciones</h1>
+    
+    <!-- Formulario para capturar preguntas y opciones -->
+    <form id="formPreguntas" action="/procesar-preguntas-opciones" method="POST">
+        <div id="contenedorPreguntas">
+            <!-- Aquí se irán agregando preguntas dinámicamente -->
+        </div>
+
+        <br>
+
+        <button type="button" onclick="agregarPregunta()">Agregar Pregunta</button>
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        // Contador de preguntas
+        var contadorPreguntas = 0;
+
+        // Función para agregar una nueva pregunta
+        function agregarPregunta() {
+            contadorPreguntas++;
+
+            // Contenedor donde se añaden las preguntas
+            var contenedor = document.getElementById("contenedorPreguntas");
+
+            // Crear un contenedor para la pregunta y sus opciones
+            var contenedorPregunta = document.createElement("div");
+            contenedorPregunta.setAttribute("id", "pregunta" + contadorPreguntas);
+
+            // Crear un campo para la pregunta
+            var campoPregunta = document.createElement("input");
+            campoPregunta.setAttribute("type", "text");
+            campoPregunta.setAttribute("name", "pregunta" + contadorPreguntas);
+            campoPregunta.setAttribute("placeholder", "Escribe la pregunta");
+            campoPregunta.setAttribute("required", true);
+            
+            // Crear un botón para agregar opciones a la pregunta
+            var botonAgregarOpcion = document.createElement("button");
+            botonAgregarOpcion.setAttribute("type", "button");
+            botonAgregarOpcion.textContent = "Agregar Opción";
+            botonAgregarOpcion.onclick = function() {
+                agregarOpcion(contadorPreguntas);
+            };
+
+            // Crear un contenedor para las opciones de la pregunta
+            var contenedorOpciones = document.createElement("div");
+            contenedorOpciones.setAttribute("id", "opcionesPregunta" + contadorPreguntas);
+
+            // Añadir los elementos creados al contenedor de la pregunta
+            contenedorPregunta.appendChild(document.createElement("hr"));
+            contenedorPregunta.appendChild(campoPregunta);
+            contenedorPregunta.appendChild(document.createElement("br"));
+            contenedorPregunta.appendChild(botonAgregarOpcion);
+            contenedorPregunta.appendChild(document.createElement("br"));
+            contenedorPregunta.appendChild(contenedorOpciones);
+
+            // Añadir la nueva pregunta al contenedor principal
+            contenedor.appendChild(contenedorPregunta);
+        }
+
+        // Función para agregar opciones a una pregunta específica
+        function agregarOpcion(numPregunta) {
+            // Capturamos el contenedor de opciones de la pregunta actual
+            var contenedorOpciones = document.getElementById("opcionesPregunta" + numPregunta);
+
+            // Crear un campo de texto para la opción
+            var campoOpcion = document.createElement("input");
+            campoOpcion.setAttribute("type", "text");
+            campoOpcion.setAttribute("name", "opcionPregunta" + numPregunta + "[]");
+            campoOpcion.setAttribute("placeholder", "Escribe una opción");
+            campoOpcion.setAttribute("required", true);
+
+            // Añadir el campo de opción al contenedor de opciones
+            contenedorOpciones.appendChild(campoOpcion);
+            contenedorOpciones.appendChild(document.createElement("br"));
+        }
+    </script>
+</body>
+</html>
