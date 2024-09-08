@@ -69,7 +69,7 @@ app.get('/', async (req, res) => {
         // Ejecuta la consulta a la base de datos
         const [rows] = await pool.execute("SELECT * FROM preguntas");
         // Renderiza la plantilla 'index.ejs' pasando los resultados de la consulta
-        res.render('login', { preguntas: rows });
+        res.render('movimiento', { preguntas: rows });
     } catch (error) {
 //        console.error('Error al ejecutar la consulta:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
