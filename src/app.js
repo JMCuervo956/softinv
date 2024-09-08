@@ -71,7 +71,7 @@ app.get('/', async (req, res) => {
         // Renderiza la plantilla 'index.ejs' pasando los resultados de la consulta
         res.render('login', { preguntas: rows });
     } catch (error) {
-        console.error('Error al ejecutar la consulta:', error);
+//        console.error('Error al ejecutar la consulta:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }  
 });
@@ -160,7 +160,7 @@ app.post('/auth', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Error al ejecutar la consulta:', error);
+//        console.error('Error al ejecutar la consulta:', error);
         return res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
@@ -230,7 +230,7 @@ app.get('/seleccion', async (req, res) => {
 
 
         // Verifica si se están obteniendo los datos correctamente
-        console.log(rows);  // Agrega este log para revisar los datos
+//        console.log(rows);  // Agrega este log para revisar los datos
         
 //        res.send('Conexión a la base de datos exitosa');
 
@@ -238,7 +238,7 @@ app.get('/seleccion', async (req, res) => {
 
 
     } catch (error) {
-        console.error('Error conectando a la base de datos:', error);
+//        console.error('Error conectando a la base de datos:', error);
         res.status(500).send('Error conectando a la base de datos.');
     }
 });
@@ -252,7 +252,7 @@ app.get('/opcbtn', async (req, res) => {
 
 
         // Verifica si se están obteniendo los datos correctamente
-        console.log(rows);  // Agrega este log para revisar los datos
+//        console.log(rows);  // Agrega este log para revisar los datos
         
 //        res.send('Conexión a la base de datos exitosa');
 
@@ -270,11 +270,11 @@ app.get('/opc1', async (req, res) => {
     try {
 //        console.log('Conexión exitosa, respuesta de la base de datos:', rows);
 
-        const [rows] = await pool.execute("select * from preguntas where id=1");
+//        const [rows] = await pool.execute("select * from preguntas where id=1");
 
 
         // Verifica si se están obteniendo los datos correctamente
-        console.log(rows);  // Agrega este log para revisar los datos
+//        console.log(rows);  // Agrega este log para revisar los datos
         
 //        res.send('Conexión a la base de datos exitosa');
 
@@ -282,7 +282,7 @@ app.get('/opc1', async (req, res) => {
 
 
     } catch (error) {
-        console.error('Error conectando a la base de datos:', error);
+//        console.error('Error conectando a la base de datos:', error);
         res.status(500).send('Error conectando a la base de datos.');
     }
 });
@@ -296,7 +296,7 @@ app.get('/opc2', async (req, res) => {
 
 
         // Verifica si se están obteniendo los datos correctamente
-        console.log(rows);  // Agrega este log para revisar los datos
+//        console.log(rows);  // Agrega este log para revisar los datos
         
 //        res.send('Conexión a la base de datos exitosa');
 
@@ -304,7 +304,7 @@ app.get('/opc2', async (req, res) => {
 
 
     } catch (error) {
-        console.error('Error conectando a la base de datos:', error);
+//        console.error('Error conectando a la base de datos:', error);
         res.status(500).send('Error conectando a la base de datos.');
     }
 });
@@ -338,8 +338,8 @@ app.post('/procesar-preguntas-opciones', async (req, res) => {
         item.opciones.forEach((opcion, opcionIndex) => {
             // Función interna para manejar cada pregunta y opción
             const procesar = () => {
-                console.log(`Pregunta ${index + 1}: ${item.pregunta}`);
-                console.log(`  Opción ${opcionIndex + 1}: ${opcion}`);
+//                console.log(`Pregunta ${index + 1}: ${item.pregunta}`);
+//                console.log(`  Opción ${opcionIndex + 1}: ${opcion}`);
                 // Aquí puedes insertar lógica adicional para procesar cada opción
                 grabar(item.pregunta, opcion);
             };
