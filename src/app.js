@@ -67,9 +67,10 @@ app.set('views', path.join(__dirname, '../views'));
 app.get('/', async (req, res) => {
     try {
         // Ejecuta la consulta a la base de datos
-        const [rows] = await pool.execute("SELECT * FROM preguntas");
+        //const [rows] = await pool.execute("SELECT * FROM preguntas");
         // Renderiza la plantilla 'index.ejs' pasando los resultados de la consulta
-        res.render('movimiento', { preguntas: rows });
+        //res.render('login', { preguntas: rows });
+        res.render('login');
     } catch (error) {
 //        console.error('Error al ejecutar la consulta:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
@@ -85,7 +86,11 @@ app.get('/fondo', (req, res) => {
     ];
     res.render('gallery', { images });
 });
- 
+
+app.get('/html', (req, res)=>{
+    res.render('html'); 
+})
+
 app.get('/menuprc', (req, res)=>{
     res.render('menuprc'); 
 })
@@ -114,6 +119,9 @@ app.get('/habilita', (req, res)=>{
     res.render('habilita'); 
 })
 
+app.get('/coltablas', (req, res)=>{
+    res.render('habilita'); 
+})
 
 // 11. Autenticacion 
 
@@ -187,7 +195,6 @@ app.post('/register', async (req, res) => {
 
         // Log para depuración
         const [rows] = await pool.execute('SELECT * FROM users WHERE user = ?', [user]);
-
         if (rows.length > 0) {
             return res.json({
                 status: 'error',
@@ -234,7 +241,7 @@ app.get('/seleccion', async (req, res) => {
         
 //        res.send('Conexión a la base de datos exitosa');
 
-        res.render('seleccion', { data: rows });
+        res.render('opc1', { data: rows });
 
 
     } catch (error) {
@@ -270,13 +277,13 @@ app.get('/opc1', async (req, res) => {
     try {
 //        console.log('Conexión exitosa, respuesta de la base de datos:', rows);
 
-//        const [rows] = await pool.execute("select * from preguntas where id=1");
-
+        const [rows] = await pool.execute("select * from preguntas where estado=1");
+        console.log(rows);
 
         // Verifica si se están obteniendo los datos correctamente
 //        console.log(rows);  // Agrega este log para revisar los datos
         
-//        res.send('Conexión a la base de datos exitosa');
+//       res.send('Conexión a la base de datos exitosa');
 
         res.render('opc1', { data: rows });
 
@@ -351,6 +358,13 @@ app.post('/procesar-preguntas-opciones', async (req, res) => {
     res.send('Preguntas y opciones capturadas correctamente');
 });
 
-
-
+app.get('/ingpreguntas', async (req, res) => {
+    try {
+        const [rows] = await pool.execute("select * from preguntas");
+        res.render('ingpreguntas', { data: rows });
+    } catch (error) {
+                console.error('Error conectando a la base de datos....????:', error);
+                res.status(500).send('Error conectando a la base de datos.?????');
+            }
+    });
 

@@ -615,3 +615,26 @@ color: #ffffff;
     }
 }
 
+.custom-btn {
+    width: 70px;  /* Cambia el ancho según tus necesidades */
+    height: 25px;  /* Cambia el alto según tus necesidades */
+    font-size: 0.8rem; /* Opcional: ajusta el tamaño de la fuente */
+    font-family: 'Arial', sans-serif; /* Cambia la fuente a Arial */
+    font-size: 12px; /* Tamaño de la fuente */
+    font-weight: bold; /* Grosor de la fuente */
+}
+
+/* tabas ****/
+
+table {
+    border-collapse: collapse;
+    width: 100%; /* O cualquier ancho que desees para la tabla */
+  }
+
+  th, td {
+    padding: 18px;
+    text-align: left;
+  }
+
+
+  

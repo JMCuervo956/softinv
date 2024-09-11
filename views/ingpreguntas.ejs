@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Asamblea</title>
+    <!-- Enlace a Bootstrap CSS desde CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- cabecera -->
+    <%- include('partials/head') %> <!-- <link rel="stylesheet" href="main.css"> /// partial para repetir en cada una de las paginas -->
+    <STYle>
+        .col1 {
+            width: 5%; /* Ajusta el ancho de la primera columna */
+        }
+        .col2 {
+            width: 50%; /* Ajusta el ancho de la segunda columna */
+        }
+        .col3 {
+            width: 50%; /* Ajusta el ancho de la segunda columna */
+        }
+    </STYle>
+</head>
+
+<body>
+    <%- include('partials/navigation') %>  
+    <div class="content">
+        <div class="register-formIni">
+            <div class="content">
+                <div class="container mt-1">
+                    <H1></H1>
+                    <h1></h1>
+<!--                    <table border="0px" class="table table-bordered table-hover custom-btn col1 col2 col3"> -->
+                    <table>
+                        <colgroup>
+                            <col style="width: 10px;">
+                            <col style="width: 50px;">
+                            <col style="width: 100px;">
+                        </colgroup>
+                        <thead>
+                                    <th></th>
+                                    <th></th>
+                                    <th>
+                                        <!--Botón para añadir nuevo registro -->
+                                        <a href="/" class="btn btn-primary btn-sm "> Adicionar </a>   
+                                    </th>                        
+                            <tr>
+                                <th>Id</th>
+                                <th>Pregunta</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (data && data.length > 0) { %>
+                                    <% data.forEach(function(item) { %>
+                                        <tr>
+                                            <td><%= item.id %></td>
+                                            <td><%= item.texto %></td>
+                                            <td>
+                                                <a href="/ver" class="btn btn-warning btn-sm custom-btn" btn-secondary w-50>Modificar</a>
+                                               <!-- <button type="submit" class="btn btn-danger btn-sm custom-btn">Eliminar</button> -->
+                                                <form action="/eliminar/<%= item.id %>" method="POST" style="display:inline;">
+                                                    <button type="submit" class="btn btn-danger btn-sm custom-btn ">Eliminar</button>
+                                                </form>
+                                                <a href="/ver" class="btn btn-primary btn-sm custom-btn" btn-secondary w-50>Opciones</a>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <!-- <p>No hay datos disponibles.</p> -->
+                                        <div>
+                                            <td colspan="4" >No hay datos disponibles</td>   
+                                        </div>
+                                    </tr>
+                            <% } %>
+                        </table>
+                </div>
+
+                <!-- Enlace a Bootstrap JS y dependencias desde CDN -->
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            </div>
+        </div>
+    </div>            
+    <%- include('partials/footer') %>
+</body>
+</html>
