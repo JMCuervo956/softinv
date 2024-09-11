@@ -10,17 +10,17 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- cabecera -->
     <%- include('partials/head') %> <!-- <link rel="stylesheet" href="main.css"> /// partial para repetir en cada una de las paginas -->
-    <STYle>
-        .col1 {
-            width: 5%; /* Ajusta el ancho de la primera columna */
+    <style>
+        table {
+            width: 70%;
+            border-collapse: collapse;
         }
-        .col2 {
-            width: 50%; /* Ajusta el ancho de la segunda columna */
+        th, td {
+            border: 1px solid rgb(247, 244, 244);
+            padding: 8px;
+            text-align: left;
         }
-        .col3 {
-            width: 50%; /* Ajusta el ancho de la segunda columna */
-        }
-    </STYle>
+    </style>
 </head>
 
 <body>
@@ -31,24 +31,16 @@
                 <div class="container mt-1">
                     <H1></H1>
                     <h1></h1>
-<!--                <table border="0px" class="table table-bordered table-hover custom-btn col1 col2 col3">   -->
-                    <table border="50px" class="table table-bordered table-hover custom-btn col1 col2 col3"> 
-                        <colgroup>
-                            <col style="width: 10px;">
-                            <col style="width: 20px;">
-                            <col style="width: 20px;">
-                        </colgroup>
+<!--                 <table border="0px" class="table table-bordered table-hover custom-btn col1 col2 col3">    -->
+                    <table class="no-border">  
                         <thead>
-                                    <th></th>
-                                    <th></th>
-                                    <th>
-                                        <!--Botón para añadir nuevo registro -->
-                                        <a href="/" class="btn btn-primary btn-sm "> Adicionar </a>   
-                                    </th>                        
                             <tr>
-                                <th>Id</th>
-                                <th>Pregunta</th>
-                                <th></th>
+                                <th id="columna1">Id</th>
+                                <th id="columna2">Pregunta</th>
+                                <th id="columna3">
+                                    <a href="/ver" class="btn btn-primary btn-sm custom-btn" btn-secondary w-50>Adicionar</a>
+                                    <a href="/ver" class="btn btn-success btn-sm custom-btn" btn-secondary w-50>Regresar </a>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -76,7 +68,7 @@
                                     </tr>
                             <% } %>
                         </table>
-                </div>
+                    </div>
 
                 <!-- Enlace a Bootstrap JS y dependencias desde CDN -->
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

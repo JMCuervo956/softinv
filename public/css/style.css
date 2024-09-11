@@ -293,7 +293,19 @@ form button:hover{
     color: #ffffff;
     border-radius: 15px;
     }
-    
+
+.btn-adi{
+    width: 100%;
+    padding: 2px;
+    background-color: #4d4c52be;
+    border: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-size: 12px;    
+    color: #ffffff;
+    border-radius: 15px;
+    }
+        
 
 
 /*
@@ -544,13 +556,14 @@ color: #ffffff;
     width: 300px;
 }
 
+/*
 .a-logout(
 )
 
 .a-login(
     
 )
-
+*/
 
 /* styles.css */
 .navbar-brand {
