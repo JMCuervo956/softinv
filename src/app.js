@@ -120,8 +120,17 @@ app.get('/habilita', (req, res)=>{
 })
 
 app.get('/coltablas', (req, res)=>{
-    res.render('habilita'); 
+    res.render('coltablas'); 
 })
+
+app.get('/preguntas', (req, res)=>{
+    res.render('preguntas'); 
+})
+
+app.get('/pgtasingresar', (req, res)=>{
+    res.render('pgtasingresar'); 
+})
+
 
 // 11. Autenticacion 
 
@@ -173,9 +182,45 @@ app.post('/auth', async (req, res) => {
     }
 });
 
-// pregunta
-// post
+// preguntas - post
 
+app.post('/preguntasreg', async (req, res) => {
+    try {
+        const pgtas = req.body.pgtas;
+        // Log para depuración
+        const [rows] = await pool.execute('SELECT * FROM preguntas WHERE texto = ?', [pgtas]);
+        if (rows.length > 0) {
+            return res.json({
+                status: 'error',
+                title: 'Error',
+                message: 'Pregunta ya Existe'
+            });
+        }
+
+        // Insertar nuevo usuario
+        console.log(pgtas, 'ínsertar');
+
+        await pool.execute('INSERT INTO preguntas (texto, estado) VALUES (?, ?)', [pgtas, 0]);
+        res.json({
+            status: 'success',
+            title: 'Registro Exitoso',
+            message: '¡Registrado correctamente!'
+
+        });
+    } catch (error) {
+        console.log(pgtas, 'No reg ERROR');
+
+        res.json({
+            status: 'success',
+            title: 'Registro de Preguta NO Exitoso',
+            message: '¡Error en el servidor! BD'
+        });
+
+    }
+});
+
+
+// register - post
 app.post('/register', async (req, res) => {
     try {
         const user = req.body.user;
@@ -271,47 +316,21 @@ app.get('/opcbtn', async (req, res) => {
         res.status(500).send('Error conectando a la base de datos.');
     }
 });
-
  
 app.get('/opc1', async (req, res) => {
     try {
-//        console.log('Conexión exitosa, respuesta de la base de datos:', rows);
-
-        const [rows] = await pool.execute("select * from preguntas where estado=1");
-        console.log(rows);
-
-        // Verifica si se están obteniendo los datos correctamente
-//        console.log(rows);  // Agrega este log para revisar los datos
-        
-//       res.send('Conexión a la base de datos exitosa');
-
+        const [rows] = await pool.execute("select * from preguntas where estado=0");
         res.render('opc1', { data: rows });
-
-
     } catch (error) {
-//        console.error('Error conectando a la base de datos:', error);
         res.status(500).send('Error conectando a la base de datos.');
     }
 });
 
-
 app.get('/opc2', async (req, res) => {
     try {
-//        console.log('Conexión exitosa, respuesta de la base de datos:', rows);
-
-        const [rows] = await pool.execute("select * from preguntas where estado=1");
-
-
-        // Verifica si se están obteniendo los datos correctamente
-//        console.log(rows);  // Agrega este log para revisar los datos
-        
-//        res.send('Conexión a la base de datos exitosa');
-
+        const [rows] = await pool.execute("select * from preguntas where estado=0");
         res.render('opc2', { data: rows });
-
-
     } catch (error) {
-//        console.error('Error conectando a la base de datos:', error);
         res.status(500).send('Error conectando a la base de datos.');
     }
 });

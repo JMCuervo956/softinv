@@ -45,7 +45,7 @@
             const formData = new FormData(this);
             const response = await fetch('/register', {
                 method: 'POST',
-                body: new URLSearchParams(formData)
+                body: new URLSearchParams(formData) 
             });
 
             const result = await response.json();

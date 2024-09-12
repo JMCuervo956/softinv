@@ -35,11 +35,11 @@
                     <table class="no-border">  
                         <thead>
                             <tr>
-                                <th id="columna1">Id</th>
+<!--                                <th id="columna1">Id</th>  -->
                                 <th id="columna2">Pregunta</th>
                                 <th id="columna3">
-                                    <a href="/ver" class="btn btn-primary btn-sm custom-btn" btn-secondary w-50>Adicionar</a>
-                                    <a href="/ver" class="btn btn-success btn-sm custom-btn" btn-secondary w-50>Regresar </a>
+                                    <a href="/preguntas" class="btn btn-primary btn-sm custom-btn" btn-secondary w-50>Adicionar</a>
+                                    <a href="/menuprc" class="btn btn-success btn-sm custom-btn" btn-secondary w-50>Regresar </a>
                                 </th>
                             </tr>
                         </thead>
@@ -47,7 +47,6 @@
                             <% if (data && data.length > 0) { %>
                                     <% data.forEach(function(item) { %>
                                         <tr>
-                                            <td><%= item.id %></td>
                                             <td><%= item.texto %></td>
                                             <td>
                                                 <a href="/ver" class="btn btn-warning btn-sm custom-btn" btn-secondary w-50>Modificar</a>
@@ -59,9 +58,8 @@
                                             </td>
                                         </tr>
                                     <% }); %>
-                                <% } else { %>
+                            <% } else { %>
                                     <tr>
-                                        <!-- <p>No hay datos disponibles.</p> -->
                                         <div>
                                             <td colspan="4" >No hay datos disponibles</td>   
                                         </div>

@@ -12,6 +12,7 @@
     <%- include('partials/head') %>
 </head>
 <body>
+    <script src="app.js"></script>
     <%- include('partials/navigation') %>  
     <div class="content">
         <div class="register-form"> 
@@ -50,20 +51,30 @@
 
             const result = await response.json();
 
-            Swal.fire({
-                title: result.title || 'Error',
-                text: result.message || 'Hubo un problema',
-                icon: result.status,
-                showConfirmButton: true,
-                timer: result.status === 'success' ? 2500 : null // Timer solo para éxito
-            }).then(() => {
-                if (result.status === 'success') {
+            if (result.status === 'success') {
+                Swal.fire({
+                    title: result.title,
+                    text: result.message,
+                    icon: result.status,
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
                     window.location.href = '/menuprc'; // Redirigir al usuario si es necesario
-                }
-            });
+                });
+            } else {
+                Swal.fire({
+                    title: result.title,
+                    text: result.message,
+                    icon: result.status,
+                    showConfirmButton: true
+                });
+            }
+
         });
     </script>
     <%- include('partials/footer') %>  
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/src/main.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </body>
 </html>
