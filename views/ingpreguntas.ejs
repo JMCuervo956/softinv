@@ -12,7 +12,7 @@
     <%- include('partials/head') %> <!-- <link rel="stylesheet" href="main.css"> /// partial para repetir en cada una de las paginas -->
     <style>
         table {
-            width: 70%;
+            width: 100%;
             border-collapse: collapse;
         }
         th, td {
@@ -42,19 +42,15 @@
         }
 
         main {
-            display: flex;
-            flex-direction: row;
             flex: 1;
             padding: 20px;
         }
 
         .content {
-            flex: 1;
             padding: 20px;
         }
 
         .image-section {
-            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -86,88 +82,87 @@
 
         /* Estilos para pantallas pequeñas */
         @media (max-width: 768px) {
-            main {
-                flex-direction: column;
+            .content {
+                padding: 10px;
+            }
+            
+            table {
+                font-size: 14px;
             }
 
-            .content {
-                padding-bottom: 20px;
+            button {
+                padding: 8px 16px;
+                font-size: 14px;
             }
         }
-
-</style>
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
     <%- include('partials/navigation') %>  
-    <div class="content">
-        <div class="register-formIni">
-            <div class="content">
-                <div class="container mt-1">
-                    <H1></H1>
-                    <h1></h1>
-<!--                 <table border="0px" class="table table-bordered table-hover custom-btn col1 col2 col3">    -->
-                    <table class="no-border">  
-                        <thead>
+    <main>
+        <div class="content">
+            <div class="container mt-1">
+                <h1>Lista de Preguntas</h1>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Pregunta</th>
+                            <th>
+                                <a href="/preguntas" class="btn btn-primary btn-sm">Adicionar</a>
+                                <a href="/menuprc" class="btn btn-success btn-sm">Regresar</a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (data && data.length > 0) { %>
+                            <% data.forEach(function(item) { %>
+                                <tr>
+                                    <td><%= item.texto %></td>
+                                    <td>
+                                        <a href="/modificar" class="btn btn-warning btn-sm">Modificar</a>
+                                        <button class="confirmar btn btn-danger btn-sm">Eliminar</button>
+                                        <form action="/eliminar/<%= item.id %>" method="POST" style="display:inline;">
+                                        </form>
+                                        <a href="/ver" class="btn btn-primary btn-sm">Opciones</a>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %> 
                             <tr>
-<!--                                <th id="columna1">Id</th>  -->
-                                <th id="columna2">Pregunta</th>
-                                <th id="columna3">
-                                    <a href="/preguntas" class="btn btn-primary btn-sm custom-btn" btn-secondary w-50>Adicionar</a>
-                                    <a href="/menuprc" class="btn btn-success btn-sm custom-btn" btn-secondary w-50>Regresar </a>
-                                </th>
+                                <td colspan="2">No hay datos disponibles</td>   
                             </tr>
-                        </thead>
-                        <tbody>
-                            <% if (data && data.length > 0) { %>
-                                    <% data.forEach(function(item) { %>
-                                        <tr>
-                                            <td><%= item.texto %></td>
-                                            <td>
-                                                <a href="/modificar" class="btn btn-warning btn-sm custom-btn" btn-secondary w-50>Modificar</a>
-                                                <button id="confirmar" type="submit" class="btn btn-danger btn-sm custom-btn">Eliminar</button> 
-                                                <form action="/eliminar/<%= item.id %>" method="POST" style="display:inline;">
-                                                </form>
-                                                <a href="/ver" class="btn btn-primary btn-sm custom-btn" btn-secondary w-50>Opciones</a>
-                                            </td>
-                                        </tr>
-                                    <% }); %>
-                            <% } else { %> 
-                                    <tr>
-                                        <div>
-                                            <td colspan="4" >No hay datos disponibles</td>   
-                                        </div>
-                                    </tr>
-                            <% } %>
-                        </table>
-                    </div>
-
-                <!-- Enlace a Bootstrap JS y dependencias desde CDN -->
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                        <% } %>
+                    </tbody>
+                </table>
             </div>
         </div>
-    </div>            
+    </main>
+
+    <!-- Enlace a Bootstrap JS y dependencias desde CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        document.getElementById('confirmar').addEventListener('click', function() {
-            Swal.fire({
-                title: '¿Seguro que desea continuar?',
-                text: "Esta acción no se puede deshacer.",
-                icon: 'warning',
-                showCancelButton: true, // Muestra el botón de cancelar
-                confirmButtonText: 'Sí, continuar',
-                cancelButtonText: 'No, cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // El usuario hizo clic en "Sí, continuar"
-                    Swal.fire('¡Hecho!', 'Tu acción ha sido confirmada.', 'success');
-                } else if (result.isDismissed) {
-                    // El usuario hizo clic en "No, cancelar"
-                    Swal.fire('Cancelado', 'Tu acción ha sido cancelada.', 'error');
-                }
+        document.querySelectorAll('.confirmar').forEach(button => {
+            button.addEventListener('click', function() {
+                Swal.fire({
+                    title: '¿Seguro que desea continuar?',
+                    text: "Esta acción no se puede deshacer.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, continuar',
+                    cancelButtonText: 'No, cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire('¡Hecho!', 'Tu acción ha sido confirmada.', 'success');
+                        // Aquí podrías enviar el formulario o realizar la acción de eliminar
+                    } else if (result.isDismissed) {
+                        Swal.fire('Cancelado', 'Tu acción ha sido cancelada.', 'error');
+                    }
+                });
             });
         });
     </script>
