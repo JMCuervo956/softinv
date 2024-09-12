@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación Web Responsive</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+                * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        main {
+            display: flex;
+            flex-direction: row;
+            flex: 1;
+            padding: 20px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .image-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        footer {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Estilos para pantallas pequeñas */
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+            }
+
+            .content {
+                padding-bottom: 20px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Mi Aplicación Web</h1>
+    </header>
+
+    <main>
+        <section class="content">
+            <h2>Bienvenido</h2>
+            <p>Esta es una aplicación web simple que se ajusta a diferentes tamaños de pantalla.</p>
+            <button id="clickButton">Haz clic aquí</button>
+        </section>
+        <section class="image-section">
+<!--            <img src="https://via.placeholder.com/300" alt="Imagen de ejemplo">  -->
+            <img src="img/edificios3.jpg" alt="Banner" class="img-fluid">   
+        </section>
+    </main>
+
+    <footer>
+        <p>Desarrollado por [Tu Nombre]</p>
+    </footer>
+
+    <!-- Script colocado justo antes de cerrar la etiqueta body -->
+    <script>
+        document.getElementById('clickButton').addEventListener('click', function() {
+            alert('¡Botón clicado!');
+        });
+    </script>
+
+    <script src="script.js"></script>
+</body>
+</html>

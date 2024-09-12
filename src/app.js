@@ -70,7 +70,7 @@ app.get('/', async (req, res) => {
         //const [rows] = await pool.execute("SELECT * FROM preguntas");
         // Renderiza la plantilla 'index.ejs' pasando los resultados de la consulta
         //res.render('login', { preguntas: rows });
-        res.render('login');
+        res.render('inicio');
     } catch (error) {
 //        console.error('Error al ejecutar la consulta:', error);
         res.status(500).json({ error: 'Error interno del servidor' });

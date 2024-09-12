@@ -21,6 +21,7 @@
             text-align: left;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -49,16 +50,15 @@
                                         <tr>
                                             <td><%= item.texto %></td>
                                             <td>
-                                                <a href="/ver" class="btn btn-warning btn-sm custom-btn" btn-secondary w-50>Modificar</a>
-                                               <!-- <button type="submit" class="btn btn-danger btn-sm custom-btn">Eliminar</button> -->
+                                                <a href="/modificar" class="btn btn-warning btn-sm custom-btn" btn-secondary w-50>Modificar</a>
+                                                <button id="confirmar" type="submit" class="btn btn-danger btn-sm custom-btn">Eliminar</button> 
                                                 <form action="/eliminar/<%= item.id %>" method="POST" style="display:inline;">
-                                                    <button type="submit" class="btn btn-danger btn-sm custom-btn ">Eliminar</button>
                                                 </form>
                                                 <a href="/ver" class="btn btn-primary btn-sm custom-btn" btn-secondary w-50>Opciones</a>
                                             </td>
                                         </tr>
                                     <% }); %>
-                            <% } else { %>
+                            <% } else { %> 
                                     <tr>
                                         <div>
                                             <td colspan="4" >No hay datos disponibles</td>   
@@ -75,6 +75,28 @@
             </div>
         </div>
     </div>            
+
+    <script>
+        document.getElementById('confirmar').addEventListener('click', function() {
+            Swal.fire({
+                title: '¿Seguro que desea continuar?',
+                text: "Esta acción no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true, // Muestra el botón de cancelar
+                confirmButtonText: 'Sí, continuar',
+                cancelButtonText: 'No, cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // El usuario hizo clic en "Sí, continuar"
+                    Swal.fire('¡Hecho!', 'Tu acción ha sido confirmada.', 'success');
+                } else if (result.isDismissed) {
+                    // El usuario hizo clic en "No, cancelar"
+                    Swal.fire('Cancelado', 'Tu acción ha sido cancelada.', 'error');
+                }
+            });
+        });
+    </script>
+   
     <%- include('partials/footer') %>
 </body>
 </html>
