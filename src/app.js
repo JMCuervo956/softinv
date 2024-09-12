@@ -361,7 +361,7 @@ app.post('/procesar-preguntas-opciones', async (req, res) => {
 
 app.get('/ingpreguntas', async (req, res) => {
     try {
-        const [rows] = await pool.execute("select * from preguntas");
+        const [rows] = await pool.execute("select * from preguntas order by id desc");
         res.render('ingpreguntas', { data: rows });
     } catch (error) {
                 console.error('Error conectando a la base de datos....????:', error);

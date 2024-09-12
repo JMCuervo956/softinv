@@ -11,6 +11,14 @@
     <!-- cabecera -->
     <%- include('partials/head') %> <!-- <link rel="stylesheet" href="main.css"> /// partial para repetir en cada una de las paginas -->
     <style>
+        th {
+            border: 1px solid rgb(247, 244, 244);
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+<!--
+    <style>
         table {
             width: 100%;
             border-collapse: collapse;
@@ -106,54 +114,67 @@
             }
         }
     </style>
+-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
     <%- include('partials/navigation') %>  
-    <main>
+    <br>
         <div class="content">
-            <h3>Lista de Preguntas</h3>
-
-            <div class="container mt-1">
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>Pregunta</th>
+            <div>
+                <div class="container mt-1">
+                    <table class="table table-bordered table-hover">
+                        <thead>
                             <th>
-                                <div class="btn-container">
-                                    <a href="/preguntas" class="btn btn-primary btn-sm">Adicionar</a>
-                                    <a href="/menuprc" class="btn btn-success btn-sm">Regresar</a>
-                                </div>
+                                <a
+                                <a href="/menuprc" class="btn btn-success btn-sm">Regresar</a>
+                                </a>    
                             </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% if (data && data.length > 0) { %>
-                            <% data.forEach(function(item) { %>
-                                <tr>
-                                    <td><%= item.texto %></td>
-                                    <td>
-                                        <div class="btn-container">
-                                            <a href="/modificar" class="btn btn-warning btn-sm">Modificar</a>
-                                            <button class="confirmar btn btn-danger btn-sm">Eliminar</button>
-                                            <form action="/eliminar/<%= item.id %>" method="POST" style="display:inline;">
-                                            </form>
-                                            <a href="/ver" class="btn btn-primary btn-sm">Opciones</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <% }); %>
-                        <% } else { %> 
+                        </thead>        
+                    </table>
+                </div>
+                <div class="container mt-1">
+                    <table class="table table-bordered table-hover">
+                        <thead>
                             <tr>
-                                <td colspan="2">No hay datos disponibles</td>   
+                                <th>Pregunta</th>
+                                <th>
+                                    <div class="btn-container">
+                                        <a href="/preguntas" class="btn btn-primary btn-sm">Adicionar</a>
+<!--                                    <a href="/menuprc" class="btn btn-success btn-sm">Regresar</a> -->
+                                    </div>
+                                </th>
                             </tr>
-                        <% } %>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <% if (data && data.length > 0) { %>
+                                <% data.forEach(function(item) { %>
+                                    <tr>
+                                        <td><%= item.texto %></td>
+                                        <td>
+                                            <div class="btn-container">
+                                                <a href="/modificar" class="btn btn-warning btn-sm">Modificar</a>
+                                                <button class="confirmar btn btn-danger btn-sm">Eliminar</button>
+                                                <form action="/eliminar/<%= item.id %>" method="POST" style="display:inline;">
+                                                </form>
+                                                <a href="/ver" class="btn btn-primary btn-sm">Opciones</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %> 
+                                <tr>
+                                    <td colspan="2">No hay datos disponibles</td>   
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </main>
+    <%- include('partials/footer') %>
+
 
     <!-- Enlace a Bootstrap JS y dependencias desde CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -181,7 +202,5 @@
             });
         });
     </script>
-   
-    <%- include('partials/footer') %>
 </body>
 </html>
