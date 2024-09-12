@@ -198,8 +198,6 @@ app.post('/preguntasreg', async (req, res) => {
         }
 
         // Insertar nuevo usuario
-        console.log(pgtas, 'ínsertar');
-
         await pool.execute('INSERT INTO preguntas (texto, estado) VALUES (?, ?)', [pgtas, 0]);
         res.json({
             status: 'success',
@@ -208,8 +206,6 @@ app.post('/preguntasreg', async (req, res) => {
 
         });
     } catch (error) {
-        console.log(pgtas, 'No reg ERROR');
-
         res.json({
             status: 'success',
             title: 'Registro de Preguta NO Exitoso',
@@ -272,7 +268,7 @@ app.post('/register', async (req, res) => {
 app.listen(PORT, () => {
     console.log('Server en port', PORT);
 }); 
-     
+    
 
 app.get('/seleccion', async (req, res) => {
     try {
@@ -280,11 +276,7 @@ app.get('/seleccion', async (req, res) => {
 
         const [rows] = await pool.execute("select * from preguntas");
 
-
         // Verifica si se están obteniendo los datos correctamente
-//        console.log(rows);  // Agrega este log para revisar los datos
-        
-//        res.send('Conexión a la base de datos exitosa');
 
         res.render('opc1', { data: rows });
 
@@ -301,16 +293,8 @@ app.get('/opcbtn', async (req, res) => {
 //        console.log('Conexión exitosa, respuesta de la base de datos:', rows);
 
         const [rows] = await pool.execute("select * from preguntas");
-
-
         // Verifica si se están obteniendo los datos correctamente
-//        console.log(rows);  // Agrega este log para revisar los datos
-        
-//        res.send('Conexión a la base de datos exitosa');
-
         res.render('opcbtn', { data: rows });
-
-
     } catch (error) {
         console.error('Error conectando a la base de datos:', error);
         res.status(500).send('Error conectando a la base de datos.');
@@ -364,8 +348,6 @@ app.post('/procesar-preguntas-opciones', async (req, res) => {
         item.opciones.forEach((opcion, opcionIndex) => {
             // Función interna para manejar cada pregunta y opción
             const procesar = () => {
-//                console.log(`Pregunta ${index + 1}: ${item.pregunta}`);
-//                console.log(`  Opción ${opcionIndex + 1}: ${opcion}`);
                 // Aquí puedes insertar lógica adicional para procesar cada opción
                 grabar(item.pregunta, opcion);
             };
