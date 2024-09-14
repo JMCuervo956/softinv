@@ -435,9 +435,9 @@ app.get('/ingpreguntas', async (req, res) => {
 
 app.get('/opciones', async(req, res) => {
     try {
-        const [rows] = await pool.execute("select * from pgtaresp");
         const id = req.query.id;
         const texto = req.query.texto;
+        const [rows] = await pool.execute("select * from pgtaresp where idprg = ?", [id]);
         res.render('opciones', { id, texto, data: rows });
     } catch (error) {
         console.error('Error conectando a la base de datos....????:', error);
