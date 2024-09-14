@@ -1,6 +1,7 @@
  
 // 1. - Invocamos a express   
-import express from 'express';
+// import express from 'express'; ???????????????
+import express, { Router } from 'express';
 import session from 'express-session';
 import {pool} from './db.js';
 import {PORT} from './config.js';
@@ -13,6 +14,7 @@ import { validateCredentials } from './auth.js';
 //import Swal from 'sweetalert2/dist/sweetalert2.js'
 import Swal from 'sweetalert2';
 //import 'sweetalert2/src/sweetalert2.scss'
+
 
 // Función para mostrar la alerta
 function showAlert() {
@@ -31,7 +33,7 @@ function showAlert() {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
  
-const app = express()
+const app = express();
 
 // Configura express-session
 app.use(session({
@@ -61,23 +63,86 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../views'));
 //app.set('views', './views'); 
 
+// Servir archivos estáticos desde la carpeta 'src'
+app.use(express.static(path.join(__dirname, 'src')));
+
 // Ruta para la página principal
  
  
 app.get('/', async (req, res) => {
     try {
-        // Ejecuta la consulta a la base de datos
-        //const [rows] = await pool.execute("SELECT * FROM preguntas");
-        // Renderiza la plantilla 'index.ejs' pasando los resultados de la consulta
-        //res.render('login', { preguntas: rows });
+        // Renderiza la plantilla 'video.ejs'
+        const greeting = getGreeting();
         res.render('login');
     } catch (error) {
-//        console.error('Error al ejecutar la consulta:', error);
+        console.error('Error al renderizar la plantilla:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }  
 });
 
 // Ruta para renderizar la galería de imágenes
+
+app.get('/menuprc', (req, res)=>{
+    res.render('menuprc'); 
+})
+
+app.get('/register', (req, res)=>{
+    res.render('register'); 
+})
+
+app.get('/preguntas', (req, res)=>{
+    res.render('preguntas'); 
+})
+
+app.get('/eliminar', (req, res) => {
+    const id = req.query.id;
+    const texto = req.query.texto;
+    res.render('eliminar', { id, texto });
+});
+
+app.get('/modificar', (req, res) => {
+    const id = req.query.id;
+    const texto = req.query.texto;
+    res.render('modificar', { id, texto });
+});
+
+app.get('/opciones', (req, res) => {
+    const id = req.query.id;
+    const texto = req.query.texto;
+    res.render('opciones', { id, texto });
+});
+    
+    
+app.get('/opcionesss', async (req, res) => {
+    const id = req.query.id;
+    const texto = req.query.texto;
+    console.log(id);
+    console.log(texto);
+    try {
+        const [rows] = await pool.execute("select * from preguntas");
+        res.render('opciones', { data: rows });
+    } catch (error) {
+                console.error('Error conectando a la base de datos....????:', error);
+                res.status(500).send('Error conectando a la base de datos.?????');
+            }
+    });
+
+
+/*
+app.get('/ingpreguntas', async (req, res) => {
+    try {
+        const [rows] = await pool.execute("select * from preguntas order by id desc");
+        res.render('ingpreguntas', { data: rows });
+    } catch (error) {
+                console.error('Error conectando a la base de datos....????:', error);
+                res.status(500).send('Error conectando a la base de datos.?????');
+            }
+    });
+*/
+//************************** */
+
+/*
+
 app.get('/fondo', (req, res) => {
     const images = [
         { src: '/public/img/sti.png', alt: 'Imagen 1' },
@@ -91,16 +156,8 @@ app.get('/html', (req, res)=>{
     res.render('html'); 
 })
 
-app.get('/menuprc', (req, res)=>{
-    res.render('menuprc'); 
-})
-
 app.get('/registros', (req, res)=>{
     res.render('registros');  
-})
-
-app.get('/register', (req, res)=>{
-    res.render('register'); 
 })
  
 app.get('/regpgtas', (req, res)=>{
@@ -123,14 +180,11 @@ app.get('/coltablas', (req, res)=>{
     res.render('coltablas'); 
 })
 
-app.get('/preguntas', (req, res)=>{
-    res.render('preguntas'); 
-})
-
 app.get('/pgtasingresar', (req, res)=>{
     res.render('pgtasingresar'); 
 })
 
+*/
 
 // 11. Autenticacion 
 
@@ -183,7 +237,6 @@ app.post('/auth', async (req, res) => {
 });
 
 // preguntas - post
-
 app.post('/preguntasreg', async (req, res) => {
     try {
         const pgtas = req.body.pgtas;
@@ -208,13 +261,33 @@ app.post('/preguntasreg', async (req, res) => {
     } catch (error) {
         res.json({
             status: 'success',
-            title: 'Registro de Preguta NO Exitoso',
+            title: 'Registro de Preguta NO Exitoso...aqui',
             message: '¡Error en el servidor! BD'
         });
 
     }
 });
 
+// modifica preguntas - post
+app.post('/preguntasmod', async (req, res) => {
+    try {
+        const ids = req.body.ids;
+        const pgtas = req.body.pgtas;
+        // Insertar nuevo usuario
+        await pool.execute('UPDATE preguntas SET texto = ? WHERE id = ?', [pgtas, ids]);
+        res.json({
+            status: 'success',
+            title: 'Actualizacion Exitosa',
+            message: '¡Registrado correctamente!'
+        });
+    } catch (error) {
+        res.json({
+            status: 'success',
+            title: 'Registro de Preguta NO Exitoso...aqui',
+            message: '¡Error en el servidor! BD'
+        });
+    }
+});
 
 // register - post
 app.post('/register', async (req, res) => {
@@ -246,38 +319,50 @@ app.post('/register', async (req, res) => {
 
         // Insertar nuevo usuario
         await pool.execute('INSERT INTO users (user, name, rol, pass) VALUES (?, ?, ?, ?)', [user, name, rol, passwordHash]);
-
         res.json({
             status: 'success',
             title: 'Registro Exitoso',
             message: '¡Usuario registrado correctamente!'
         });
-
-
     } catch (error) {
         res.json({
             status: 'success',
             title: 'Registro Exitoso',
             message: '¡Error en el servidor! BD'
         });
-
     }
 });
- 
+
+/* Eliminar pregunta */
+
+app.post('/preguntaseli', async (req, res) => {
+    try {
+        const ids = req.body.ids;
+        const pgtas = req.body.pgtas;
+        // Log para depuración
+        const [rows] = await pool.execute('delete from sarlaft.preguntas where id = ?', [ids]);        
+        return res.json({
+            status: 'success',
+            title: 'Borrado Exitoso.',
+            message: '¡Registro Exitoso! BD'
+        });
+    } catch (error) {
+        res.json({
+            status: 'error',
+            title: 'Borrado de Preguta NO Exitoso',
+            message: '¡Error en el servidor! BD'
+        });
+    }
+});
 
 app.listen(PORT, () => {
-    console.log('Server en port', PORT);
-}); 
-    
+    console.log(`Server is running at http://localhost:${PORT}`);
+});
 
 app.get('/seleccion', async (req, res) => {
     try {
-//        console.log('Conexión exitosa, respuesta de la base de datos:', rows);
-
         const [rows] = await pool.execute("select * from preguntas");
-
         // Verifica si se están obteniendo los datos correctamente
-
         res.render('opc1', { data: rows });
 
 
@@ -369,3 +454,45 @@ app.get('/ingpreguntas', async (req, res) => {
             }
     });
 
+   
+// FUNCIONES
+
+    function executeActiones(texto) {
+   
+        // Aquí ejecutas la lógica que deseas, por ejemplo, una llamada AJAX
+        fetch('/ruta-api', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'confirmar' // Envía datos si es necesario
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire('¡Hecho!', 'Tu acción ha sido confirmada.', 'success').then(() => {
+                    // Opcional: redirigir a otra página después de la confirmación
+                    window.location.href = '/pagina-destino';
+                });
+            } else {
+                Swal.fire('Error', 'Hubo un problema con la acción.', 'error');
+            }
+        })
+        .catch(error => {
+            Swal.fire('Error', 'No se pudo completar la acción.', 'error');
+        });
+    }
+    
+
+// Definición de la función
+
+    function miFuncion1() {
+        console.log('¡La función ha sido llamada!');
+    }
+
+    function getGreeting() {
+        return 'Hola, mundo!';
+      }
+      

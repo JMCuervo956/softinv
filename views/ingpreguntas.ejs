@@ -154,11 +154,9 @@
                                         <td><%= item.texto %></td>
                                         <td>
                                             <div class="btn-container">
-                                                <a href="/modificar" class="btn btn-warning btn-sm">Modificar</a>
-                                                <button class="confirmar btn btn-danger btn-sm">Eliminar</button>
-                                                <form action="/eliminar/<%= item.id %>" method="POST" style="display:inline;">
-                                                </form>
-                                                <a href="/ver" class="btn btn-primary btn-sm">Opciones</a>
+                                                <a href="/modificar?id=<%= item.id %>&texto=<%= item.texto %>" class="btn btn-warning btn-sm">Modificar</a>
+                                                <a href="/eliminar?id=<%= item.id %>&texto=<%= item.texto %>" class="btn btn-danger btn-sm">Eliminar</a>
+                                                <a href="/opciones?id=<%= item.id %>&texto=<%= item.texto %>" class="btn btn-primary btn-sm">Opciones</a>
                                             </div>
                                         </td>
                                     </tr>
@@ -180,27 +178,5 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <script>
-        document.querySelectorAll('.confirmar').forEach(button => {
-            button.addEventListener('click', function() {
-                Swal.fire({
-                    title: '¿Seguro que desea continuar?',
-                    text: "Esta acción no se puede deshacer.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Sí, continuar',
-                    cancelButtonText: 'No, cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire('¡Hecho!', 'Tu acción ha sido confirmada.', 'success');
-                        // Aquí podrías enviar el formulario o realizar la acción de eliminar
-                    } else if (result.isDismissed) {
-                        Swal.fire('Cancelado', 'Tu acción ha sido cancelada.', 'error');
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>

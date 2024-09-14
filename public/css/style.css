@@ -5,21 +5,10 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.content {
-    flex: 1; /* Hace que el contenido principal crezca para ocupar el espacio disponible */
-}
-
 .container {
     display: flex;
     gap: 0px; /* Espacio entre los inputs */
     justify-content: center; /* Alineación horizontal (opcional) */
-}
-
-.footer {
-    background-color: #3f4034;
-    color: #ffffff;
-    padding: 0px;
-    text-align: center;
 }
 
 html, body {
@@ -36,12 +25,14 @@ body {
     flex-direction: column;
     /* movimiento */
     background-color: #f0f0f0;
+    min-height: 100vh;
 }
+
 
 /*     background-image: url('/img/edificios.jpg');  */
 
 .custom-navbar-bg {
-    background-color: #3d1adb77; /* Azul oscuro *  de encabezado "" */
+    background-color: #01053b77; /* Azul oscuro *  de encabezado "" */
 }
 
 /*     background: #b8b8bb ; */
@@ -60,10 +51,7 @@ body {
 }
 
 /* Estilo del contenido que aparece debajo o al lado del fondo */
-.content {
-    text-align: center;
-    padding: 0px; /* espacio cuadro login con el encabezado */
-}
+
 
 .gallery {
     display: flex;
@@ -136,7 +124,17 @@ form{
     text-align: left !important;
     box-shadow: 0 19px 30px rgb(0,0,0,0.30), 0 15px 12px rgb(0,0,0,0.22) ; /* sombras */ 
 }
- 
+
+.register-formpgt{
+    width: 600px;
+    margin: 0 auto;
+    padding: 20px 20px 20px 20px;  /* Espacio : Sup, der, inf, izq */
+    margin-top: 35px;
+    font-family: roboto;
+    text-align: left !important;
+    box-shadow: 0 19px 30px rgb(0,0,0,0.30), 0 15px 12px rgb(0,0,0,0.22) ; /* sombras */ 
+}
+
 .register-formIzq{
     width:150px;
     margin: 15px;
@@ -257,10 +255,6 @@ form button{
     font-weight: 500;
 }
 
-form button:hover{
-    opacity: .75;
-}
-
 .btn-login:hover, .btn-login:active{
     color: #fff;
     background-color: #089733;
@@ -332,15 +326,15 @@ form button:hover{
 
 /*estilos boton login*/
 .btn-login{
-width: 80%;
-padding: 2px;
-background-color: #6f42c1;
-border: 0;
-box-sizing: border-box;
-cursor: pointer;
-font-weight: bold;
-font-size: medium;    
-color: #ffffff;
+    width: 80%;
+    padding: 2px;
+    background-color: #6f42c1;
+    border: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: medium;    
+    color: #ffffff;
 }
 
 .btn-logout{
@@ -355,25 +349,6 @@ color: #ffffff;
     color: #5b17d8;
     }
     
-/*
-.btn-register{
-    width: 50%;
-    padding: 5px;
-    background-color: #6f42c1;
-    border: 0;
-    box-sizing: border-box;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: medium;    
-    color: #ffffff;
-    text-align: center;
-    margin-top: 5px;
-    -webkit-appearance: button;
-    -moz-appearance: button;
-    appearance: button;
-    text-decoration: none;
-    }
-*/
 .btn-register:hover, .btn-login:active{
         color: #fff;
         background-color: #0995d6;
@@ -384,26 +359,6 @@ color: #ffffff;
     box-shadow: 0 0 0 3px rgba(9, 68, 12, 0.25)
 }    
 
-/*
-.btn-cancel{
-    width: 50%; 
-    padding: 8px;
-    background-color: #dd7d23;
-    border: 0;
-    box-sizing: border-box;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: medium;    
-    color: #ffffff;
-    text-align: center;
-    margin-top: 5px;
-    -webkit-appearance: button;
-    -moz-appearance: button;
-    appearance: button;
-    text-decoration: none;
-    }
-
-*/
 .btn-continuar{
     width: 87%;
     padding: 5px;
@@ -637,17 +592,74 @@ color: #ffffff;
     font-weight: bold; /* Grosor de la fuente */
 }
 
-/* tabas ****/
+/* tablas ****/
 
 table {
+    width: 100%;
     border-collapse: collapse;
-    width: 100%; /* O cualquier ancho que desees para la tabla */
-  }
+}
 
-  th, td {
-    padding: 18px;
+th {
+    border: 1px solid rgb(247, 244, 244);
+    padding: 8px;
     text-align: left;
-  }
+}
 
 
-  
+th, td {
+    border: 1px solid rgb(247, 244, 244);
+    padding: 8px;
+    text-align: left;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+.content {
+    text-align: center;
+    padding: 20px;
+    /* padding: 0px; /* espacio cuadro login con el encabezado */
+    flex: 1; /* Hace que el contenido principal crezca para ocupar el espacio disponible */
+}
+
+.image-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+footer {
+    background-color: #4CAF50;  /* pie */
+    color: white;
+    text-align: center;
+    padding: 1px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #45a049;
+    opacity: .75;
+}
+

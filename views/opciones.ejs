@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Asamblea</title>
+    <!-- Enlace a Bootstrap CSS desde CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- cabecera -->
+    <%- include('partials/head') %> <!-- <link rel="stylesheet" href="main.css"> /// partial para repetir en cada una de las paginas -->
+    <style>
+        th {
+            border: 1px solid rgb(247, 244, 244);
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* CSS para ajustar el ancho de la segunda columna */
+        .table td:nth-child(2), .table th:nth-child(2) {
+            width: 50px; /* Ajusta este valor según tus necesidades */
+        }
+</style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <%- include('partials/navigation') %>  
+    <div class="register-formpgt"> 
+        <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Pregunta:  </span><%= texto %> 
+    </div>
+    <br>
+    <div class="content">
+            <h5 style="font-size: 14px; color: #5f14b6; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">ADICIONAR RESPUESTAS</h5> 
+    <!--    <div class="register-formcda" > 
+                 <h5 style="font-size: 24px; color: #5f14b6; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">ADICIONAR OPCIONES</h5>  
+            </div>  -->
+            <H1></H1>
+            
+
+            <div>
+                <div class="container mt-1">
+                    <table class="table table-bordered table-hover" style="background-color: transparent; border: 0px solid transparent;">
+                        <colgroup>
+                            <col style="width: 20px;"> <!-- Ancho de la primera columna -->
+                            <col style="width: 20px;"> <!-- Ancho de la segunda columna -->
+                        <colgroup>
+                            <col style="width: 100px;"> <!-- Ancho de la primera columna -->
+                            <col style="width: 100px;"> <!-- Ancho de la segunda columna -->
+                        </colgroup>
+                        </colgroup>
+                    </table>
+                </div>
+                <div class="container mt-1">
+                    <table class="table table-bordered table-hover"  style="border: 1px solid transparent;">
+                            <colgroup>
+                                <col style="width: 50px;"> <!-- Ancho de la primera columna -->
+                                <col style="width: 10px;"> <!-- Ancho de la segunda columna -->
+                            <colgroup>
+                                <col style="width: 40px;"> <!-- Ancho de la primera columna -->
+                                <col style="width: 100px;"> <!-- Ancho de la segunda columna -->
+                            </colgroup>
+                            </colgroup>
+
+                        <thead>
+                            <tr>
+                                <th>
+                                    <a href="/preguntas" class="btn btn-primary btn-sm">Adicionar</a>
+                                    <a href="/ingpreguntas" class="btn btn-success btn-sm">Regresar</a>
+
+                                </th>
+                                <th>
+                                    <div class="btn-container">
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+<!--
+        <script>
+            document.getElementById('registerForm').addEventListener('submit', async function(event) {
+                event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
+                const formData = new FormData(this);
+                const response = await fetch('/preguntasmod', {
+                    method: 'POST',
+                    body: new URLSearchParams(formData)
+                });
+                const result = await response.json();
+                Swal.fire({
+                    title: result.title || 'Error',
+                    text: result.message || 'Hubo un problema',
+                    icon: result.status,
+                    showConfirmButton: true,
+                    timer: result.status === 'success' ? 2500 : null // Timer solo para éxito
+                }).then(() => {
+                    if (result.status === 'success') {
+                        window.location.href = '/ingpreguntas'; // Redirigir al usuario si es necesario
+                    }
+                });
+            });
+        </script>
+-->        
+    <%- include('partials/footer') %>
+    <!-- Enlace a Bootstrap JS y dependencias desde CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
