@@ -106,27 +106,6 @@ app.get('/modificar', (req, res) => {
     res.render('modificar', { id, texto });
 });
 
-app.get('/opciones', (req, res) => {
-    const id = req.query.id;
-    const texto = req.query.texto;
-    res.render('opciones', { id, texto });
-});
-    
-    
-app.get('/opcionesss', async (req, res) => {
-    const id = req.query.id;
-    const texto = req.query.texto;
-    console.log(id);
-    console.log(texto);
-    try {
-        const [rows] = await pool.execute("select * from preguntas");
-        res.render('opciones', { data: rows });
-    } catch (error) {
-                console.error('Error conectando a la base de datos....????:', error);
-                res.status(500).send('Error conectando a la base de datos.?????');
-            }
-    });
-
 
 /*
 app.get('/ingpreguntas', async (req, res) => {
@@ -454,6 +433,33 @@ app.get('/ingpreguntas', async (req, res) => {
             }
     });
 
+app.get('/opciones', async(req, res) => {
+    try {
+        const [rows] = await pool.execute("select * from pgtaresp");
+        const id = req.query.id;
+        const texto = req.query.texto;
+        res.render('opciones', { id, texto, data: rows });
+    } catch (error) {
+        console.error('Error conectando a la base de datos....????:', error);
+        res.status(500).send('Error conectando a la base de datos.?????');
+        }
+    });
+        
+        
+    app.get('/opcionesss', async (req, res) => {
+        const id = req.query.id;
+        const texto = req.query.texto;
+        console.log(id);
+        console.log(texto);
+        try {
+            const [rows] = await pool.execute("select * from preguntas");
+            res.render('opciones', { data: rows });
+        } catch (error) {
+                    console.error('Error conectando a la base de datos....????:', error);
+                    res.status(500).send('Error conectando a la base de datos.?????');
+                }
+        });
+    
    
 // FUNCIONES
 

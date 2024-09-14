@@ -37,8 +37,6 @@
                  <h5 style="font-size: 24px; color: #5f14b6; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">ADICIONAR OPCIONES</h5>  
             </div>  -->
             <H1></H1>
-            
-
             <div>
                 <div class="container mt-1">
                     <table class="table table-bordered table-hover" style="background-color: transparent; border: 0px solid transparent;">
@@ -77,6 +75,25 @@
                             </tr>
                         </thead>
                         <tbody>
+
+                            <% if (data && data.length > 0) { %>
+                                <% data.forEach(function(item) { %>
+                                    <tr>
+                                        <td><%= item.respuesta %></td>
+                                        <td>
+                                            <div class="btn-container">
+                                                <a href="/modificar?id=<%= item.id %>&texto=<%= item.respuesta %>" class="btn btn-warning btn-sm">Modificar</a>
+                                                <a href="/eliminar?id=<%= item.id %>&texto=<%= item.respuesta %>" class="btn btn-danger btn-sm">Eliminar</a>
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %> 
+                                <tr>
+                                    <td colspan="2">No hay datos disponibles</td>   
+                                </tr>
+                            <% } %>
 
                         </tbody>
                     </table>
