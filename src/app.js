@@ -73,7 +73,7 @@ app.get('/', async (req, res) => {
     try {
         // Renderiza la plantilla 'video.ejs'
         const greeting = getGreeting();
-        res.render('login');
+        res.render('html');
     } catch (error) {
         console.error('Error al renderizar la plantilla:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
