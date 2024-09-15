@@ -73,7 +73,7 @@ app.get('/', async (req, res) => {
     try {
         // Renderiza la plantilla 'video.ejs'
         const greeting = getGreeting();
-        res.render('html');
+        res.render('login');
     } catch (error) {
         console.error('Error al renderizar la plantilla:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
@@ -318,6 +318,7 @@ app.post('/preguntaseli', async (req, res) => {
     try {
         const ids = req.body.ids;
         const pgtas = req.body.pgtas;
+
         // Log para depuración
         const [rows] = await pool.execute('delete from sarlaft.preguntas where id = ?', [ids]);        
         return res.json({
