@@ -328,9 +328,9 @@ app.post('/preguntaseli', async (req, res) => {
         });
     } catch (error) {
         res.json({
-            status: ('Error al borrar el registro:', error),
+            status: 'error',
             title: 'Borrado de Preguta NO Exitoso',
-            message: '¡Error en el servidor! BD'
+            message: error
         });
     }
 });
