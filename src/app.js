@@ -330,7 +330,7 @@ app.post('/preguntaseli', async (req, res) => {
         res.json({
             status: 'error',
             title: 'Borrado de Preguta NO Exitoso',
-            message: error
+            message: `Error: ${error.message}`
         });
     }
 });
