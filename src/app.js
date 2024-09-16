@@ -220,7 +220,7 @@ app.post('/preguntasreg', async (req, res) => {
     try {
         const pgtas = req.body.pgtas;
         // Log para depuración
-        const [rows] = await pool.execute('SELECT * FROM preguntas WHERE texto = ?', [pgtas]);
+        const [rows] = await pool.execute('SELECT * FROM preguntas WHERE texto = ? and estado = 0', [pgtas]);
         if (rows.length > 0) {
             return res.json({
                 status: 'error',
@@ -229,8 +229,8 @@ app.post('/preguntasreg', async (req, res) => {
             });
         }
 
-        // Insertar nuevo usuario
-        await pool.execute('INSERT INTO preguntas (texto, estado) VALUES (?, ?)', [pgtas, 0]);
+        // Insertar nueva pregunta
+        await pool.execute('INSERT INTO preguntas (texto, estado, fechacreacion, fechaproceso) VALUES (?, ?, ?, ?,)', [pgtas, 0, curdate(), null]);
         res.json({
             status: 'success',
             title: 'Registro Exitoso',
@@ -320,7 +320,8 @@ app.post('/preguntaseli', async (req, res) => {
         const pgtas = req.body.pgtas;
 
         // Log para depuración
-        const [rows] = await pool.execute('delete from sarlaft.preguntas where id = ?', [ids]);        
+//        const [rows] = await pool.execute('delete from sarlaft.preguntas where id = ?', [ids]);        
+        await pool.execute('UPDATE preguntas SET estado=1 WHERE id = ?', [ids]);
         return res.json({
             status: 'success',
             title: 'Borrado Exitoso.',
@@ -426,7 +427,7 @@ app.post('/procesar-preguntas-opciones', async (req, res) => {
 
 app.get('/ingpreguntas', async (req, res) => {
     try {
-        const [rows] = await pool.execute("select * from preguntas order by id desc");
+        const [rows] = await pool.execute("select * from preguntas where estado=0");
         res.render('ingpreguntas', { data: rows });
     } catch (error) {
                 console.error('Error conectando a la base de datos....????:', error);

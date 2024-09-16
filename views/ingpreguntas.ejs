@@ -127,37 +127,32 @@
                     <table class="table table-bordered table-hover">
                         <thead>
                             <th>
-                                <a
+                                <h4>Preguntas</h4>
                                 <a href="/menuprc" class="btn btn-success btn-sm">Regresar</a>
-                                </a>    
+                                <a href="/preguntas" class="btn btn-primary btn-sm">Adicionar</a>
                             </th>
                         </thead>        
                     </table>
                 </div>
+
                 <div class="container mt-1">
                     <table class="table table-bordered table-hover">
                         <thead>
-                            <tr>
-                                <th>Pregunta</th>
-                                <th>
-                                    <div class="btn-container">
-                                        <a href="/preguntas" class="btn btn-primary btn-sm">Adicionar</a>
-<!--                                    <a href="/menuprc" class="btn btn-success btn-sm">Regresar</a> -->
-                                    </div>
-                                </th>
-                            </tr>
                         </thead>
                         <tbody>
+
                             <% if (data && data.length > 0) { %>
                                 <% data.forEach(function(item) { %>
                                     <tr>
                                         <td><%= item.texto %></td>
                                         <td>
-                                            <div class="btn-container">
-                                                <a href="/modificar?id=<%= item.id %>&texto=<%= item.texto %>" class="btn btn-warning btn-sm">Modificar</a>
-                                                <a href="/eliminar?id=<%= item.id %>&texto=<%= item.texto %>" class="btn btn-danger btn-sm">Eliminar</a>
-                                                <a href="/opciones?id=<%= item.id %>&texto=<%= item.texto %>" class="btn btn-primary btn-sm">Opciones</a>
-                                            </div>
+                                                    <a href="/modificar?id=<%= item.id %>&texto=<%= item.texto %>" class="btn btn-warning btn-sm">Modificar</a>
+                                        </td>
+                                        <td>
+                                                    <a href="/eliminar?id=<%= item.id %>&texto=<%= item.texto %>" class="btn btn-danger btn-sm">Eliminar</a>
+                                        </td>
+                                        <td>
+                                                    <a href="/opciones?id=<%= item.id %>&texto=<%= item.texto %>" class="btn btn-primary btn-sm">Respuestas</a>
                                         </td>
                                     </tr>
                                 <% }); %>
@@ -166,6 +161,7 @@
                                     <td colspan="2">No hay datos disponibles</td>   
                                 </tr>
                             <% } %>
+
                         </tbody>
                     </table>
                 </div>
