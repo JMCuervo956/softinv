@@ -10,8 +10,14 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import bcryptjs from 'bcryptjs';
 import { validateCredentials } from './auth.js';
-   
-//import Swal from 'sweetalert2/dist/sweetalert2.js'
+
+// importar archivos
+import fs from 'fs';
+import { readFile } from 'fs/promises';
+import fastcsv from 'fast-csv';
+import bodyParser from 'body-parser';
+
+//import Swal from 'sweetalert2/dist/sweetalert2.js'  
 import Swal from 'sweetalert2';
 //import 'sweetalert2/src/sweetalert2.scss'
 
@@ -53,6 +59,7 @@ app.use((req, res, next) => {
 
 // Configuración para servir archivos estáticos desde el directorio 'public'
 app.use(express.static(path.join(__dirname, '../public')));
+app.use(bodyParser.json()); // para cargue de archivos
 
 // Middleware para parsear datos del formulario (application/x-www-form-urlencoded)
 app.use(express.urlencoded({ extended: true }));
@@ -68,7 +75,7 @@ app.use(express.static(path.join(__dirname, 'src')));
 
 // Ruta para la página principal
  
- 
+  
 app.get('/', async (req, res) => {
     try {
         // Renderiza la plantilla 'video.ejs'
@@ -92,6 +99,10 @@ app.get('/register', (req, res)=>{
 
 app.get('/preguntas', (req, res)=>{
     res.render('preguntas'); 
+})
+
+app.get('/tablaguardar', (req, res)=>{
+    res.render('tablaguardar'); 
 })
 
 app.get('/eliminar', (req, res) => {
@@ -321,7 +332,8 @@ app.post('/preguntaseli', async (req, res) => {
 
         // Log para depuración
 //        const [rows] = await pool.execute('delete from sarlaft.preguntas where id = ?', [ids]);        
-        await pool.execute('UPDATE preguntas SET estado=1 WHERE id = ?', [ids]);
+//        await pool.execute('UPDATE preguntas SET estado=1 WHERE id = ?', [ids]);
+        await pool.execute('delete from preguntas WHERE id = ?', [ids]);
         return res.json({
             status: 'success',
             title: 'Borrado Exitoso.',
@@ -336,6 +348,13 @@ app.post('/preguntaseli', async (req, res) => {
     }
 });
 
+
+// SUBIR ARCHIVO TXT
+ 
+
+
+
+//
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
 });
@@ -492,7 +511,6 @@ app.get('/opciones', async(req, res) => {
             Swal.fire('Error', 'No se pudo completar la acción.', 'error');
         });
     }
-    
 
 // Definición de la función
 
@@ -504,3 +522,106 @@ app.get('/opciones', async(req, res) => {
         return 'Hola, mundo!';
       }
       
+// *******************
+ 
+app.post('/grabadata', async (req, res) => {
+    console.log('ingreso')
+    try {
+        console.log('ingreso1')
+        // Log para depuración
+        console.log('1')
+        const [rows] = await pool.execute('SELECT * FROM usersss');
+        console.log('2')
+        if (rows.length > 0) {
+            console.log('ver')
+            return res.json({
+                status: 'error',
+                title: 'Error',
+                message: 'Usuario ya Existe'
+            });
+        } 
+    } catch (error) {
+        console.log('ingreso2')
+        res.json({
+            status: 'success',
+            title: 'Registro Exitoso',
+            message: '¡Error en el servidor! BD'
+        });
+    }
+});
+
+async function processCSV(filePath) {
+    // Crear una conexión a la base de datos
+    const connection = await mysql.createConnection(dbConfig);
+
+    try {
+        // Crear la tabla si no existe (ajusta los campos según tu CSV)
+        await connection.execute(`
+            CREATE TABLE IF NOT EXISTS my_table (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255),
+                age INT
+            )
+        `);
+
+        // Leer el archivo CSV
+        const data = [];
+        fs.createReadStream(filePath)
+            .pipe(csvParser())
+            .on('data', (row) => {
+                data.push(row);
+            })
+            .on('end', async () => {
+                // Insertar datos en la base de datos
+                for (const row of data) {
+                    const { name, age } = row;  // Ajusta según el CSV
+                    await connection.execute(
+                        'INSERT INTO my_table (name, age) VALUES (?, ?)',
+                        [name, age]
+                    );
+                }
+
+                console.log('Datos insertados con éxito');
+                await connection.end();
+            });
+    } catch (error) {
+        console.error('Error:', error);
+        await connection.end();
+    }
+}      
+
+
+app.post('/save-table-data', async (req, res) => {
+    console.log('reg salvar')
+    const data = req.body;
+
+    if (!Array.isArray(data) || data.length === 0) {
+        return res.status(400).json({ message: 'No data provided' });
+    }
+
+    try {
+        const connection = await pool.getConnection();
+        await connection.beginTransaction();
+
+        for (const item of data) {
+            const { name, age } = item;
+                await pool.execute('INSERT INTO my_table (name, age) VALUES (?, ?)', [name, age]    
+            );
+        }
+        await connection.commit();
+        connection.release();
+ 
+//        res.json({ message: 'Data saved successfully' });
+
+        res.json({
+            status: 'success',
+            title: 'Registro Exitoso',
+            message: '¡Registrado correctamente!'
+        })
+
+    } catch (error) {
+        console.error('Error saving data:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}); 
+
