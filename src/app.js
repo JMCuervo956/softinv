@@ -331,9 +331,9 @@ app.post('/preguntaseli', async (req, res) => {
         const pgtas = req.body.pgtas;
 
         // Log para depuración
-//        const [rows] = await pool.execute('delete from sarlaft.preguntas where id = ?', [ids]);        
+        const [rows] = await pool.execute('delete from sarlaft.preguntas where id = ?', [ids]);        
 //        await pool.execute('UPDATE preguntas SET estado=1 WHERE id = ?', [ids]);
-        await pool.execute('delete from preguntas WHERE id = ?', [ids]);
+//        await pool.execute('delete from preguntas WHERE id = ?', [ids]);
         return res.json({
             status: 'success',
             title: 'Borrado Exitoso.',
