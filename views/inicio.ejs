@@ -97,7 +97,6 @@
                 <input type="text" class="input-small" placeholder="Identificador" name="Identi" required>
                 <br><br>
                 <button type="button" id="clickButton" onclick="submitForm()">Continuar</button>
-                <input type="submit" class="btn-login" value="Login">
             </form>
         </section>  
         <section class="image-section">
@@ -107,7 +106,7 @@
     </main>
 
     <footer>
-        <p>Desarrollado por [Tu Nombre]</p>
+        <p>2024 - JMSOFT -  Todos los derechos reservados.</p>
     </footer>
 
     <!-- Script colocado justo antes de cerrar la etiqueta body -->
@@ -115,7 +114,7 @@
         function submitForm() {
             const form = document.getElementById('votingForm');
             if (form.checkValidity()) {
-                   window.location.href = '/menuprc'
+                   window.location.href = '/login'
             } else {
                 // Si el campo es inválido, puedes mostrar un mensaje aquí si deseas
                 alert("Por favor, complete el campo identificador.");
