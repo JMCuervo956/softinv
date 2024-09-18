@@ -60,6 +60,7 @@ app.use((req, res, next) => {
 // Configuración para servir archivos estáticos desde el directorio 'public'
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(bodyParser.json()); // para cargue de archivos
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Middleware para parsear datos del formulario (application/x-www-form-urlencoded)
 app.use(express.urlencoded({ extended: true }));
@@ -288,6 +289,31 @@ app.post('/preguntaseli', async (req, res) => {
     }
 });
 
+/* voto opc1 */
+
+app.post('/procesar-seleccion', async (req, res) => {
+    try {
+        const selectedValue = req.body.preguntas; // Obtén el valor seleccionado
+        console.log('Valor seleccionado:', selectedValue);
+
+        //        const pgtas = req.body.pgtas;
+
+        // Log para depuración
+        await pool.execute('select * from sarlaft.`users` where id=1');
+        return res.json({
+            status: 'success',
+            title: 'Voto Exitoso.',
+            message: '¡Registro Exitoso! BD'
+        });
+ 
+    } catch (error) {
+        res.json({
+            status: 'error',
+            title: 'Borrado de Preguta NO Exitoso',
+            message: `Error: ${error.message}`
+        });
+    }
+});
 
 // SUBIR ARCHIVO TXT
  
@@ -320,11 +346,11 @@ app.get('/opcbtn', async (req, res) => {
         res.status(500).send('Error conectando a la base de datos.');
     }
 });
- 
+
 app.get('/opc1', async (req, res) => {
     try {
-        const [rows] = await pool.execute("select * from preguntas where estado=0");
-        res.render('opc1', { data: rows });
+        const [rows] = await pool.execute("select a.texto,a.estado,b.respuesta,b.estado from sarlaft.preguntas a inner join sarlaft.pgtaresp b on a.id=b.idprg where a.estado=0");
+        res.render('opc1', { preguntas: rows });
     } catch (error) {
         res.status(500).send('Error conectando a la base de datos.');
     }

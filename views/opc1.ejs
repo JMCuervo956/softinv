@@ -12,19 +12,23 @@
     <a href="/menuprc" class="btn-cancel">Regresar</a>
     <h1></h1>
     <div class="content">
-        <% if (data && data.length > 0) { %>
-            <h2 style="font-family: 'Arial', sans-serif; font-size: 30px; color: rgb(216, 19, 45); font-weight: bold;"> <%= data[0].texto %> </h2>
-            <div class="register-formIzq1">  
+        <% if (preguntas && preguntas.length > 0) { %>
+            <h2 style="font-family: 'Arial', sans-serif; font-size: 30px; color: rgb(216, 19, 45); font-weight: bold;"> <%= preguntas[0].texto %> </h2>
+            <div class="register-formIzq1"> 
                 <div style="font-size: 20px;"> 
-                    <form action="/procesar-seleccion" method="POST">
-                        <% data.forEach(function(item) { %>
+
+                    <form id="votingForm" action="/procesar-seleccion" method="POST"> 
+                        <% preguntas.forEach(function(item) { %>
                             <div>
-                                <input type="checkbox" name="preguntas" value="<%= item.id %>">
-                                <label><%= item.texto %></label>
+                                <input type="radio" name="preguntas" value="<%= item.id %>" id="respuesta-<%= item.id %>" checked>
+                                <label for="respuesta-<%= item.id %>"><%= item.respuesta %></label><br>
                             </div>
                         <% }); %>
-                        <br>
-                        <input type="submit" class="btn-save" value="Votar">
+                        <br> 
+                        <div style="display: inline;">
+                            <h5></h5>
+                            <input type="submit" class="btn-save" value="Votar">
+                        </div>
                     </form>
                     </div>   
                 </div>    
@@ -36,6 +40,46 @@
             </tr>
         <% } %>
     </div>
+
+    <script>
+        document.getElementById('votingForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
+
+            const formData = new FormData(this);
+            const response = await fetch('/procesar-seleccion', {
+                method: 'POST',
+                body: new URLSearchParams(formData)
+            });
+            console.log('i2')
+
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                Swal.fire({
+                    title: result.title,
+                    text: result.message,
+                    icon: result.status,
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    window.location.href = '/menuprc'; // Redirigir al usuario si es necesario
+                });
+            } else {
+                Swal.fire({
+                    title: result.title,
+                    text: result.message,
+                    icon: result.status,
+                    showConfirmButton: true
+                });
+            }
+
+        });
+    </script>
+    <%- include('partials/footer') %>  
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/src/main.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>    
+
 </body>
 </html>
 
