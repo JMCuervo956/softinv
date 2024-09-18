@@ -129,7 +129,7 @@ app.post('/auth', async (req, res) => {
     const pass = req.body.pass;
     
     // Define el nombre de la tabla como una variable
-    const tableName = 'tbl1_users'; // Puedes cambiar 'users' por cualquier nombre de tabla que desees usar
+    const tableName = 'users'; // Puedes cambiar 'users' por cualquier nombre de tabla que desees usar
     // Usa la variable en la consulta SQL
     const [rows] = await pool.execute(`SELECT * FROM ${tableName} WHERE user = ?`, [user]);
 
@@ -169,7 +169,7 @@ app.post('/preguntasreg', async (req, res) => {
     try {
         const pgtas = req.body.pgtas;
         // Log para depuración
-        const tableName = "tbl1_preguntas";
+        const tableName = "preguntas";
         const [rows] = await pool.execute(`select * FROM ${tableName} WHERE texto = ?`, [pgtas]);
         if (rows.length > 0) {
             return res.json({
@@ -379,7 +379,7 @@ app.post('/procesar-preguntas-opciones', async (req, res) => {
 
 app.get('/ingpreguntas', async (req, res) => {
     try {
-        const tableName = "tbl1_preguntas";
+        const tableName = "preguntas";
         const [rows] = await pool.execute(`select * from ${tableName}`);
 //        const [rows] = await pool.execute("select * from preguntas where estado=0");
         

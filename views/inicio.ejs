@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplicación Web Responsive</title>
-    <link rel="stylesheet" href="style.css">
-
+   
     <style>
                 * {
             margin: 0;
@@ -80,42 +79,49 @@
                 padding-bottom: 20px;
             }
         }
-
     </style>
-    
+
 </head>
 <body>
     <header>
-        <h1>ASAMBLEAS</h1>
+        <h1>Asamblea</h1>
     </header>
 
     <main>
         <section class="content">
             <h2>Bienvenido</h2>
-            <p>Esta es una aplicación web simple que se ajusta a diferentes tamaños de pantalla.</p>
             <br><br>
-            <label for="rz" >Identificador</label>           
-            <input type="text" class="input-small" placeholder="Identificador" name="Identi" autocomplete="off" required> 
-            <br><br>
-            <button id="clickButton">Haz clic aquí</button>
-        </section>
+            <p>Esta aplicación web le permite realizar votacion de acuerdo a la establecido</p>
+            <br>
+            <form id="votingForm" action="/your-action-url" method="post">
+                <input type="text" class="input-small" placeholder="Identificador" name="Identi" required>
+                <br><br>
+                <button type="button" id="clickButton" onclick="submitForm()">Continuar</button>
+                <input type="submit" class="btn-login" value="Login">
+            </form>
+        </section>  
         <section class="image-section">
-            <img src="img/edificios3.jpg" alt="Banner" class="img-fluid">   
+<!--            <img src="https://via.placeholder.com/300" alt="Imagen de ejemplo">  
+            <img src="img/edificios3.jpg" alt="Banner" class="img-fluid">   -->
         </section>
     </main>
 
     <footer>
-        <p>2024 - JMSOFT -  Todos los derechos reservados.</p>
+        <p>Desarrollado por [Tu Nombre]</p>
     </footer>
 
     <!-- Script colocado justo antes de cerrar la etiqueta body -->
     <script>
-        document.getElementById('clickButton').addEventListener('click', function() {
-            window.location.href = 'login'; // Ruta de tu página de login
-            <!--            alert('¡Botón clicado!');  -->
-        });
+        function submitForm() {
+            const form = document.getElementById('votingForm');
+            if (form.checkValidity()) {
+                   window.location.href = '/menuprc'
+            } else {
+                // Si el campo es inválido, puedes mostrar un mensaje aquí si deseas
+                alert("Por favor, complete el campo identificador.");
+            }
+        }
     </script>
-
     <script src="script.js"></script>
 </body>
 </html>
