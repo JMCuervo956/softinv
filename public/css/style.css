@@ -288,18 +288,37 @@ form button{
     border-radius: 10px;
     }
 
-/* Estilos normales del botón */
+/* Estilos normales del botón 
 .btn-hover-effect {
-    transition: all 0.3s ease-in-out;
+    transition: all 0.1s ease-in-out;
 }
+*/
 
 /* Efecto al pasar el ratón */
-.btn-hover-effect:hover {
-    background-color: #ffcc00; /* Cambia el color de fondo al pasar el mouse */
+.btnind-hover-effect:hover {
+    background-color: #9900ff; /* Cambia el color de fondo al pasar el mouse */
     color: #fff; /* Cambia el color del texto al pasar el mouse */
-    transform: scale(1.05); /* Aplica un leve aumento de tamaño */
+    transform: scale(1.10); /* Aplica un leve aumento de tamaño */
     text-decoration: underline; /* Añade subrayado */
-    font-weight: bold; /* Cambia el texto a negrita */
+    /*font-weight: bold;  Cambia el texto a negrita */
+}
+/* Efecto al pasar el ratón */
+.btn-hover-effect:hover {
+    background-color: #9900ff; /* Cambia el color de fondo al pasar el mouse */
+    color: #fff; /* Cambia el color del texto al pasar el mouse */
+    transform: scale(1.50); /* Aplica un leve aumento de tamaño */
+    text-decoration: underline; /* Añade subrayado */
+    /*font-weight: bold;  Cambia el texto a negrita */
+}
+
+
+/* Efecto al pasar el ratón */
+.tex-hover-effect:hover {
+    background-color: #11013f; /* Cambia el color de fondo al pasar el mouse */
+    color: #cec2c2; /* Cambia el color del texto al pasar el mouse */
+    transform: scale(1.00); /* Aplica un leve aumento de tamaño */
+    text-decoration: underline; /* Añade subrayado */
+    /*font-weight: bold;  Cambia el texto a negrita */
 }
 
 

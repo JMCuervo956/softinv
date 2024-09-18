@@ -1,3 +1,90 @@
+
+
+
+// preguntas - post
+app.post('/preguntasreg', async (req, res) => {
+    try {
+        const pgtas = req.body.pgtas;
+        // Log para depuración
+//        const [rows] = await pool.execute('SELECT * FROM preguntas WHERE texto = ? and estado = 0', [pgtas]);
+        const [rows] = await pool.execute('SELECT * FROM preguntas WHERE texto = ?', [pgtas]);
+        if (rows.length > 0) {
+            return res.json({
+                status: 'error',
+                title: 'Error',
+                message: 'Pregunta ya Existe'
+            });
+        }
+        // Insertar nueva pregunta
+
+        const date = new Date();
+        console.log(date);
+        const estado = 0; // Ejemplo de estado
+        await pool.execute('INSERT INTO preguntas (texto, estado, fechacreacion, fechaproceso) VALUES (?, ?, ?, ?,)', [pgtas, 0, curdate(), null]);
+        res.json({
+            status: 'success',
+            title: 'Registro Exitoso',
+            message: '¡Registrado correctamente!'
+        });
+        
+    } catch (error) {
+        res.json({
+            status: 'success',
+            title: 'Registro de Preguta NO Exitoso...aqui',
+            message: '¡Error en el servidor! BD'
+        });
+    }
+});
+
+
+
+/************************************************************** */
+
+// 11. Autenticacion 
+
+app.post('/auth', async (req, res) => {
+    const user = req.body.user;
+    const pass = req.body.pass;
+    
+    // Define el nombre de la tabla como una variable
+    const tableName = 'tbl1_users'; // Puedes cambiar 'users' por cualquier nombre de tabla que desees usar
+    
+    // Usa la variable en la consulta SQL
+    const [rows] = await pool.execute(`SELECT * FROM ${tableName} WHERE user = ?`, [user]);
+
+    // Verificar si se encontró el usuario
+    if (rows.length === 0) {
+        return res.json({
+            status: 'error',
+            title: 'Error',
+            message: 'Usuario no encontrado'
+        });
+    }
+
+    const userRecord = rows[0];
+    const passwordMatch = await bcryptjs.compare(pass, userRecord.pass);
+
+    // Verificar si la contraseña es correcta
+    if (!passwordMatch) {
+        return res.json({
+            status: 'error',
+            title: 'Error',
+            message: 'Contraseña incorrecta'
+        });
+    }
+
+    // Autenticación exitosa
+    req.session.loggedin = true;
+    req.session.user = user;
+    return res.json({
+        status: 'success',
+        title: 'Conexión Exitosa',
+        message: '!LOGIN Correcto!'
+    });
+});
+
+/************************************************************** */
+
 // 1. - Invocamos a express   
 // import express from 'express'; ???????????????
 import express, { Router } from 'express';
@@ -80,7 +167,7 @@ app.get('/', async (req, res) => {
     try {
         // Renderiza la plantilla 'video.ejs'
         const greeting = getGreeting();
-        res.render('inicio');
+        res.render('login');
     } catch (error) {
         console.error('Error al renderizar la plantilla:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
@@ -88,10 +175,6 @@ app.get('/', async (req, res) => {
 });
 
 // Ruta para renderizar la galería de imágenes
-
-app.get('/login', (req, res)=>{
-    res.render('login'); 
-})
 
 app.get('/menuprc', (req, res)=>{
     res.render('menuprc'); 
@@ -130,6 +213,7 @@ app.post('/auth', async (req, res) => {
     
     // Define el nombre de la tabla como una variable
     const tableName = 'tbl1_users'; // Puedes cambiar 'users' por cualquier nombre de tabla que desees usar
+    
     // Usa la variable en la consulta SQL
     const [rows] = await pool.execute(`SELECT * FROM ${tableName} WHERE user = ?`, [user]);
 
@@ -169,8 +253,7 @@ app.post('/preguntasreg', async (req, res) => {
     try {
         const pgtas = req.body.pgtas;
         // Log para depuración
-        const tableName = "tbl1_preguntas";
-        const [rows] = await pool.execute(`select * FROM ${tableName} WHERE texto = ?`, [pgtas]);
+        const [rows] = await pool.execute('SELECT * FROM preguntas WHERE texto = ? and estado = 0', [pgtas]);
         if (rows.length > 0) {
             return res.json({
                 status: 'error',
@@ -179,10 +262,8 @@ app.post('/preguntasreg', async (req, res) => {
             });
         }
 
-        const date = new Date();
-        console.log(date);
-        const estado = 0; // Ejemplo de estado
-        await pool.execute(`INSERT INTO ${tableName} (texto, estado, fechacreacion) VALUES (?, ?, ?)`, [pgtas, estado, date]);
+        // Insertar nueva pregunta
+        await pool.execute('INSERT INTO preguntas (texto, estado, fechacreacion, fechaproceso) VALUES (?, ?, ?, ?,)', [pgtas, 0, curdate(), null]);
         res.json({
             status: 'success',
             title: 'Registro Exitoso',
@@ -379,10 +460,7 @@ app.post('/procesar-preguntas-opciones', async (req, res) => {
 
 app.get('/ingpreguntas', async (req, res) => {
     try {
-        const tableName = "tbl1_preguntas";
-        const [rows] = await pool.execute(`select * from ${tableName}`);
-//        const [rows] = await pool.execute("select * from preguntas where estado=0");
-        
+        const [rows] = await pool.execute("select * from preguntas where estado=0");
         res.render('ingpreguntas', { data: rows });
     } catch (error) {
                 console.error('Error conectando a la base de datos....????:', error);

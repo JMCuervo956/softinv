@@ -16,11 +16,17 @@
             <!-- Aquí se aplica el fondo -->
         </div>
         <div class="register-form"> 
-                <form id="loginForm" action="/auth" method='POST'>
+                <form onsubmit="clearFields()" id="loginForm" action="/auth" method='POST'>
+
                     <label for="user" >Usuario</label>           
-                    <input type="text" name="user" required>
-                    <label for="pass" >password</label>           
-                    <input type="password" name="pass" required> 
+                    <input type="text" class="input-small" placeholder="Usuario" name="user" autocomplete="aaa" required>
+
+                    <label for="pass" >Contraseña</label>           
+                    <input type="password" class="input-small" placeholder="Contraseña" name="pass" autocomplete="off" required> 
+
+                    <label for="rz" >Identificador</label>           
+                    <input type="text" class="input-small" placeholder="Identificador" name="Identi" autocomplete="off" required> 
+                    <br><br>
                     <div style="display: inline;">
                         <h5></h5>
                         <input type="submit" class="btn-login" value="Login">

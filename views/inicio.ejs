@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplicación Web Responsive</title>
     <link rel="stylesheet" href="style.css">
+
     <style>
                 * {
             margin: 0;
@@ -81,32 +82,37 @@
         }
 
     </style>
+    
 </head>
 <body>
     <header>
-        <h1>Mi Aplicación Web</h1>
+        <h1>ASAMBLEAS</h1>
     </header>
 
     <main>
         <section class="content">
             <h2>Bienvenido</h2>
             <p>Esta es una aplicación web simple que se ajusta a diferentes tamaños de pantalla.</p>
+            <br><br>
+            <label for="rz" >Identificador</label>           
+            <input type="text" class="input-small" placeholder="Identificador" name="Identi" autocomplete="off" required> 
+            <br><br>
             <button id="clickButton">Haz clic aquí</button>
         </section>
         <section class="image-section">
-<!--            <img src="https://via.placeholder.com/300" alt="Imagen de ejemplo">  -->
             <img src="img/edificios3.jpg" alt="Banner" class="img-fluid">   
         </section>
     </main>
 
     <footer>
-        <p>Desarrollado por [Tu Nombre]</p>
+        <p>2024 - JMSOFT -  Todos los derechos reservados.</p>
     </footer>
 
     <!-- Script colocado justo antes de cerrar la etiqueta body -->
     <script>
         document.getElementById('clickButton').addEventListener('click', function() {
-            alert('¡Botón clicado!');
+            window.location.href = 'login'; // Ruta de tu página de login
+            <!--            alert('¡Botón clicado!');  -->
         });
     </script>
 
