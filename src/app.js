@@ -1,5 +1,6 @@
 // 1. - Invocamos a express   
 // import express from 'express'; ???????????????
+
 import express, { Router } from 'express';
 import session from 'express-session';
 import {pool} from './db.js';
@@ -57,10 +58,15 @@ app.use((req, res, next) => {
     next();
   });
 
+
+ // Middleware
+app.use(express.static(path.join(path.dirname(fileURLToPath(import.meta.url)), '../public')));
+ 
 // Configuración para servir archivos estáticos desde el directorio 'public'
 app.use(express.static(path.join(__dirname, '../public')));
-app.use(bodyParser.json()); // para cargue de archivos
-app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.json()); // para cargue de archivos
+//app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json()); 
 
 // Middleware para parsear datos del formulario (application/x-www-form-urlencoded)
 app.use(express.urlencoded({ extended: true }));
@@ -181,7 +187,6 @@ app.post('/preguntasreg', async (req, res) => {
         }
 
         const date = new Date();
-        console.log(date);
         const estado = 0; // Ejemplo de estado
         await pool.execute(`INSERT INTO ${tableName} (texto, estado, fechacreacion) VALUES (?, ?, ?)`, [pgtas, estado, date]);
         res.json({
@@ -290,15 +295,12 @@ app.post('/preguntaseli', async (req, res) => {
 });
 
 /* voto opc1 */
-
-app.post('/procesar-seleccion', async (req, res) => {
+app.post('/procesarseleccion', async (req, res) => {
+//    console.log('Datos recibidos:', req.body); // Asegúrate de que esto imprima correctamente
+    const selectedValue = req.body.preguntas; // Esto debe contener el valor seleccionado
+//    console.log('Valor seleccionado:', selectedValue);
     try {
         const selectedValue = req.body.preguntas; // Obtén el valor seleccionado
-        console.log('Valor seleccionado:', selectedValue);
-
-        //        const pgtas = req.body.pgtas;
-
-        // Log para depuración
         await pool.execute('select * from `users` where id=1');
         return res.json({
             status: 'success',
