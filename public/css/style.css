@@ -136,7 +136,7 @@ form{
 }
 
 .register-formIzq{
-    width:150px;
+    width:200px;
     margin: 15px;
     padding: 10px; /* 20px 20px 20px 20px; Espacio : Sup, der, inf, izq */
     margin-top: 15px;
@@ -283,7 +283,7 @@ form button{
     border: 0;
     box-sizing: border-box;
     cursor: pointer;
-    font-size: 20px;    
+    font-size: 15px;    
     color: #ffffff;
     border-radius: 10px;
     }

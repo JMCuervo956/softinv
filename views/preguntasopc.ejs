@@ -1,4 +1,3 @@
-<!-- register.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -14,12 +13,18 @@
 <body>
     <%- include('partials/navigation') %>  
     <h5 style="color: blue; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); transition: color 0.3s ease;" onmouseover="this.style.color='darkblue';" onmouseout="this.style.color='blue';">Usuario: <%= name %></h5>
+
+    <div class="register-formcda"> 
+        <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Pregunta:  </span><%= id %> 
+        <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Pregunta:  </span><%= respuesta %> 
+    </div>
+
     <div class="content">
         <div class="register-formcda" > 
-            <h5>Registro de Preguntas</h5>
+            <h5>Opciones de Preguntas</h5>
         </div>
         <div class="register-formcda"> 
-            <form id="registerForm" action="/preguntasreg" method='POST'> 
+            <form id="registerForm" action="/preguntasregopc" method='POST'> 
                 <div class="contenedor__login-register">
                     <br>
                     <input type="text" name="pgtas" class="input-small" placeholder="Pregunta" required>
@@ -27,7 +32,7 @@
                     <h1></h1>    
                     <div style="display: inline;">
                         <h5></h5>
-                        <a href="/ingpreguntas" class="btn-cancel"> Regresar </a><input type="submit" class="btn-save" value=" Registrar ">
+                        <a href="/opciones?id=<%= id %>&texto=<%= respuesta %>" class="btn-cancel"> Regresar </a><input type="submit" class="btn-save" value=" Registrar ">
                     </div>
                 </div>       
             </form>    

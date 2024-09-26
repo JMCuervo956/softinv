@@ -11,124 +11,74 @@
     <!-- cabecera -->
     <%- include('partials/head') %> <!-- <link rel="stylesheet" href="main.css"> /// partial para repetir en cada una de las paginas -->
     <style>
-        th {
+
+            th {
             border: 1px solid rgb(247, 244, 244);
             padding: 8px;
             text-align: left;
         }
 
-        /* CSS para ajustar el ancho de la segunda columna */
-        .table td:nth-child(2), .table th:nth-child(2) {
-            width: 50px; /* Ajusta este valor según tus necesidades */
-        }
-</style>
+        .successImage {
+            display: none; /* Ocultar inicialmente */
+            width: 50px; /* Ajusta el tamaño según necesites */
+            margin-top: 10px; /* Espacio superior */
+        }        
+
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
     <%- include('partials/navigation') %>  
-    <div class="register-formcda"> 
-        <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Pregunta:  </span><%= texto %> 
-    </div>
-    <br>
+    <h5 style="color: blue; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); transition: color 0.3s ease;" onmouseover="this.style.color='darkblue';" onmouseout="this.style.color='blue';">Usuario: <%= name %></h5>
+    <h5 style="color: #e04010c7; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); text-align: center;">Pregunta</h5>
+    <h4 style="text-align: center;"><%= texto %></h4>
     <div class="content">
-            <h5 style="font-size: 14px; color: #5f14b6; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">ADICIONAR RESPUESTAS</h5> 
-    <!--    <div class="register-formcda" > 
-                 <h5 style="font-size: 24px; color: #5f14b6; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">ADICIONAR OPCIONES</h5>  
-            </div>  -->
-            <H1></H1>
-            <div>
-                <div class="container mt-1">
-                    <table class="table table-bordered table-hover" style="background-color: transparent; border: 0px solid transparent;">
-                        <colgroup>
-                            <col style="width: 20px;"> <!-- Ancho de la primera columna -->
-                            <col style="width: 20px;"> <!-- Ancho de la segunda columna -->
-                        <colgroup>
-                            <col style="width: 100px;"> <!-- Ancho de la primera columna -->
-                            <col style="width: 100px;"> <!-- Ancho de la segunda columna -->
-                        </colgroup>
-                        </colgroup>
-                    </table>
-                </div>
-                <div class="container mt-1">
-                    <table class="table table-bordered table-hover"  style="border: 1px solid transparent;">
-                            <colgroup>
-                                <col style="width: 50px;"> <!-- Ancho de la primera columna -->
-                                <col style="width: 10px;"> <!-- Ancho de la segunda columna -->
-                            <colgroup>
-                                <col style="width: 40px;"> <!-- Ancho de la primera columna -->
-                                <col style="width: 100px;"> <!-- Ancho de la segunda columna -->
-                            </colgroup>
-                            </colgroup>
-
-                        <thead>
-                            <tr>
-                                <th>
-                                    <a href="/preguntas" class="btn btn-primary btn-sm">Adicionar</a>
-                                    <a href="/ingpreguntas" class="btn btn-success btn-sm">Regresar</a>
-
-                                </th>
-                                <th>
-                                    <div class="btn-container">
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <% if (data && data.length > 0) { %>
-                                <% data.forEach(function(item) { %>
-                                    <tr>
-                                        <td><%= item.respuesta %></td>
-                                        <td>
-                                            <div class="btn-container">
-                                                <a href="/modificar?id=<%= item.id %>&texto=<%= item.respuesta %>" class="btn btn-warning btn-sm">Modificar</a>
-                                                <a href="/eliminar?id=<%= item.id %>&texto=<%= item.respuesta %>" class="btn btn-danger btn-sm">Eliminar</a>
-
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <% }); %>
-                            <% } else { %> 
-                                <tr>
-                                    <td colspan="2">No hay datos disponibles</td>   
-                                </tr>
-                            <% } %>
-
-                        </tbody>
-                    </table>
-                </div>
+        <div>    
+            <div class="container mt-1">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <th>
+                            <a href="/ingpreguntas" class="btn btn-success btn-sm btnind-hover-effect">Regresar</a>
+                            <a href="/preguntasopc?id=<%= id %>&respuesta=<%= texto %>" class="btn btn-primary btn-sm">Adicionar</a>
+                        </th>
+                    </thead>        
+                </table>
             </div>
+            <h5 style="color: #5a6904c7; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); text-align: center;">Opciones de respuesta</h5>
+            <div class="container mt-1">
+                        <table class="table table-bordered table-hover">
+                            <thead></thead>        
+                            <tbody>
+                                <% if (data && data.length > 0) { %>
+                                    <% data.forEach(function(item) { %>
+                                        <tr>
+                                            <td class="tex-hover-effect"><%= item.respuesta %></td>
+                                            <td>
+                                                <a href="/modopc?idvlrprg=<%= item.id %>&respuesta=<%= item.respuesta %>" class="btn btn-warning btn-sm btn-hover-effect ">Mod</a>
+                                            </td>
+                                            <td>
+                                                <a href="/eliopc?id=<%= item.id %>&respuesta=<%= item.respuesta %>" class="btn btn-danger btn-sm btn-hover-effect ">Ret</a>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                <% } else { %> 
+                                    <tr>
+                                        <td colspan="3">No hay datos disponibles</td> <!-- Cambié colspan a 3 -->
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+            </div>    
         </div>
-
-<!--
-        <script>
-            document.getElementById('registerForm').addEventListener('submit', async function(event) {
-                event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
-                const formData = new FormData(this);
-                const response = await fetch('/preguntasmod', {
-                    method: 'POST',
-                    body: new URLSearchParams(formData)
-                });
-                const result = await response.json();
-                Swal.fire({
-                    title: result.title || 'Error',
-                    text: result.message || 'Hubo un problema',
-                    icon: result.status,
-                    showConfirmButton: true,
-                    timer: result.status === 'success' ? 2500 : null // Timer solo para éxito
-                }).then(() => {
-                    if (result.status === 'success') {
-                        window.location.href = '/ingpreguntas'; // Redirigir al usuario si es necesario
-                    }
-                });
-            });
-        </script>
--->        
+    </div>
     <%- include('partials/footer') %>
     <!-- Enlace a Bootstrap JS y dependencias desde CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
+
+
 </html>

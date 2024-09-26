@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfica con Valores y Porcentajes</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <style>
+        /* Ajustamos el tamaño del contenedor */
+        #chart-container {
+            width: 400px;
+            height: 300px;
+        }
+
+        #myChart {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+    <%- include('partials/head') %>
+</head>
+<body>
+<%- include('partials/navigation') %>  
+<div class="content">
+    <div id="chart-container">
+        <canvas id="myChart"></canvas>
+    </div>
+    <a href="/menuprc" class="btn btn-success btn-sm btnind-hover-effect">Regresar</a>
+</div>    
+    <script>
+        const labels = ['Rojo', 'Azul', 'Amarillo'];  // Definimos las etiquetas aquí
+        const dataValues = [12, 19, 3];  // Valores de la gráfica
+        const total = dataValues.reduce((a, b) => a + b, 0);  // Total de valores
+        const dataPercentage = dataValues.map(value => ((value / total) * 100).toFixed(2));  // Porcentajes
+
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,  // Usamos la constante de labels aquí
+                datasets: [{
+                    label: 'Votos',  // Etiqueta del conjunto
+                    data: dataValues,  // Datos de valores
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)', 
+                        'rgba(54, 162, 235, 0.2)', 
+                        'rgba(255, 206, 86, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)', 
+                        'rgba(54, 162, 235, 1)', 
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                aspectRatio: 1.5,  // Controlar el ratio de aspecto
+                responsive: true,   // Hacer el gráfico responsive
+                plugins: {
+                    legend: {
+                        display: false  // Ocultar la leyenda
+                    },
+                    datalabels: {  // Habilitar las etiquetas sobre las barras
+                        color: 'black',  // Color de las etiquetas
+                        anchor: 'start',  // Etiqueta en la parte inferior
+                        align: 'end',  // Alineación al final (debajo de la barra)
+                        offset: 20,  // Ajuste hacia abajo de la etiqueta valor y %
+                        formatter: function(value, context) {
+                            const percentage = dataPercentage[context.dataIndex];
+                            return `Votos : ${value}\n\n${percentage}%`;
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false  // Quitar la cuadrícula vertical
+                        },
+                        ticks: {
+                            font: {
+                                weight: 'bold',  // Negrita para los nombres
+                                size: 14,        // Tamaño de fuente
+                                color: 'blue'    // Color de texto
+                            }
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                            // color: 'rgba(0, 0, 0, 0.1)'  // Color de la cuadrícula horizontal (opcional)
+                        },
+                        beginAtZero: true  // Asegurar que el eje Y comience en 0
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]  // Activar el plugin de DataLabels
+        });
+    </script>
+    <%- include('partials/footer') %>  
+</body>
+</html>

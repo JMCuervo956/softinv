@@ -6,172 +6,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
     <title>Asamblea</title>
-    <!-- Enlace a Bootstrap CSS desde CDN -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- cabecera -->
-    <%- include('partials/head') %> <!-- <link rel="stylesheet" href="main.css"> /// partial para repetir en cada una de las paginas -->
+    <%- include('partials/head') %>
     <style>
         th {
             border: 1px solid rgb(247, 244, 244);
             padding: 8px;
             text-align: left;
         }
-    </style>
-<!--
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid rgb(247, 244, 244);
-            padding: 8px;
-            text-align: left;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        header {
-            background-color: #4CAF50;
-            color: white;
-            text-align: center;
-            padding: 1rem;
-        }
-
-        main {
-            flex: 1;
-            padding: 20px;
-        }
-
-        .content {
-            padding: 20px;
-        }
-
-        .image-section {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        footer {
-            background-color: #4CAF50;
-            color: white;
-            text-align: center;
-            padding: 10px;
-        }
-
-        button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin: 5px;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        /* Estilos para pantallas pequeñas */
-        @media (max-width: 768px) {
-            .content {
-                padding: 10px;
-            }
-
-            table {
-                font-size: 14px;
-            }
-
-            button {
-                padding: 8px 16px;
-                font-size: 14px;
-                margin: 5px 0;
-                display: block;
-                width: 100%;
-            }
-
-            .btn-container {
-                display: flex;
-                flex-direction: column;
-                align-items: stretch;
-            }
+        .successImage {
+            display: none; /* Ocultar inicialmente */
+            width: 50px; /* Ajusta el tamaño según necesites */
+            margin-top: 10px; /* Espacio superior */
         }
     </style>
--->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
     <%- include('partials/navigation') %>  
+    <h5 style="color: blue; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); transition: color 0.3s ease;" onmouseover="this.style.color='darkblue';" onmouseout="this.style.color='blue';">Usuario: <%= name %></h5>
     <br>
-        <div class="content">
-            <div>
-                <div class="container mt-1">
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                            <th>
-                                <h4>Preguntas</h4>
-                                <a href="/menuprc" class="btn btn-success btn-sm btnind-hover-effect">Regresar</a>
-                                <a href="/preguntas" class="btn btn-primary btn-sm btnind-hover-effect">Adicionar</a>
-                            </th>
-                        </thead>        
-                    </table>
-                </div>
+    <div class="content">
+        <div>
+            <div class="container mt-1">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <th>
+                            <h4>Preguntas</h4>
+                            <a href="/menuprc" class="btn btn-success btn-sm btnind-hover-effect">Regresar</a>
+                            <a href="/preguntas" class="btn btn-primary btn-sm btnind-hover-effect">Adicionar</a>
+                        </th>
+                    </thead>        
+                </table>
+            </div>
 
-                <div class="container mt-1">
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                        </thead>
-                        <tbody>
-                            <% if (data && data.length > 0) { %>
-                                <% data.forEach(function(item) { %>
-                                    <tr>
-                                        <td class="tex-hover-effect "><%= item.texto %></td>
-                                        <td>
-                                            <a href="/modificar?id=<%= item.id %>&texto=<%= item.texto %>" class="btn btn-warning btn-sm btn-hover-effect ">Mod</a>
-                                        </td>
-                                        <td>
-                                            <a href="/eliminar?id=<%= item.id %>&texto=<%= item.texto %>" class="btn btn-danger btn-sm btn-hover-effect ">Ret</a>
-                                       </td>
-                                        <td>
-                                            <a href="/opciones?id=<%= item.id %>&texto=<%= item.texto %>" class="btn btn-primary btn-sm btn-hover-effect">Opc</a>
-                                        </td>
-                                    </tr>
-                                <% }); %>
-                            <% } else { %> 
+            <div class="container mt-1">
+                <table class="table table-bordered table-hover">
+                    <thead></thead>
+                    <tbody>
+                        <% if (data && data.length > 0) { %>
+                            <% data.forEach(function(item) { %>
                                 <tr>
-                                    <td colspan="2">No hay datos disponibles</td>   
+                                    <td class="tex-hover-effect"><%= item.texto %></td>
+                                    <td>
+                                        <a href="/modificar?id=<%= item.id %>&texto=<%= item.texto %>" class="btn btn-warning btn-sm btn-hover-effect ">Mod</a>
+                                    </td>
+                                    <td>
+                                        <a href="/eliminar?id=<%= item.id %>&texto=<%= item.texto %>" class="btn btn-danger btn-sm btn-hover-effect ">Ret</a>
+                                    </td>
+                                    <td>
+                                        <a href="/opciones?id=<%= item.id %>&texto=<%= item.texto %>" class="btn btn-primary btn-sm btn-hover-effect">Opc</a>
+                                    </td>
                                 </tr>
-                            <% } %>
-
-                        </tbody>
-                    </table>
-                </div>
+                            <% }); %>
+                        <% } else { %> 
+                            <tr>
+                                <td colspan="5">No hay datos disponibles</td>   
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
             </div>
         </div>
+    </div>
+
     <%- include('partials/footer') %>
 
-
-    <!-- Enlace a Bootstrap JS y dependencias desde CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script>
+        function checkValue(input) {
+            console.log('imagen'); // Este mensaje debería aparecer
+            const successImage = input.parentElement.querySelector('.successImage');
+            if (parseInt(input.value) === 0) {
+                successImage.style.display = 'block'; // Mostrar imagen
+            } else {
+                successImage.style.display = 'none'; // Ocultar imagen
+            }
+        }
+    </script>
 </body>
 </html>

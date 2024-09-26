@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfica de Pastel con Títulos Debajo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Ajustamos el tamaño del contenedor */
+        #chart-container {
+            width: 400px;
+            height: 300px;
+            position: relative;  /* Posicionamiento relativo para los títulos */
+        }
+
+        #myChart {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .legend {
+            display: flex;           /* Usar flexbox para la leyenda */
+            justify-content: space-around; /* Espaciado equitativo */
+            margin-top: 10px;      /* Margen superior */
+        }
+
+        .legend div {
+            text-align: center;     /* Centrar texto */
+        }
+    </style>
+  <%- include('partials/head') %>
+</head>
+<body>
+<%- include('partials/navigation') %>  
+<br><br>
+<div>
+    <a href="/menuprc" class="btn btn-success btn-sm btnind-hover-effect">Regresar</a>
+</div>
+
+<div class="content">
+    
+    <div id="chart-container">
+        <canvas id="myChart"></canvas>
+        <div class="legend">
+            <div>
+                <div style="width: 20px; height: 20px; background-color: rgba(255, 99, 132, 0.2); border: 1px solid rgba(255, 99, 132, 1);"></div>
+                <span>Rojo</span>
+            </div>
+            <div>
+                <div style="width: 20px; height: 20px; background-color: rgba(54, 162, 235, 0.2); border: 1px solid rgba(54, 162, 235, 1);"></div>
+                <span>Azul</span>
+            </div>
+            <div>
+                <div style="width: 20px; height: 20px; background-color: rgba(255, 206, 86, 0.2); border: 1px solid rgba(255, 206, 86, 1);"></div>
+                <span>Amarillo</span>
+            </div>
+        </div>
+    </div>
+</div>    
+<script>
+        const labels = ['Rojo', 'Azul', 'Amarillo'];  // Definimos las etiquetas aquí
+        const dataValues = [12, 19, 3];  // Valores de la gráfica
+        const total = dataValues.reduce((a, b) => a + b, 0);  // Total de valores
+        const dataPercentage = dataValues.map(value => ((value / total) * 100).toFixed(2));  // Porcentajes
+
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'pie',  // Cambiado a gráfico de pastel
+            data: {
+                labels: labels,  // Usamos la constante de labels aquí
+                datasets: [{
+                    label: 'Votos',  // Etiqueta del conjunto
+                    data: dataValues,  // Datos de valores
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)', 
+                        'rgba(54, 162, 235, 0.2)', 
+                        'rgba(255, 206, 86, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)', 
+                        'rgba(54, 162, 235, 1)', 
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,   // Hacer el gráfico responsive
+                plugins: {
+                    legend: {
+                        display: false  // Ocultar la leyenda del gráfico
+                    },
+                    datalabels: {  // Habilitar las etiquetas sobre los segmentos
+                        color: 'black',  // Color de las etiquetas
+                        formatter: function(value, context) {
+                            const percentage = dataPercentage[context.dataIndex];
+                            return `Votos: ${value} \n\n (${percentage}%)`;  // Formato para mostrar valor y porcentaje
+
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]  // Activar el plugin de DataLabels
+        });
+    </script>
+    <%- include('partials/footer') %>  
+</body>
+</html>

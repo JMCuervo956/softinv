@@ -1,4 +1,3 @@
-// api.js
 export async function saveTableData(data) {
     try {
         const response = await fetch('/save-table-data', {
@@ -19,3 +18,5 @@ export async function saveTableData(data) {
         throw error;
     }
 }
+
+

@@ -1,4 +1,4 @@
-// 1. - Invocamos a express   
+// 1. - Invocamos a express    
 // import express from 'express'; ???????????????
 
 import express, { Router } from 'express';
@@ -11,17 +11,27 @@ import { fileURLToPath } from 'url';
 import bcryptjs from 'bcryptjs';
 import { validateCredentials } from './auth.js';
 
+// graficas
+//import Chart from 'https://cdn.jsdelivr.net/npm/chart.js';
+//const module = await import('https://example.com/path/to/module.js');
+//import myModule from './path/to/local/module.js';
+
 // importar archivos
 import fs from 'fs';
 import { readFile } from 'fs/promises';
 import fastcsv from 'fast-csv';
 import bodyParser from 'body-parser';
+import csv from 'csv-parser'; // CARGAR
+//import cors from 'cors';
 
 //import Swal from 'sweetalert2/dist/sweetalert2.js'  
 import Swal from 'sweetalert2';
 import { Console } from 'console';
 //import 'sweetalert2/src/sweetalert2.scss'
 
+// proceso para carga de archivos
+
+import multer from 'multer';
 
 // Función para mostrar la alerta
 function showAlert() {
@@ -33,14 +43,18 @@ function showAlert() {
         timer: 1500 // Duración en milisegundos (1500 ms = 1.5 segundos)
     });
 }
- 
- 
 
 // Definir __dirname manualmente en un entorno ESM 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
  
 const app = express();
+
+// Configuración de multer para manejar la carga de archivos  -- CARGA --
+const upload = multer({ dest: 'uploads/' });
+
+// Configuración de CORS
+//app.use(cors());
 
 // Configura express-session
 app.use(session({
@@ -94,6 +108,7 @@ app.get('/', async (req, res) => {
     }  
 });
 
+
 // Ruta para renderizar la galería de imágenes
 
 app.get('/login', (req, res)=>{
@@ -101,15 +116,43 @@ app.get('/login', (req, res)=>{
 })
 
 app.get('/menuprc', (req, res)=>{
-    res.render('menuprc'); 
+    if (req.session.loggedin) {
+        const userUser = req.session.user;
+        const userName = req.session.name;
+        res.render('menuprc', { user: userUser, name: userName });
+    } else {
+        res.send('Por favor, inicia sesión primero.');
+    }
 })
 
 app.get('/register', (req, res)=>{
-    res.render('register'); 
+    if (req.session.loggedin) {
+        const userUser = req.session.user;
+        const userName = req.session.name;
+        res.render('register', { user: userUser, name: userName });
+    } else {
+        res.send('Por favor, inicia sesión primero.');
+    }
 })
 
 app.get('/preguntas', (req, res)=>{
-    res.render('preguntas'); 
+    if (req.session.loggedin) {
+        const userUser = req.session.user;
+        const userName = req.session.name;
+        res.render('preguntas', { user: userUser, name: userName });
+    } else {
+        res.send('Por favor, inicia sesión primero.');
+    }
+})
+
+app.get('/cargas', (req, res)=>{
+    if (req.session.loggedin) {
+        const userUser = req.session.user;
+        const userName = req.session.name;
+        res.render('cargas', { user: userUser, name: userName });
+    } else {
+        res.send('Por favor, inicia sesión primero.');
+    }
 })
 
 app.get('/tablaguardar', (req, res)=>{
@@ -125,9 +168,44 @@ app.get('/eliminar', (req, res) => {
 app.get('/modificar', (req, res) => {
     const id = req.query.id;
     const texto = req.query.texto;
+    console.log(id);
+    console.log(texto);
     res.render('modificar', { id, texto });
 });
 
+app.get('/preguntasopc', (req, res) => {
+    if (req.session.loggedin) {
+        const userUser = req.session.user;
+        const userName = req.session.name;
+        const id = req.query.id; // Obtén el id
+        const respuesta = req.query.respuesta; // Obtén la respuesta
+        res.render('preguntasopc', { id:id, respuesta:respuesta,user: userUser, name: userName });
+    } else {
+        res.send('Por favor, inicia sesión primero.');
+    }
+});
+
+app.get('/modopc', (req, res) => {
+    const idvlrprg = req.query.idvlrprg; // variable ej> idvlrprg, que se debe usar en modopc idprg
+    const respuesta = req.query.respuesta;
+    console.log(req.query.idvlrprg);
+    console.log(idvlrprg);
+    console.log(respuesta);
+    res.render('modopc', { idvlrprg, respuesta });
+});
+
+
+// Graficos
+
+app.get('/bar', (req, res)=>{
+    res.render('bar'); 
+})
+
+app.get('/pie', (req, res)=>{
+    res.render('pie'); 
+})
+
+// 
 
 // 11. Autenticacion 
 
@@ -139,7 +217,6 @@ app.post('/auth', async (req, res) => {
     const tableName = 'users'; // Puedes cambiar 'users' por cualquier nombre de tabla que desees usar
     // Usa la variable en la consulta SQL
     const [rows] = await pool.execute(`SELECT * FROM ${tableName} WHERE user = ?`, [user]);
-
     // Verificar si se encontró el usuario
     if (rows.length === 0) {
         return res.json({
@@ -148,7 +225,6 @@ app.post('/auth', async (req, res) => {
             message: 'Usuario no encontrado'
         });
     }
-
     const userRecord = rows[0];
     const passwordMatch = await bcryptjs.compare(pass, userRecord.pass);
 
@@ -164,6 +240,11 @@ app.post('/auth', async (req, res) => {
     // Autenticación exitosa
     req.session.loggedin = true;
     req.session.user = user;
+
+    // Guardar el campo deseado en la sesión
+    req.session.user = userRecord.user;  // Guardar el rol del usuario
+    req.session.name = userRecord.name;  // Guardar el email del usuario
+
     return res.json({
         status: 'success',
         title: 'Conexión Exitosa',
@@ -174,9 +255,47 @@ app.post('/auth', async (req, res) => {
 // preguntas - post
 app.post('/preguntasreg', async (req, res) => {
     try {
+        const user = req.body.user;
+        const name = req.body.name;        
         const pgtas = req.body.pgtas;
         // Log para depuración
         const tableName = "preguntas";
+        const [rows] = await pool.execute(`select * FROM ${tableName} WHERE texto = ?`, [pgtas]);
+        if (rows.length > 0) {
+            return res.json({
+                status: 'error',
+                title: 'Error',
+                message: 'Pregunta ya Existe'
+            });
+        }
+
+        const date = new Date();
+        const estado = 0; // Ejemplo de estado
+        await pool.execute(`INSERT INTO ${tableName} (texto, estado, fechacreacion) VALUES (?, ?, ?)`, [pgtas, estado, date]);
+        res.json({
+            status: 'success',
+            title: 'Registro Exitoso',
+            message: '¡Registrado correctamente!'
+
+        });
+    } catch (error) {
+        res.json({
+            status: 'success',
+            title: 'Registro de Preguta NO Exitoso...aqui',
+            message: '¡Error en el servidor! BD'
+        });
+
+    }
+});
+
+// preguntas - post
+app.post('/preguntasregopc', async (req, res) => {
+    try {
+        const user = req.body.user;
+        const name = req.body.name;        
+        const pgtas = req.body.pgtas;
+        // Log para depuración
+        const tableName = "pgtaresp";
         const [rows] = await pool.execute(`select * FROM ${tableName} WHERE texto = ?`, [pgtas]);
         if (rows.length > 0) {
             return res.json({
@@ -225,6 +344,29 @@ app.post('/preguntasmod', async (req, res) => {
         });
     }
 });
+
+// modificacion opciones - post
+app.post('/preguntasmodopc', async (req, res) => {
+    try {
+        const ids = req.body.ids;
+        const pgtas = req.body.pgtas;
+        // Insertar nuevo registro
+        const tableName = "pgtaresp";
+        await pool.execute(`UPDATE ${tableName} SET texto = ? WHERE id = ?`, [pgtas, ids]);
+        res.json({
+            status: 'success',
+            title: 'Actualizacion Exitosa',
+            message: '¡Registrado correctamente!'
+        });
+    } catch (error) {
+        res.json({
+            status: 'success',
+            title: 'Registro de Preguta NO Exitoso...aqui',
+            message: '¡Error en el servidor! BD'
+        });
+    }
+});
+
 
 // register - post
 app.post('/register', async (req, res) => {
@@ -279,7 +421,8 @@ app.post('/preguntaseli', async (req, res) => {
 
         // Log para depuración
 
-        await pool.execute('delete from preguntas WHERE id = ?', [ids]);
+        const [rows] =  await pool.execute('delete from preguntas WHERE id = ?', [ids]);
+        //              await pool.execute('delete from preguntas WHERE id = ?', [ids]);
         return res.json({
             status: 'success',
             title: 'Borrado Exitoso.',
@@ -300,25 +443,91 @@ app.post('/procesarseleccion', async (req, res) => {
     const selectedValue = req.body.preguntas; // Esto debe contener el valor seleccionado
 //    console.log('Valor seleccionado:', selectedValue);
     try {
+        const userUser = req.session.user;
+        const userName = req.session.name;
         const selectedValue = req.body.preguntas; // Obtén el valor seleccionado
-        await pool.execute('select * from `users` where id=1');
-        return res.json({
-            status: 'success',
-            title: 'Voto Exitoso.',
-            message: '¡Registro Exitoso! BD'
-        });
- 
+        const [id, respuesta, idp, texto] = selectedValue.split('|');
+     
+        // EVALUA SI YA VOTO
+        const pgtas = req.body.pgtas;
+        // Log para depuración
+
+        // SELECT     
+        const tablePtas = "respusers";
+        const [rows] = await pool.execute(`SELECT pregunta FROM ${tablePtas} WHERE user = ?`, [userUser]);
+        
+        if (rows.length > 0) {
+            const pregunta = rows[0].pregunta;  // Obtenemos la primera fila y el campo "pregunta"
+            return res.json({
+                status: 'info',
+                title: `[ ${pregunta} ]`,
+                message: `Voto ya Registrado`
+            });
+        } else {
+            // insert de respuesta
+            const tableName = "respusers";
+            const date = new Date();
+            const estado = 0; // Ejemplo de estado
+            await pool.execute(`INSERT INTO ${tableName} (user, idprg, pregunta, idpres, respuesta) VALUES (?, ?, ?, ?, ?)`, [userUser, idp, texto, id, respuesta]);
+            return res.json({
+                status: 'success',
+                title: 'Voto Exitoso.',
+                message: '¡Registro Exitoso! BD'
+            });
+        }
     } catch (error) {
         res.json({
             status: 'error',
-            title: 'Borrado de Preguta NO Exitoso',
+            title: 'Grabar Respuesta NO Exitoso',
             message: `Error: ${error.message}`
         });
     }
 });
 
-// SUBIR ARCHIVO TXT
- 
+// opc 2 
+app.post('/procesar-seleccion', async (req, res) => {
+        try {
+            const userUser = req.session.user;
+            const userName = req.session.name;
+            const selectedValue = req.body.pregunta; // Obtén el valor seleccionado
+//            console.log(selectedValue)
+            await pool.execute('UPDATE preguntas SET estado = 0');
+            for (const id of selectedValue) {
+//                console.log(`Registro con ID ${id} actualizado.`);
+                const wact = id;
+//                await pool.execute('UPDATE preguntas SET estado = 0');
+                // Aquí asegúrate de pasar el valor correcto a la consulta
+                await pool.execute('UPDATE preguntas SET estado = 1 WHERE id = ?', [wact]);
+                console.log('ing1');
+                console.log(selectedValue);
+                if (selectedValue && selectedValue.length > 0) {
+                    for (const id of selectedValue) {
+                        await pool.execute('UPDATE preguntas SET estado = 1 WHERE id = ?', [id]);
+                    }                
+                }else{
+                    console.log('sssssssssssssssssssss')
+                }  
+            }
+            return res.json({
+                status: 'success',
+                title: 'Seleccion OK',
+                message: '¡Registro Exitoso! BD'
+            });   
+        } catch (error) {
+            res.json({
+                status: 'error',
+                title: 'Grabar Seleccion Pregunta NO Exitoso',
+                message: `Error: ${error.message}`
+            });
+        }
+    });
+    
+/// GRAFICOS
+
+
+
+// ejecutar
+
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
 });
@@ -351,8 +560,15 @@ app.get('/opcbtn', async (req, res) => {
 
 app.get('/opc1', async (req, res) => {
     try {
-        const [rows] = await pool.execute("select a.texto,a.estado,b.respuesta,b.estado from preguntas a inner join pgtaresp b on a.id=b.idprg where a.estado=0");
-        res.render('opc1', { preguntas: rows });
+        if (req.session.loggedin) {
+            const userUser = req.session.user;
+            const userName = req.session.name;
+//            const [rows] = await pool.execute("select a.texto,a.estado,b.respuesta,b.estado from preguntas a inner join pgtaresp b on a.id=b.idprg where a.estado=0");
+            const [rows] = await pool.execute("select a.id as idp,a.texto,a.estado,b.id,b.respuesta,b.estado from preguntas a inner join pgtaresp b on a.id=b.idprg where a.estado=1");
+            res.render('opc1', { preguntas: rows, user: userUser, name: userName });
+        } else {
+            res.send('Por favor, inicia sesión primero.');
+        }
     } catch (error) {
         res.status(500).send('Error conectando a la base de datos.');
     }
@@ -360,7 +576,7 @@ app.get('/opc1', async (req, res) => {
 
 app.get('/opc2', async (req, res) => {
     try {
-        const [rows] = await pool.execute("select * from preguntas where estado=0");
+        const [rows] = await pool.execute("select * from preguntas");
         res.render('opc2', { data: rows });
     } catch (error) {
         res.status(500).send('Error conectando a la base de datos.');
@@ -410,40 +626,54 @@ app.get('/ingpreguntas', async (req, res) => {
         const tableName = "preguntas";
         const [rows] = await pool.execute(`select * from ${tableName}`);
 //        const [rows] = await pool.execute("select * from preguntas where estado=0");
-        
-        res.render('ingpreguntas', { data: rows });
+        if (req.session.loggedin) {
+            const userUser = req.session.user;
+            const userName = req.session.name;
+            res.render('ingpreguntas', { data: rows, user: userUser, name: userName });
+
+        } else {
+            res.send('Por favor, inicia sesión primero.');
+        }
     } catch (error) {
                 console.error('Error conectando a la base de datos....????:', error);
                 res.status(500).send('Error conectando a la base de datos.?????');
             }
     });
 
+   
 app.get('/opciones', async(req, res) => {
     try {
-        const id = req.query.id;
-        const texto = req.query.texto;
-        const [rows] = await pool.execute("select * from pgtaresp where idprg = ?", [id]);
-        res.render('opciones', { id, texto, data: rows });
+        if (req.session.loggedin) {
+            const userUser = req.session.user;
+            const userName = req.session.name;
+            const id = req.query.id;
+            const texto = req.query.texto;
+            console.log(id);
+            console.log(texto);
+            const [rows] = await pool.execute("select * from pgtaresp where idprg = ?", [id]);
+            res.render('opciones', { id, texto, data: rows, user: userUser, name: userName });
+        } else {
+            res.send('Por favor, inicia sesión primero.');
+        }
     } catch (error) {
         console.error('Error conectando a la base de datos....????:', error);
         res.status(500).send('Error conectando a la base de datos.?????');
         }
     });
-        
-        
-    app.get('/opcionesss', async (req, res) => {
-        const id = req.query.id;
-        const texto = req.query.texto;
-        console.log(id);
-        console.log(texto);
-        try {
-            const [rows] = await pool.execute("select * from preguntas");
-            res.render('opciones', { data: rows });
-        } catch (error) {
-                    console.error('Error conectando a la base de datos....????:', error);
-                    res.status(500).send('Error conectando a la base de datos.?????');
-                }
-        });
+       
+app.get('/opcionesss', async (req, res) => {
+    const id = req.query.id;
+    const texto = req.query.texto;
+    console.log(id);
+    console.log(texto);
+    try {
+        const [rows] = await pool.execute("select * from preguntas");
+        res.render('opciones', { data: rows });
+    } catch (error) {
+                console.error('Error conectando a la base de datos....????:', error);
+                res.status(500).send('Error conectando a la base de datos.?????');
+            }
+    });
     
    
 // FUNCIONES
@@ -551,11 +781,10 @@ async function processCSV(filePath) {
         console.error('Error:', error);
         await connection.end();
     }
-}      
+}
 
 
 app.post('/save-table-data', async (req, res) => {
-    console.log('reg salvar')
     const data = req.body;
 
     if (!Array.isArray(data) || data.length === 0) {
@@ -566,10 +795,15 @@ app.post('/save-table-data', async (req, res) => {
         const connection = await pool.getConnection();
         await connection.beginTransaction();
 
+        // Eliminar registros previos
+        await connection.execute('DELETE FROM my_table2');
+
+        // Insertar cada fila en la base de datos
         for (const item of data) {
-            const { name, age } = item;
-                await pool.execute('INSERT INTO my_table (name, age) VALUES (?, ?)', [name, age]    
-            );
+            const { codigo } = item;
+            if (codigo) {  // Validar datos
+                await connection.execute('INSERT INTO my_table2 (codigo) VALUES (?)', [codigo]);
+            }
         }
         await connection.commit();
         connection.release();
@@ -577,13 +811,15 @@ app.post('/save-table-data', async (req, res) => {
             status: 'success',
             title: 'Registro Exitoso',
             message: '¡Registrado correctamente!'
-        })
-
+        });
     } catch (error) {
         console.error('Error saving data:', error);
         res.status(500).json({ message: 'Internal server error' });
+
+        // Rollback en caso de error
+        if (connection) {
+            await connection.rollback();
+            connection.release();
+        }
     }
-}); 
-
-
-
+});

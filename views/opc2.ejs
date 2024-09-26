@@ -5,37 +5,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
     <title>Votacion</title>
-    <%- include('partials/head') %> <!-- <link rel="stylesheet" href="main.css"> /// partial para repetir en cada una de las paginas -->
+    <%- include('partials/head') %>
+
+    <style>
+        /* Estilo personalizado para toda la alerta */
+        .my-swal-popup {
+            background-color: #f0f8ff; /* Color de fondo */
+            color: #000; /* Color del texto */
+        }
+
+        /* Estilo personalizado para la barra de progreso */
+        .my-progress-bar {
+            background-color: #c92014; /* Color de la barra de progreso */
+        }
+
+        /* Estilo del botón */
+        .my-confirm-button {
+            background-color: #007bff; /* Color del botón de aceptar */
+            color: #fff; /* Color del texto del botón */
+        }
+    </style>
+
 </head>
 <body class="body.imagen">
     <%- include('partials/navigation') %>
-    <a href="/menuprc" class="btn-cancel"> Regresar </a>
     <h1></h1>
     <div class="content">
-<!--        <div class="register-formIzq1">   -->
-                    <% if (data && data.length > 0) { %>
-                        <h2 style="font-family: 'Arial', sans-serif; font-size: 30px; color: rgb(216, 19, 45); font-weight: bold;"> <%= data[0].texto %> </h2>
-                        <!-- Mostrar el texto de la primera pregunta -->
-                        <div class="register-formIzq1">  
-                                <div style="font-size: 20px;"> 
-                                <form action="/procesar-seleccion" method="POST">
-                                    <% data.forEach(function(item) { %>
-                                        <div>
-                                            <input type="radio" name="pregunta" value="<%= item.id %>">
-                                            <label><%= item.texto %></label>
-                                        </div>
-                                    <% }); %>
-                                    <br>
-<!--                                    <button type="submit" >Enviar</button>   -->
-                                    <input type="submit" class="btn-save" value="Votar">
-                                </form>
-                                </div>     
-                         </div>            
-                    <% } else { %>
-                        <p>No hay preguntas disponibles en este momento.</p>
-                    <% } %>
-<!--        </div>              -->
-     </div>   
-     <%- include('partials/footer') %>  
+        <% if (data && data.length > 0) { %>
+            <div class="register-formIzq1">  
+                <div style="font-size: 20px;"> 
+                    <form id="registerForm" onsubmit="enviarSeleccion(event)">
+                        <% data.forEach(function(item) { %>
+                            <div>
+<!--
+                                <input type="checkbox" name="pregunta" value="<%= item.id %>">
+                                <label><%= item.texto %></label>
+-->
+                                <input type="checkbox" name="pregunta" value="<%= item.id %>" <%= item.estado === 1 ? 'checked' : '' %> >
+                                <label><%= item.texto %></label>
+
+                            </div>
+                        <% }); %>
+                        <br>
+                        <a href="/menuprc" class="btn-cancel"> Regresar </a>
+                        <input type="submit" class="btn-save" value="Actualizar">
+                    </form>
+                </div>     
+            </div>            
+        <% } else { %>
+            <p>No hay preguntas disponibles en este momento.</p>
+        <% } %>
+    </div>   
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        async function enviarSeleccion(event) {
+            event.preventDefault(); // Evita que el formulario se envíe de forma predeterminada
+            const selectedValues = Array.from(document.querySelectorAll('input[name="pregunta"]:checked')).map(checkbox => checkbox.value);
+
+            // Validar si se ha seleccionado al menos una opción
+/*
+            if (selectedValues.length === 0) {
+                swal.fire({
+                    title: 'Atención',
+                    text: 'Debes seleccionar al menos una opción.',
+                    icon: 'warning',
+                    confirmButtonText: 'Aceptar',
+                    customClass: {
+                        popup: 'my-swal-popup',
+                        confirmButton: 'my-confirm-button'
+                    }
+                });
+                return; // Detener la ejecución si no hay selección
+            }
+*/
+            try {
+                const response = await fetch('/procesar-seleccion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ pregunta: selectedValues })
+                });
+     
+                const result = await response.json();
+    
+                // Mostrar el SweetAlert basado en la respuesta
+                if (result.status === 'success') {
+                    swal.fire({
+                            title: result.title || 'Error',
+                            text: result.message || 'Hubo un problema',
+                            icon: result.status,
+                            showConfirmButton: true,
+                            timer: result.status === 'success' ? 2000 : null, // Timer solo para éxito
+                            timerProgressBar: true, // Muestra una barra de progreso
+                            customClass: {
+                                    popup: 'my-swal-popup', // Clase personalizada para toda la alerta
+                                    progressSteps: 'my-progress-bar', // Clase para la barra de progreso
+                                    confirmButton: 'my-confirm-button' // Clase para el botón
+                                }
+                        }).then((result) => {
+                            // Redirigir después de que se cierre la alerta
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                window.location.href = '/menuprc'; // Cambia '/nueva-pagina' a la URL deseada
+                            }
+                        });
+                } else {
+                    swal.fire({
+                        title: result.title,
+                        text: result.message,
+//                        icon: 'error',
+//                        button: 'Aceptar',
+                        confirmButtonText: 'Aceptar',
+                        timer: null, // 5 segundos
+                        timerProgressBar: true // Muestra una barra de progreso
+                    });
+                }
+            } catch (error) {
+                swal.fire({
+                    title: 'Error',
+                    text: 'Hubo un problema al procesar tu selección.',
+                    icon: 'error',
+                    button: 'Aceptar',
+                    timer: 5000 // 5 segundos
+                });
+            }
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/src/main.js"></script>
+    <%- include('partials/footer') %>  
 </body>
 </html>

@@ -1,4 +1,3 @@
-<!-- register.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -13,22 +12,33 @@
 </head>
 <body>
     <%- include('partials/navigation') %>  
-    <h5 style="color: blue; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); transition: color 0.3s ease;" onmouseover="this.style.color='darkblue';" onmouseout="this.style.color='blue';">Usuario: <%= name %></h5>
     <div class="content">
         <div class="register-formcda" > 
-            <h5>Registro de Preguntas</h5>
+            <h5 style="font-size: 24px; color: #5f14b6; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">modificar OPCION PREGUNTA</h5>
         </div>
-        <div class="register-formcda"> 
-            <form id="registerForm" action="/preguntasreg" method='POST'> 
+        <div class="register-formpgt"> 
+            <form id="registerForm" action="/preguntasmodopc" method='POST'> 
                 <div class="contenedor__login-register">
-                    <br>
-                    <input type="text" name="pgtas" class="input-small" placeholder="Pregunta" required>
-                    <br><br>
-                    <h1></h1>    
+                    <p style="font-size: 20px;">
+                        <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">ID:</span> 
+                        <span style="color: #d11b33; text-shadow: 3px 1px 2px rgba(0, 0, 0, 0.3);"><%= idvlrprg %></span>
+                    </p>
+                    <p style="font-size: 20px;">
+                        <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Pregunta:</span> 
+                        <span style="color: #d11b33; text-shadow: 2px 1px 2px rgba(0, 0, 0, 0.3);"><%= respuesta %></span>
+                    </p> 
+                    
+                    <!-- Campo oculto con el mismo valor -->
+                    <input type="text" name="id" value="<%= idvlrprg %>">
+                    <span style="color: #518b05; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Modificar Pregunta  :</span> 
+                    <h1></h1>
+                    <input type="text" name="pgtas" value="<%= respuesta %>" style="width: 100%; max-width: 600px; height: 30px; padding: 10px; font-size: 16px;">
+
                     <div style="display: inline;">
-                        <h5></h5>
-                        <a href="/ingpreguntas" class="btn-cancel"> Regresar </a><input type="submit" class="btn-save" value=" Registrar ">
+                        <br><br>
+                        <a href="/opciones?id=<%= idvlrprg %>&respuesta=<%= respuesta %>" class="btn-cancel"> Regresar </a>
                     </div>
+                    <input type="submit" class="btn-save" value=" Confirmar ">
                 </div>       
             </form>    
         </div>
@@ -37,15 +47,12 @@
     <script>
         document.getElementById('registerForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
-
             const formData = new FormData(this);
-            const response = await fetch('/preguntasreg', {
+            const response = await fetch('/preguntasmod', {
                 method: 'POST',
                 body: new URLSearchParams(formData)
             });
-
             const result = await response.json();
-
             Swal.fire({
                 title: result.title || 'Error',
                 text: result.message || 'Hubo un problema',
@@ -59,7 +66,7 @@
             });
         });
     </script>
-
     <%- include('partials/footer') %>  
 </body>
 </html>
+

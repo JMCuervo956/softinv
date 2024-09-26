@@ -9,6 +9,7 @@
 </head>
 <body class="body.imagen">
     <%- include('partials/navigation') %>
+    <h5 style="color: blue; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); transition: color 0.3s ease;" onmouseover="this.style.color='darkblue';" onmouseout="this.style.color='blue';">Usuario: <%= name %></h5>
     <div class="content">
         <% if (preguntas && preguntas.length > 0) { %>
             <div class="register-formIzq1"> 
@@ -27,8 +28,10 @@
                     <form id="registerForm" action="/procesarseleccion" method="POST" > 
                         <% preguntas.forEach(function(item) { %>
                             <div>
-                                <input type="radio" name="preguntas" value="<%= item.respuesta %>" id="respuesta-<%= item.respuesta %> "
-                                <% if (item.default) { %> checked <% } %> >
+<!--                                <input type="radio" name="preguntas" value="<%= item.respuesta %>" id="respuesta-<%= item.respuesta %> "  
+                <input type="radio" name="preguntas" value="<%= item.id %>|<%= item.respuesta %>" id="respuesta-<%= item.id %>">   -->
+                    <input type="radio" name="preguntas" value="<%= item.idp %>|<%= item.texto %>|<%= item.id %>|<%= item.respuesta %>" id="respuesta-<%= item.id %>">
+                    <% if (item.default) { %> checked <% } %> >
                                 <label for="respuesta-<%= item.id %>"><%= item.respuesta %></label><br>
                             </div>
                             <% }); %>
