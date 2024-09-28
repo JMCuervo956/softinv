@@ -1,5 +1,4 @@
 // 1. - Invocamos a express    
-// import express from 'express'; ???????????????
 
 import express, { Router } from 'express';
 import session from 'express-session';
@@ -9,12 +8,6 @@ import mysql from 'mysql2/promise'; // Cambiado para usar mysql2 con promesas
 import path from 'path';
 import { fileURLToPath } from 'url';
 import bcryptjs from 'bcryptjs';
-import { validateCredentials } from './auth.js';
-
-// graficas
-//import Chart from 'https://cdn.jsdelivr.net/npm/chart.js';
-//const module = await import('https://example.com/path/to/module.js');
-//import myModule from './path/to/local/module.js';
 
 // importar archivos
 import fs from 'fs';
@@ -22,12 +15,10 @@ import { readFile } from 'fs/promises';
 import fastcsv from 'fast-csv';
 import bodyParser from 'body-parser';
 import csv from 'csv-parser'; // CARGAR
-//import cors from 'cors';
 
 //import Swal from 'sweetalert2/dist/sweetalert2.js'  
 import Swal from 'sweetalert2';
 import { Console } from 'console';
-//import 'sweetalert2/src/sweetalert2.scss'
 
 // proceso para carga de archivos
 
@@ -53,9 +44,6 @@ const app = express();
 // Configuración de multer para manejar la carga de archivos  -- CARGA --
 const upload = multer({ dest: 'uploads/' });
 
-// Configuración de CORS
-//app.use(cors());
-
 // Configura express-session
 app.use(session({
     secret: 'tu_secreto_aqui', // Cambia esto por una cadena secreta
@@ -78,8 +66,6 @@ app.use(express.static(path.join(path.dirname(fileURLToPath(import.meta.url)), '
  
 // Configuración para servir archivos estáticos desde el directorio 'public'
 app.use(express.static(path.join(__dirname, '../public')));
-//app.use(bodyParser.json()); // para cargue de archivos
-//app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json()); 
 
 // Middleware para parsear datos del formulario (application/x-www-form-urlencoded)
@@ -96,7 +82,6 @@ app.use(express.static(path.join(__dirname, 'src')));
 
 // Ruta para la página principal
  
-  
 app.get('/', async (req, res) => {
     try {
         // Renderiza la plantilla 'video.ejs'
@@ -155,10 +140,6 @@ app.get('/cargas', (req, res)=>{
     }
 })
 
-app.get('/tablaguardar', (req, res)=>{
-    res.render('tablaguardar'); 
-})
-
 app.get('/eliminar', (req, res) => {
     const id = req.query.id;
     const texto = req.query.texto;
@@ -168,8 +149,6 @@ app.get('/eliminar', (req, res) => {
 app.get('/modificar', (req, res) => {
     const id = req.query.id;
     const texto = req.query.texto;
-    console.log(id);
-    console.log(texto);
     res.render('modificar', { id, texto });
 });
 
@@ -188,12 +167,8 @@ app.get('/preguntasopc', (req, res) => {
 app.get('/modopc', (req, res) => {
     const idvlrprg = req.query.idvlrprg; // variable ej> idvlrprg, que se debe usar en modopc idprg
     const respuesta = req.query.respuesta;
-    console.log(req.query.idvlrprg);
-    console.log(idvlrprg);
-    console.log(respuesta);
     res.render('modopc', { idvlrprg, respuesta });
 });
-
 
 // Graficos
 
@@ -490,22 +465,16 @@ app.post('/procesar-seleccion', async (req, res) => {
             const userUser = req.session.user;
             const userName = req.session.name;
             const selectedValue = req.body.pregunta; // Obtén el valor seleccionado
-//            console.log(selectedValue)
             await pool.execute('UPDATE preguntas SET estado = 0');
             for (const id of selectedValue) {
-//                console.log(`Registro con ID ${id} actualizado.`);
                 const wact = id;
-//                await pool.execute('UPDATE preguntas SET estado = 0');
-                // Aquí asegúrate de pasar el valor correcto a la consulta
                 await pool.execute('UPDATE preguntas SET estado = 1 WHERE id = ?', [wact]);
-                console.log('ing1');
-                console.log(selectedValue);
                 if (selectedValue && selectedValue.length > 0) {
                     for (const id of selectedValue) {
                         await pool.execute('UPDATE preguntas SET estado = 1 WHERE id = ?', [id]);
                     }                
                 }else{
-                    console.log('sssssssssssssssssssss')
+                    console.log('Error update procesar-seleccion')
                 }  
             }
             return res.json({
@@ -522,10 +491,6 @@ app.post('/procesar-seleccion', async (req, res) => {
         }
     });
     
-/// GRAFICOS
-
-
-
 // ejecutar
 
 app.listen(PORT, () => {
@@ -648,8 +613,6 @@ app.get('/opciones', async(req, res) => {
             const userName = req.session.name;
             const id = req.query.id;
             const texto = req.query.texto;
-            console.log(id);
-            console.log(texto);
             const [rows] = await pool.execute("select * from pgtaresp where idprg = ?", [id]);
             res.render('opciones', { id, texto, data: rows, user: userUser, name: userName });
         } else {
@@ -661,50 +624,6 @@ app.get('/opciones', async(req, res) => {
         }
     });
        
-app.get('/opcionesss', async (req, res) => {
-    const id = req.query.id;
-    const texto = req.query.texto;
-    console.log(id);
-    console.log(texto);
-    try {
-        const [rows] = await pool.execute("select * from preguntas");
-        res.render('opciones', { data: rows });
-    } catch (error) {
-                console.error('Error conectando a la base de datos....????:', error);
-                res.status(500).send('Error conectando a la base de datos.?????');
-            }
-    });
-    
-   
-// FUNCIONES
-
-    function executeActiones(texto) {
-   
-        // Aquí ejecutas la lógica que deseas, por ejemplo, una llamada AJAX
-        fetch('/ruta-api', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                action: 'confirmar' // Envía datos si es necesario
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire('¡Hecho!', 'Tu acción ha sido confirmada.', 'success').then(() => {
-                    // Opcional: redirigir a otra página después de la confirmación
-                    window.location.href = '/pagina-destino';
-                });
-            } else {
-                Swal.fire('Error', 'Hubo un problema con la acción.', 'error');
-            }
-        })
-        .catch(error => {
-            Swal.fire('Error', 'No se pudo completar la acción.', 'error');
-        });
-    }
 
 // Definición de la función
 
@@ -716,32 +635,7 @@ app.get('/opcionesss', async (req, res) => {
         return 'Hola, mundo!';
       }
       
-// *******************
- 
-app.post('/grabadata', async (req, res) => {
-    try {
-        console.log('ingreso1')
-        // Log para depuración
-        console.log('1')
-        const [rows] = await pool.execute('SELECT * FROM usersss');
-        console.log('2')
-        if (rows.length > 0) {
-            console.log('ver')
-            return res.json({
-                status: 'error',
-                title: 'Error',
-                message: 'Usuario ya Existe'
-            });
-        } 
-    } catch (error) {
-        console.log('ingreso2')
-        res.json({
-            status: 'success',
-            title: 'Registro Exitoso',
-            message: '¡Error en el servidor! BD'
-        });
-    }
-});
+// *** CARGAR ARCHIVO ***
 
 async function processCSV(filePath) {
     // Crear una conexión a la base de datos
@@ -823,3 +717,5 @@ app.post('/save-table-data', async (req, res) => {
         }
     }
 });
+
+//  ***  FIN CARGAR ARCHIVO *** //
