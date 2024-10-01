@@ -28,12 +28,12 @@
                     <h1></h1>
                     <label for="rol">Rol</label>           
                     <select name="rol" id="rol" class="select-css">
-                        <option value="admin" selected>Usuario</option>
-                        <option value="Usuario">Administrador</option>
+                        <option value="Usuario" selected>Usuario</option>
+                        <option value="admin">Administrador</option>
                     </select>
                     <div style="display: inline;">
                         <h5></h5>
-                        <a href="/menuprc" class="btn-cancel">Cancelar</a><input type="submit" class="btn-save" value="Registrar">
+                        <a href="/usuarios" class="btn-cancel">Cancelar</a><input type="submit" class="btn-save" value="Registrar">
                     </div>
                 </div>       
             </form>    
@@ -60,7 +60,7 @@
                     showConfirmButton: false,
                     timer: 1500
                 }).then(() => {
-                    window.location.href = '/menuprc'; // Redirigir al usuario si es necesario
+                    window.location.href = '/usuarios'; // Redirigir al usuario si es necesario
                 });
             } else {
                 Swal.fire({

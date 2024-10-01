@@ -10,31 +10,41 @@
 
 </head>
 <body class="body.imagen">
-    <%- include('partials/navigation') %>
+    <% if (rol==='admin') { %>
+        <%- include('partials/navigat') %>  
+    <% } else { %> 
+        <%- include('partials/navigation') %>  
+    <% } %>
     <div style="display: inline;">
-        <h5 style="color: blue; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); transition: color 0.3s ease;" onmouseover="this.style.color='darkblue';" onmouseout="this.style.color='blue';">Usuario: <%= name %></h5>
+        <h5 style="color: blue; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); transition: color 0.3s ease;" 
+        onmouseover="this.style.color='darkblue';" 
+        onmouseout="this.style.color='blue';">
+        <span><%= rol %>:</span>
+        <span style="padding-left: 10px;"><%= name %></span>
+    </h5>
+
     </div>    
     <div class="content">
         <div class="register-formIzq">
                 <div style="display: inline;">
-
+<!--
                     <div style="display: inline;">
                         <input type="submit" id="btnUsuarios" class="btn-salir" value="Usuarios">
                         <br><br>    
                     </div>
-
+            
                     <div style="display: inline;">
                         <h5></h5>
                         <input type="submit" id="btnPreguntas" class="btn-salir" value="Preguntas">
                         <br><br>    
                     </div>
-
+            
                     <div style="display: inline;">
                         <h5></h5>
                         <input type="submit" id="btnSel" class="btn-salir" value="Asignar Pregunta voto">
                         <br><br>    
                     </div>
-
+-->                   
                     <div style="display: inline;">
                         <h5></h5>
                         <input type="submit" id="btnSeleccion" class="btn-salir" value="Votar">
@@ -75,24 +85,26 @@
         </div>
      </div>   
     <script>
+
+/*
         document.getElementById('btnUsuarios').addEventListener('click', function() {
             // Acción para el botón "Usuarios"
-            window.location.href = '/register'; // Redirige a la página de usuarios
+            window.location.href = '/usuarios'; // Redirige a la página de usuarios
         });
 
         document.getElementById('btnPreguntas').addEventListener('click', function() {
             // Acción para el botón "Registro de Preguntas"
             window.location.href = '/ingpreguntas'; // Redirige a la página de usuarios
         });
-        
-        document.getElementById('btnSeleccion').addEventListener('click', function() {
-            // Acción para el botón "Votaciones"
-            window.location.href = '/opc1'; // Redirige a la página de votaciones
-        });
 
         document.getElementById('btnSel').addEventListener('click', function() {
             // Acción para el botón "Votaciones"
             window.location.href = '/opc2'; // opc2 Redirige a la página de votaciones
+        });
+*/          
+        document.getElementById('btnSeleccion').addEventListener('click', function() {
+            // Acción para el botón "Votaciones"
+            window.location.href = '/opc1'; // Redirige a la página de votaciones
         });
 
         /*

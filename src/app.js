@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url';
 import bcryptjs from 'bcryptjs';
 
 // importar archivos
+
 import fs from 'fs';
 import { readFile } from 'fs/promises';
 import fastcsv from 'fast-csv';
@@ -36,10 +37,10 @@ function showAlert() {
 }
 
 // Definir __dirname manualmente en un entorno ESM 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
- 
-const app = express();
+ const app = express();
 
 // Configuración de multer para manejar la carga de archivos  -- CARGA --
 const upload = multer({ dest: 'uploads/' });
@@ -60,12 +61,12 @@ app.use((req, res, next) => {
     next();
   });
 
-
  // Middleware
-app.use(express.static(path.join(path.dirname(fileURLToPath(import.meta.url)), '../public')));
- 
-// Configuración para servir archivos estáticos desde el directorio 'public'
+//app.use(express.static(path.join(path.dirname(fileURLToPath(import.meta.url)), '../public')));
+//app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.static(path.join(__dirname, '../public')));
+
+
 app.use(express.json()); 
 
 // Middleware para parsear datos del formulario (application/x-www-form-urlencoded)
@@ -104,7 +105,8 @@ app.get('/menuprc', (req, res)=>{
     if (req.session.loggedin) {
         const userUser = req.session.user;
         const userName = req.session.name;
-        res.render('menuprc', { user: userUser, name: userName });
+        const userRol = req.session.rol;
+        res.render('menuprc', { user: userUser, name: userName, rol: userRol });
     } else {
         res.send('Por favor, inicia sesión primero.');
     }
@@ -140,16 +142,28 @@ app.get('/cargas', (req, res)=>{
     }
 })
 
+app.get('/modificar', (req, res) => {
+    const id = req.query.id;
+    const texto = req.query.texto;
+    res.render('modificar', { id, texto });
+});
+
 app.get('/eliminar', (req, res) => {
     const id = req.query.id;
     const texto = req.query.texto;
     res.render('eliminar', { id, texto });
 });
 
-app.get('/modificar', (req, res) => {
+app.get('/moduser', (req, res) => {
     const id = req.query.id;
     const texto = req.query.texto;
-    res.render('modificar', { id, texto });
+    res.render('moduser', { id, texto });
+});
+
+app.get('/eliuser', (req, res) => {
+    const user = req.query.user;
+    const name = req.query.name;
+    res.render('eliuser', { user, name });
 });
 
 app.get('/preguntasopc', (req, res) => {
@@ -214,11 +228,11 @@ app.post('/auth', async (req, res) => {
 
     // Autenticación exitosa
     req.session.loggedin = true;
-    req.session.user = user;
 
     // Guardar el campo deseado en la sesión
-    req.session.user = userRecord.user;  // Guardar el rol del usuario
-    req.session.name = userRecord.name;  // Guardar el email del usuario
+    req.session.user = userRecord.user;  // Guardar el usuario
+    req.session.name = userRecord.name;  // Guardar el nombre del usuario
+    req.session.rol = userRecord.rol;  // Guardar el rol del usuario
 
     return res.json({
         status: 'success',
@@ -346,6 +360,8 @@ app.post('/preguntasmodopc', async (req, res) => {
 // register - post
 app.post('/register', async (req, res) => {
     try {
+        const rz = '1';
+        const id_rz = 'qwe';
         const user = req.body.user;
         const name = req.body.name;
         const rol = req.body.rol;
@@ -372,7 +388,10 @@ app.post('/register', async (req, res) => {
         }
 
         // Insertar nuevo usuario
-        await pool.execute('INSERT INTO users (user, name, rol, pass) VALUES (?, ?, ?, ?)', [user, name, rol, passwordHash]);
+//        await pool.execute('INSERT INTO users (user, name, rol, pass) VALUES (?, ?, ?, ?)', [user, name, rol, passwordHash]);
+        await pool.execute('INSERT INTO sarlaft.users (rz, id_rz, user, name, rol, pass) VALUES (?, ?, ?, ?, ?, ?)', [rz, id_rz, user, name, rol, passwordHash]);
+//      await pool.execute(`INSERT INTO ${tableName} (texto, estado, fechacreacion) VALUES (?, ?, ?)`, [pgtas, estado, date]);
+
         res.json({
             status: 'success',
             title: 'Registro Exitoso',
@@ -381,8 +400,8 @@ app.post('/register', async (req, res) => {
     } catch (error) {
         res.json({
             status: 'success',
-            title: 'Registro Exitoso',
-            message: '¡Error en el servidor! BD'
+            title: 'Registro ERROR',
+            message: `Error: ${error.message}`
         });
     }
 });
@@ -605,7 +624,83 @@ app.get('/ingpreguntas', async (req, res) => {
             }
     });
 
-   
+// Usuarios
+
+app.get('/usuarios', async (req, res) => {
+    try {
+        const tableName = "users";
+        const [rows] = await pool.execute(`select * from ${tableName}`);
+        if (req.session.loggedin) {
+            const userUser = req.session.user;
+            const userName = req.session.name;
+            res.render('usuarios', { data: rows, user: userUser, name: userName });
+
+        } else {
+            res.send('Por favor, inicia sesión primero.');
+        }
+    } catch (error) {
+                console.error('Error conectando a la base de datos....????:', error);
+                res.status(500).send('Error conectando a la base de datos.?????');
+            }
+    });
+    
+// modifica usuarios - post
+
+app.post('/usuariomod', async (req, res) => {
+    try {
+        const ids = req.body.ids;
+        const pgtas = req.body.pgtas;
+        // Insertar nuevo usuario
+        await pool.execute('UPDATE preguntas SET texto = ? WHERE id = ?', [pgtas, ids]);
+        res.json({
+            status: 'success',
+            title: 'Actualizacion Exitosa',
+            message: '¡Registrado correctamente!'
+        });
+    } catch (error) {
+        res.json({
+            status: 'success',
+            title: 'Registro de Preguta NO Exitoso...aqui',
+            message: '¡Error en el servidor! BD'
+        });
+    }
+});
+
+/* Eliminar usuarios */
+
+app.post('/usuarioeli', async (req, res) => {
+    try {
+        const ids = req.body.ids;
+
+        // Log para depuración delete
+
+        const [result] = await pool.execute('DELETE FROM users WHERE estado is null AND user = ?', [ids]);
+        if (result.affectedRows > 0) {
+            // El registro fue eliminado con éxito
+            return res.json({
+                status: 'success',
+                title: 'Eliminado',
+                message: 'El usuario ha sido eliminado correctamente.'
+            });
+        } else {
+            // No se eliminó ningún registro
+            return res.json({
+                status: 'error',
+                title: 'Error',
+                message: 'No se pudo eliminar el usuario. Es posible que el usuario sea Administrador Principal o No exista.'
+            });
+        }
+    } catch (error) {
+        res.json({
+            status: 'error',
+            title: 'Borrado de Usuario NO Exitoso',
+            message: `Error: ${error.message}`
+        });
+    }
+});
+
+// Opciones
+    
 app.get('/opciones', async(req, res) => {
     try {
         if (req.session.loggedin) {
