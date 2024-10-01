@@ -40,13 +40,20 @@
             </div>
             <div class="container mt-1">
                 <table class="table table-bordered table-hover">
-                    <thead></thead>
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Nombre</th>
+                            <th>Rol</th>
+                        </tr>                        
+                    </thead>
                     <tbody>
                         <% if (data && data.length > 0) { %>
                             <% data.forEach(function(item) { %>
                                 <tr>
                                     <td class="tex-hover-effect" style="width: 100px;"><%= item.user %></td>
                                     <td class="tex-hover-effect" style="width: 400px;"><%= item.name %></td>
+                                    <td class="tex-hover-effect" style="width: 400px;"><%= item.rol %></td>
                                     <td>
                                         <a href="/moduser?user=<%= item.user %>&name=<%= item.name %>" class="btn btn-warning btn-sm btn-hover-effect ">Mod</a>
                                     </td>
