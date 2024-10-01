@@ -389,7 +389,7 @@ app.post('/register', async (req, res) => {
 
         // Insertar nuevo usuario
 //        await pool.execute('INSERT INTO users (user, name, rol, pass) VALUES (?, ?, ?, ?)', [user, name, rol, passwordHash]);
-        await pool.execute('INSERT INTO sarlaft.users (rz, id_rz, user, name, rol, pass) VALUES (?, ?, ?, ?, ?, ?)', [rz, id_rz, user, name, rol, passwordHash]);
+        await pool.execute('INSERT INTO users (rz, id_rz, user, name, rol, pass, null) VALUES (?, ?, ?, ?, ?, ?, ?)', [rz, id_rz, user, name, rol, passwordHash, null]);
 //      await pool.execute(`INSERT INTO ${tableName} (texto, estado, fechacreacion) VALUES (?, ?, ?)`, [pgtas, estado, date]);
 
         res.json({
