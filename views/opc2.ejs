@@ -41,7 +41,7 @@
                                 <input type="checkbox" name="pregunta" value="<%= item.id %>">
                                 <label><%= item.texto %></label>
 -->
-                                <input type="checkbox" name="pregunta" value="<%= item.id %>" <%= item.estado === 1 ? 'checked' : '' %> >
+                                <input type="radio" name="pregunta" value="<%= item.id %>" <%= item.estado === 1 ? 'checked' : '' %> >
                                 <label><%= item.texto %></label>
 
                             </div>

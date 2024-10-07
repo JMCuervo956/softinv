@@ -30,9 +30,11 @@
 
 <body>
     <%- include('partials/navigation') %>  
-    <h5 style="color: blue; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); transition: color 0.3s ease;" onmouseover="this.style.color='darkblue';" onmouseout="this.style.color='blue';">Usuario: <%= name %></h5>
-    <h5 style="color: #e04010c7; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); text-align: center;">Pregunta</h5>
-    <h4 style="text-align: center;"><%= texto %></h4>
+    <br><br>
+    <div style="text-align: left;">
+        <h5 style="color: #e04010c7; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); display: inline; margin-right: 30px; margin-left: 80px;">Pregunta :</h5>
+        <h6 style="display: inline;">&nbsp;&nbsp;&nbsp;&nbsp;<%= texto %></h6>
+    </div>    
     <div class="content">
         <div>    
             <div class="container mt-1">
@@ -55,10 +57,10 @@
                                         <tr>
                                             <td class="tex-hover-effect"><%= item.respuesta %></td>
                                             <td>
-                                                <a href="/modopc?idvlrprg=<%= item.id %>&respuesta=<%= item.respuesta %>" class="btn btn-warning btn-sm btn-hover-effect ">Mod</a>
+                                                <a href="/modopc?idvlrprg=<%= item.id %>&respuesta=<%= item.respuesta %><%idp= id %><%pgp= texto %>" class="btn btn-warning btn-sm btn-hover-effect ">Mod</a>
                                             </td>
                                             <td>
-                                                <a href="/eliopc?id=<%= item.id %>&respuesta=<%= item.respuesta %>" class="btn btn-danger btn-sm btn-hover-effect ">Ret</a>
+                                                <a href="/eliopc?idvlrprg=<%= item.id %>&respuesta=<%= item.respuesta %><%idp= id %><%pgp= texto %>" class="btn btn-danger btn-sm btn-hover-effect ">Ret</a>
                                             </td>
                                         </tr>
                                     <% }); %>

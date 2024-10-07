@@ -12,27 +12,23 @@
 </head>
 <body>
     <%- include('partials/navigation') %>  
-    <h5 style="color: blue; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); transition: color 0.3s ease;" onmouseover="this.style.color='darkblue';" onmouseout="this.style.color='blue';">Usuario: <%= name %></h5>
-
-    <div class="register-formcda"> 
-        <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Pregunta:  </span><%= id %> 
-        <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Pregunta:  </span><%= respuesta %> 
-    </div>
-
+    <br><br>    
+    <div style="text-align: center;">
+        <h5 style="color: #e04010c7; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); display: inline; margin-right: 10px;">Pregunta :</h5>
+        <h6 style="display: inline;"><%= id %><span style="margin-left: 20px;"><%= respuesta %></span></h6>
+    </div>       
     <div class="content">
-        <div class="register-formcda" > 
-            <h5>Opciones de Preguntas</h5>
-        </div>
         <div class="register-formcda"> 
-            <form id="registerForm" action="/preguntasregopc" method='POST'> 
+            <form id="registerForm"> 
                 <div class="contenedor__login-register">
-                    <br>
-                    <input type="text" name="pgtas" class="input-small" placeholder="Pregunta" required>
-                    <br><br>
-                    <h1></h1>    
+                    <input type="hidden" name="id" value="<%= id %>">
+                    <input type="hidden" name="respuesta" value="<%= respuesta %>">
+                    <h6>Respuesta a Adicionar</h6>
+                    <input type="text" name="pgtas" class="input-small" placeholder="Respuesta" required>
                     <div style="display: inline;">
                         <h5></h5>
-                        <a href="/opciones?id=<%= id %>&texto=<%= respuesta %>" class="btn-cancel"> Regresar </a><input type="submit" class="btn-save" value=" Registrar ">
+                        <a href="/opciones?id=<%= id %>&texto=<%= respuesta %>" class="btn-cancel"> Regresar </a>
+                        <input type="submit" class="btn-save" value=" Registrar ">
                     </div>
                 </div>       
             </form>    
@@ -42,9 +38,8 @@
     <script>
         document.getElementById('registerForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
-
             const formData = new FormData(this);
-            const response = await fetch('/preguntasreg', {
+            const response = await fetch('/opcionesreg', {
                 method: 'POST',
                 body: new URLSearchParams(formData)
             });
@@ -52,14 +47,13 @@
             const result = await response.json();
 
             Swal.fire({
-                title: result.title || 'Error',
                 text: result.message || 'Hubo un problema',
                 icon: result.status,
                 showConfirmButton: true,
-                timer: result.status === 'success' ? 2500 : null // Timer solo para éxito
+                timer: result.status === 'success' ? 500 : null // Timer solo para éxito
             }).then(() => {
                 if (result.status === 'success') {
-                    window.location.href = '/ingpreguntas'; // Redirigir al usuario si es necesario
+                    window.location.href = '/opciones?id=<%= id %>&texto=<%= respuesta %>'; // Redirigir al usuario si es necesario
                 }
             });
         });

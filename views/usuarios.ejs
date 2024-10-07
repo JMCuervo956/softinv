@@ -23,7 +23,11 @@
 
 <body>
     <%- include('partials/navigation') %>  
-    <h5 style="color: blue; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); transition: color 0.3s ease;" onmouseover="this.style.color='darkblue';" onmouseout="this.style.color='blue';">Usuario: <%= name %></h5>
+    <h5 style="font-size: 14px; color: blue; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); transition: color 0.3s ease;" 
+        onmouseover="this.style.color='darkblue';" 
+        onmouseout="this.style.color='blue';">
+        <span style="padding-left: 10px;"><%= name %></span>
+    </h5>
     <br>
     <div class="content">
         <div>
@@ -55,7 +59,7 @@
                                     <td class="tex-hover-effect" style="width: 400px;"><%= item.name %></td>
                                     <td class="tex-hover-effect" style="width: 400px;"><%= item.rol %></td>
                                     <td>
-                                        <a href="/moduser?user=<%= item.user %>&name=<%= item.name %>" class="btn btn-warning btn-sm btn-hover-effect ">Mod</a>
+                                        <a href="/moduser?user=<%= item.user %>&name=<%= item.name %>&rol=<%= item.rol %>&estado=<%= item.estado %>" class="btn btn-warning btn-sm btn-hover-effect ">Mod</a>
                                     </td>
                                     <td>
                                         <a href="/eliuser?user=<%= item.user%>&name=<%= item.name %>" class="btn btn-danger btn-sm btn-hover-effect ">Ret</a>

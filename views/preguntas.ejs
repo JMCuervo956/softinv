@@ -13,7 +13,6 @@
 </head>
 <body>
     <%- include('partials/navigation') %>  
-    <h5 style="color: blue; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); transition: color 0.3s ease;" onmouseover="this.style.color='darkblue';" onmouseout="this.style.color='blue';">Usuario: <%= name %></h5>
     <div class="content">
         <div class="register-formcda" > 
             <h5>Registro de Preguntas</h5>
@@ -47,11 +46,10 @@
             const result = await response.json();
 
             Swal.fire({
-                title: result.title || 'Error',
                 text: result.message || 'Hubo un problema',
                 icon: result.status,
                 showConfirmButton: true,
-                timer: result.status === 'success' ? 2500 : null // Timer solo para éxito
+                timer: result.status === 'success' ? 1500 : null // Timer solo para éxito
             }).then(() => {
                 if (result.status === 'success') {
                     window.location.href = '/ingpreguntas'; // Redirigir al usuario si es necesario

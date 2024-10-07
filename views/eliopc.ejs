@@ -13,34 +13,35 @@
 <body>
     <%- include('partials/navigation') %>  
     <div class="content">
-        <div class="register-formcda" > 
-            <h5 style="font-size: 24px; color: #5f14b6; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">Eliminar PREGUNTA</h5>
-
-        </div>
+        <br><br>
+        <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Pregunta:</span> 
+        <span style="color: #d11b33; text-shadow: 3px 1px 2px rgba(0, 0, 0, 0.3);"><%= pgp %></span>
         <div class="register-formpgt"> 
             <form id="registerForm" action="/preguntaseliopc" method='POST'> 
                 <div class="contenedor__login-register">
                     <p style="font-size: 20px;">
+                        <h5 style="font-size: 16px; color: #5f14b6; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">Eliminar Respuesta</h5>
+                    </p> 
+
+                    <p style="font-size: 20px;">
                         <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">ID:</span> 
-                        <span style="color: #d11b33; text-shadow: 3px 1px 2px rgba(0, 0, 0, 0.3);"><%= id %></span>
+                        <span style="color: #d11b33; text-shadow: 3px 1px 2px rgba(0, 0, 0, 0.3);"><%= idvlrprg %></span>
                     </p>
 
                     <p style="font-size: 20px;">
                         <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Pregunta:</span> 
-                        <span style="color: #d11b33; text-shadow: 2px 1px 2px rgba(0, 0, 0, 0.3);"><%= texto %></span>
+                        <span style="color: #d11b33; text-shadow: 2px 1px 2px rgba(0, 0, 0, 0.3);"><%= respuesta %></span>
                     </p>
 
-                    <br>
                     <!-- Campo oculto con el mismo valor -->
-                    <input type="hidden" name="ids" value="<%= id %>">
-                    <input type="hidden" name="pgtas" value="<%= texto %>">
-
+                    <input type="hidden" name="idvlrprg" value="<%= idvlrprg %>">
                     <div style="display: inline;">
                         <h5></h5>
-                        <a href="/ingpreguntas" class="btn-cancel"> Regresar </a>   
+                        <a href="/opciones?id=<%= idp %>&texto=<%= pgp %>" class="btn-cancel"> Regresar </a> 
                     </div>
                     <input type="submit" class="btn-save" value=" Confirmar ">
                 </div>       
+
             </form>    
         </div>
     </div>
@@ -49,7 +50,7 @@
         document.getElementById('registerForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
             const formData = new FormData(this);
-            const response = await fetch('/preguntaseli', {
+            const response = await fetch('/preguntaseliopc', {
                 method: 'POST',
                 body: new URLSearchParams(formData)
             });
@@ -59,10 +60,10 @@
                 text: result.message || 'Hubo un problema',
                 icon: result.status,
                 showConfirmButton: true,
-                timer: result.status === 'success' ? 2500 : null // Timer solo para éxito
+                timer: result.status === 'success' ? 1000 : null // Timer solo para éxito
             }).then(() => {
                 if (result.status === 'success') {
-                    window.location.href = '/ingpreguntas'; // Redirigir al usuario si es necesario
+                    window.location.href = '/opciones?id=<%= idp %>&texto=<%= pgp %>'; // Redirigir al usuario si es necesario
                 }
             });
         });
