@@ -711,10 +711,6 @@ app.post('/usuarioeli', async (req, res) => {
         }
         const date = new Date();
         const estado = 0; // Ejemplo de estado
-        console.log(id);
-        console.log(respuesta);
-        console.log(pgtas);
-        console.log(date);
         await pool.execute(`INSERT INTO ${tableName} (idprg, pregunta, respuesta, fecha, estado) VALUES (?, ?, ?, ?, ?)`, [id, respuesta, pgtas, date, estado]);
         res.json({
             status: 'success',
