@@ -696,3 +696,6 @@ button:hover {
     opacity: .75;
 }
 
+.ocultar-columna {
+        display: none;
+}

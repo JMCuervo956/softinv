@@ -18,7 +18,6 @@
                             <br><br>  
                             <h6>Pregunta: </h6>
                             <h6 style="font-family: 'Arial', sans-serif; color: rgb(216, 19, 45); font-weight: bold;"> <%= preguntas[0].texto %> </h6>
-<!--                            <input type="text" name="id" value="<%= preguntas[0].idp %>">  -->
                     </thead>        
                 </table>
             </div>
@@ -26,21 +25,36 @@
             <div class="register-formIzq1"> 
                 <div style="font-size: 20px;"> 
                     <form id="registerForm" action="/procesarseleccion" method="POST" > 
-                        <% preguntas.forEach(function(item) { %>
-                            <div>
-<!--                                <input type="radio" name="preguntas" value="<%= item.respuesta %>" id="respuesta-<%= item.respuesta %> "  
-                <input type="radio" name="preguntas" value="<%= item.id %>|<%= item.respuesta %>" id="respuesta-<%= item.id %>">   -->
-                <input type="radio" name="preguntas" value="<%= item.idp %>|<%= item.texto %>|<%= item.id %>|<%= item.respuesta %>" id="respuesta-<%= item.id %>">
-                    <% if (item.default) { %> checked <% } %> >
-                                <label for="respuesta-<%= item.id %>"><%= item.respuesta %></label><br>
-                            </div>
+                        <% if (preguntas[0].prgact === 1) { %>
+                            <% preguntas.forEach(function(item) { %>
+                                    <div>
+                                        <input type="radio" name="preguntas" value="<%= item.idp %>|<%= item.texto %>|<%= item.id %>|<%= item.respuesta %>" id="respuesta-<%= item.id %>">
+                                        <% if (item.default) { %> checked <% } %> 
+                                            <label for="respuesta-<%= item.id %>"><%= item.respuesta %></label><br>
+                                    </div>
                             <% }); %>
-                        <br> 
-                        <div style="display: inline;">
-                            <input type="submit" class="btn-save" value="Votar">
-                        </div>
+                            <div style="display: inline;">
+                                <input type="submit" class="btn-save" value="Votar">
+                            </div>
+                        <% } else { %>
+                            <% preguntas.forEach(function(item) { %>
+                                <div>
+                                    <input type="radio" name="preguntas" 
+                                        value="<%= item.idp %>|<%= item.texto %>|<%= item.id %>|<%= item.respuesta %>" 
+                                        id="respuesta-<%= item.id %>" 
+                                        <% if (!item.default) { %> disabled <% } %>
+                                        <% if (item.default) { %> checked <% } %> 
+                                    />
+                                    <label for="respuesta-<%= item.id %>"><%= item.respuesta %></label><br>
+                                </div>
+                            <% }); %>
+                            <div style="display: inline;">
+                                <h6 style="background-color: rgb(95, 102, 3); padding: 10px; color: white;">Pregunta NO Activa (Cerrada)</h6>
+                            </div>
+                        <% } %>
                     </form>
-                    </div>   
+
+                </div>   
                 </div>    
         <% } else { %>
             <tr>

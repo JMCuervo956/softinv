@@ -197,7 +197,7 @@ app.get('/opc1', async (req, res) => {
             const userUser = req.session.user;
             const userName = req.session.name;
 //            const [rows] = await pool.execute("select a.texto,a.estado,b.respuesta,b.estado from preguntas a inner join pgtaresp b on a.id=b.idprg where a.estado=0");
-            const [rows] = await pool.execute("select a.id as idp,a.texto,a.estado,b.id,b.respuesta,b.estado from preguntas a inner join pgtaresp b on a.id=b.idprg where a.estado=1");
+            const [rows] = await pool.execute("select a.id as idp,a.texto,a.estado,a.activo as prgact,b.id,b.respuesta,b.estado from preguntas a inner join pgtaresp b on a.id=b.idprg where a.estado=1");
             res.render('opc1', { preguntas: rows, user: userUser, name: userName });
         } else {
             res.send('Por favor, inicia sesión primero.');
@@ -322,7 +322,7 @@ app.post('/preguntasreg', async (req, res) => {
             return res.json({ status: 'error', message: 'Pregunta ya Existe' });
         }
         const date = new Date();
-        await pool.execute(`INSERT INTO ${tableName} (texto, estado, fechacreacion) VALUES (?, ?, ?)`, [pgtas, 0, date]);
+        await pool.execute(`INSERT INTO ${tableName} (texto, estado, activo, fechacreacion) VALUES (?, ?, ?, ?)`, [pgtas, 0, 0, date]);
         res.json({ status: 'success', message: '¡Registrado correctamente!' });
     } catch (error) {
         res.json({ status: 'success', message: '¡Registro de Preguta NO Exitoso!' });
@@ -563,18 +563,24 @@ app.post('/procesar-seleccion', async (req, res) => {
             const userUser = req.session.user;
             const userName = req.session.name;
             const selectedValue = req.body.pregunta; // Obtén el valor seleccionado
-            await pool.execute('UPDATE preguntas SET estado = 0');
-            for (const id of selectedValue) {
-                const wact = id;
-                await pool.execute('UPDATE preguntas SET estado = 1 WHERE id = ?', [wact]);
-                if (selectedValue && selectedValue.length > 0) {
-                    for (const id of selectedValue) {
-                        await pool.execute('UPDATE preguntas SET estado = 1 WHERE id = ?', [id]);
-                    }                
-                }else{
-                    console.log('Error update procesar-seleccion')
-                }  
+            const selectActivo = parseInt(req.body.selactivo, 10); // Convierte a entero
+
+            // Actualiza el estado y activo a 0 para todas las preguntas
+            await pool.execute('UPDATE preguntas SET estado = 0, activo = 0');
+
+            // Verifica si hay valores seleccionados
+            if (selectedValue && selectedValue.length > 0) {
+                for (const id of selectedValue) {
+                    // Actualiza el estado a 1 para los ids seleccionados
+                    await pool.execute('UPDATE preguntas SET estado = 1 WHERE id = ?', [id]);
+                    
+                    // Actualiza el activo según selectActivo (asumiendo que es un valor por cada id)
+                    await pool.execute('UPDATE preguntas SET activo = ? WHERE id = ?', [selectActivo, id]);
+                }
+            } else {
+                console.log('Error update procesar-seleccion');
             }
+
             return res.json({
                 status: 'success',
                 title: 'Seleccion OK',
@@ -590,7 +596,7 @@ app.post('/procesar-seleccion', async (req, res) => {
     });
     
 // Ruta para procesar los datos del formulario
-
+/*
 app.post('/procesar-preguntas-opciones', async (req, res) => {
     const preguntas = [];
     const c1 = 1;
@@ -625,7 +631,7 @@ app.post('/procesar-preguntas-opciones', async (req, res) => {
     const [result] = await pool.execute('INSERT INTO preguntas (id, texto, tipo, fecha, estado) VALUES (?, ?, ?, ?, ?)', [c1, `${item.pregunta}`, `${opcion}`, c2, c3]);
     res.send('Preguntas y opciones capturadas correctamente');
 });
-
+*/
    
 // modifica usuarios - post
 
