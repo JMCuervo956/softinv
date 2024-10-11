@@ -14,8 +14,6 @@
             <div class="register-formIzq1"> 
                 <table>
                     <thead>
-                            <a href="/menuprc" class="btn btn-success btn-sm btnind-hover-effect">Regresar</a>
-                            <br><br>  
                             <h6>Pregunta: </h6>
                             <h6 style="font-family: 'Arial', sans-serif; color: rgb(216, 19, 45); font-weight: bold;"> <%= preguntas[0].texto %> </h6>
                     </thead>        
@@ -34,7 +32,8 @@
                                     </div>
                             <% }); %>
                             <div style="display: inline;">
-                                <input type="submit" class="btn-save" value="Votar">
+                                <input type="submit" class="btn btn-success btn-sm" value="Votar">
+                                <a href="/menuprc" class="btn btn-success btn-sm" style="background-color: rgb(255, 244, 87); color: rgb(139, 17, 240); font-weight: bold;">Regresar</a>
                             </div>
                         <% } else { %>
                             <% preguntas.forEach(function(item) { %>
@@ -49,23 +48,31 @@
                                 </div>
                             <% }); %>
                             <div style="display: inline;">
-                                <h6 style="background-color: rgb(95, 102, 3); padding: 10px; color: white;">Pregunta NO Activa (Cerrada)</h6>
+                                <br>
+                                <td>
+                                    <div style="display: flex; align-items: center;">
+                                        <a href="/menuprc" class="btn btn-success btn-sm" style="background-color: rgb(255, 244, 87); color: rgb(139, 17, 240); font-weight: bold;">Regresar</a>
+                                        <h6 style="background-color: rgb(95, 102, 3); padding: 8px; color: white; margin-left: 10px;">Pregunta NO Activa (Cerrada)</h6>
+                                    </div>
+                                </td>
                             </div>
                         <% } %>
                     </form>
-
                 </div>   
-                </div>    
+            </div>    
         <% } else { %>
             <tr>
                 <div>
-                    <td colspan="4" >No hay datos disponibles</td>   
+                    <div class="register-formIzq1"> 
+                        <td>No hay datos disponibles</td>
+                        <a href="/menuprc" class="btn btn-success btn-sm" style="background-color: rgb(255, 244, 87); color: rgb(139, 17, 240); padding: 10px 30px; font-weight: bold; margin-left: 60px;">Regresar</a>
+                    </div>
                 </div>
             </tr>
         <% } %>
     </div>
 
-        <script>
+    <script>
             function validarSeleccion() {
                 const radios = document.getElementsByName('preguntas');
                 let seleccionada = false;
@@ -76,7 +83,6 @@
                         break;
                     }
                 }
-
                 if (!seleccionada) {
                     Swal.fire({
                         title: 'Atención',
@@ -85,7 +91,6 @@
                         confirmButtonText: 'Entendido'
                     });
                 }
-
                 return seleccionada; // Evita el envío si no hay selección
             }
         </script>
@@ -117,10 +122,10 @@
                 });
             });
         </script>
-            <%- include('partials/footer') %>  
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-            <script src="/src/main.js"></script>
-            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>    
+        <%- include('partials/footer') %>  
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/src/main.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>    
 
 </body>
 </html>

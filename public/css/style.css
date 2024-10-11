@@ -126,13 +126,27 @@ form{
 }
 
 .register-formpgt{
-    width: 600px;
+    width: 100%;
     margin: 0 auto;
     padding: 20px 20px 20px 20px;  /* Espacio : Sup, der, inf, izq */
     margin-top: 35px;
     font-family: roboto;
     text-align: left !important;
-    box-shadow: 0 19px 30px rgb(0,0,0,0.30), 0 15px 12px rgb(0,0,0,0.22) ; /* sombras */ 
+    box-shadow: 0 19px 30px rgba(0, 0, 0, 0.5), 0 15px 12px rgba(0, 0, 0, 0.22); /* Sombras */
+    border-radius: 8px; /* Añadir bordes redondeados para mejorar el diseño */
+}
+
+
+.register-formIzq1 {
+    width: 100%; /* Cambia a 100% para que ocupe el ancho del contenedor */
+    max-width: 500px; /* Limita el ancho máximo para pantallas grandes */
+    margin: 15px auto; /* Centra el contenedor en la pantalla */
+    padding: 10px; /* Espaciado interno */
+    font-size: 20px; 
+    box-shadow: 0 19px 30px rgba(0, 0, 0, 0.5), 0 15px 12px rgba(0, 0, 0, 0.22); /* Sombras */
+    text-align: left;
+    border-radius: 8px; /* Añadir bordes redondeados para mejorar el diseño */
+    box-sizing: border-box; /* Asegura que el padding se incluya en el ancho total */
 }
 
 .register-formIzq{
@@ -155,15 +169,13 @@ form{
     box-shadow: 0 19px 30px rgb(0,0,0,0.30), 0 15px 12px rgb(0,0,0,0.22) ; /* sombras */ 
 }
 
-.register-formIzq1{
-    width:500px;
-    margin: 15px;
-    padding: 10px; /* 20px 20px 20px 20px; Espacio : Sup, der, inf, izq */
-    margin-top: 15px;
-    font-size: 20px; 
-    box-shadow: 0 19px 30px rgb(0,0,0,0.50), 0 15px 12px rgb(0,0,0,0.22) ; /* recuado y sombras */ 
-    text-align: left;
+@media (max-width: 600px) {
+    .register-formIzq1 {
+        font-size: 16px; /* Ajusta el tamaño de fuente en pantallas pequeñas */
+        padding: 8px; /* Reduce el padding en pantallas pequeñas */
+    }
 }
+
 
 body.imagen {
     background-image: url('/img/lmagenIni.jpg'); /* Ruta de la imagen */
@@ -699,3 +711,4 @@ button:hover {
 .ocultar-columna {
         display: none;
 }
+

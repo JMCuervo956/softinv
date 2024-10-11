@@ -41,6 +41,7 @@ app.use((req, res, next) => {
 		
 // Middleware		
 app.use(express.static(path.join(__dirname, '../public')));		
+
 app.use(express.json());		
 app.use(express.urlencoded({ extended: true }));		
 		
@@ -533,8 +534,7 @@ app.post('/procesarseleccion', async (req, res) => {
             return res.json({
                 status: 'info',
                 title: `ya No puede votar`,
-                message: `Voto 
-                Registrado : [ ${respuesta} ]`
+                message: `Su Voto Registrado es : [ ${respuesta} ]`
             });
         } else {
             // insert de respuesta
