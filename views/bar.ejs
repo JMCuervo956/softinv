@@ -10,7 +10,7 @@
     <style>
         /* Ajustamos el tamaño del contenedor */
         #chart-container {
-            width: 400px;
+            width: 100%;
             height: 300px;
         }
 
@@ -25,12 +25,15 @@
 <body>
 <%- include('partials/navigation') %>  
 <div class="content">
-    <div id="chart-container">
-        <canvas id="myChart"></canvas>
-    </div>
-    <a href="/menuprc" class="btn btn-success btn-sm btnind-hover-effect">Regresar</a>
+    <div class="register-formIzq1"> 
+        <div id="chart-container">
+            <canvas id="myChart"></canvas>
+        </div>
+        <a href="/menuprc" class="btn btn-success btn-sm btnind-hover-effect">Regresar</a>
+    </div>    
 </div>    
-    <script>
+
+<script>
         const labels = ['No', 'Si', 'NS/NR'];  // Definimos las etiquetas aquí
         const dataValues = [12, 19, 3];  // Valores de la gráfica
         const total = dataValues.reduce((a, b) => a + b, 0);  // Total de valores

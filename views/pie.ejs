@@ -10,7 +10,7 @@
     <style>
         /* Ajustamos el tamaño del contenedor */
         #chart-container {
-            width: 400px;
+            width: 100%;
             height: 300px;
             position: relative;  /* Posicionamiento relativo para los títulos */
         }
@@ -35,37 +35,37 @@
 </head>
 <body>
 <%- include('partials/navigation') %>  
-<br><br>
-<div>
-    <a href="/menuprc" class="btn btn-success btn-sm btnind-hover-effect">Regresar</a>
-</div>
-
-<div class="content">
-    
-    <div id="chart-container">
-        <canvas id="myChart"></canvas>
-        <div class="legend">
-            <div>
-                <div style="width: 20px; height: 20px; background-color: rgba(255, 99, 132, 0.2); border: 1px solid rgba(255, 99, 132, 1);"></div>
-                <span>Rojo</span>
-            </div>
-            <div>
-                <div style="width: 20px; height: 20px; background-color: rgba(54, 162, 235, 0.2); border: 1px solid rgba(54, 162, 235, 1);"></div>
-                <span>Azul</span>
-            </div>
-            <div>
-                <div style="width: 20px; height: 20px; background-color: rgba(255, 206, 86, 0.2); border: 1px solid rgba(255, 206, 86, 1);"></div>
-                <span>Amarillo</span>
-            </div>
-        </div>
+    <br><br>
+    <div>
+        <a href="/menuprc" class="btn btn-success btn-sm btnind-hover-effect">Regresar</a>
     </div>
-</div>    
+    <div class="content">
+        <div class="register-formIzq1"> 
+            <div id="chart-container">
+                <canvas id="myChart"></canvas>
+                <div class="legend">
+                    <div>
+                        <div style="width: 20px; height: 20px; background-color: rgba(255, 99, 132, 1); border: 1px solid rgba(255, 99, 132, 1);"></div>
+                        <span>Rojo</span>
+                    </div>
+                    <div>
+                        <div style="width: 20px; height: 20px; background-color: rgba(54, 162, 235, 1); border: 1px solid rgba(54, 162, 235, 1);"></div>
+                        <span>Azul</span>
+                    </div>
+                    <div>
+                        <div style="width: 20px; height: 20px; background-color: rgba(255, 206, 86, 1); border: 1px solid rgba(255, 206, 86, 1);"></div>
+                        <span>Amarillo</span>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+
 <script>
         const labels = ['No', 'Si', 'Ns/Nr'];  // Definimos las etiquetas aquí
         const dataValues = [12, 19, 3];  // Valores de la gráfica
         const total = dataValues.reduce((a, b) => a + b, 0);  // Total de valores
         const dataPercentage = dataValues.map(value => ((value / total) * 100).toFixed(2));  // Porcentajes
-
         const ctx = document.getElementById('myChart').getContext('2d');
         const myChart = new Chart(ctx, {
             type: 'pie',  // Cambiado a gráfico de pastel
@@ -98,14 +98,13 @@
                         formatter: function(value, context) {
                             const percentage = dataPercentage[context.dataIndex];
                             return `Votos: ${value} \n\n (${percentage}%)`;  // Formato para mostrar valor y porcentaje
-
                         }
                     }
                 }
             },
             plugins: [ChartDataLabels]  // Activar el plugin de DataLabels
         });
-    </script>
+</script>
     <%- include('partials/footer') %>  
 </body>
 </html>
