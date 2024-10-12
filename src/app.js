@@ -258,9 +258,36 @@ app.get('/usuarios', async (req, res) => {
 
 // Graficos
 
-app.get('/bar', (req, res)=>{
-    res.render('bar'); 
-})
+app.get('/bar', async (req, res) => {
+    try {
+        if (req.session.loggedin) {
+            // Ejecuta la consulta SQL
+            const [datos] = await pool.execute("SELECT respuesta, COUNT(*) AS total FROM respusers GROUP BY respuesta order by total desc");
+
+            // Procesa los resultados para obtener las etiquetas y valores
+            const labels = [];
+            const dataValues = [];
+
+            // Cambié 'results' por 'datos' porque 'datos' es el resultado de la consulta
+            datos.forEach(row => {
+                labels.push(row.respuesta);  // Añade la respuesta como una etiqueta
+                dataValues.push(row.total);  // Añade el conteo de respuestas como un valor
+            });
+
+            // Pasa estos datos a la vista
+            res.render('bar', {
+                labels: labels, // No es necesario usar JSON.stringify aquí
+                dataValues: dataValues, // No es necesario usar JSON.stringify aquí
+            });
+        } else {
+            res.send('Por favor, inicia sesión primero.');
+        }
+    } catch (error) {
+        console.error('Error al ejecutar la consulta:', error);  // Imprime el error en la consola
+        res.status(500).send('Error conectando a la base de datos.');
+    }
+});
+
 
 app.get('/pie', (req, res)=>{
     res.render('pie'); 
