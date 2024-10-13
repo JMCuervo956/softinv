@@ -289,8 +289,34 @@ app.get('/bar', async (req, res) => {
 });
 
 
-app.get('/pie', (req, res)=>{
-    res.render('pie'); 
+app.get('/pie', async (req, res)=>{
+    try {
+        if (req.session.loggedin) {
+            // Ejecuta la consulta SQL
+            const [datos] = await pool.execute("SELECT respuesta, COUNT(*) AS total FROM respusers GROUP BY respuesta order by total desc");
+
+            // Procesa los resultados para obtener las etiquetas y valores
+            const labels = [];
+            const dataValues = [];
+
+            // Cambié 'results' por 'datos' porque 'datos' es el resultado de la consulta
+            datos.forEach(row => {
+                labels.push(row.respuesta);  // Añade la respuesta como una etiqueta
+                dataValues.push(row.total);  // Añade el conteo de respuestas como un valor
+            });
+
+            // Pasa estos datos a la vista
+            res.render('pie', {
+                labels: labels, // No es necesario usar JSON.stringify aquí
+                dataValues: dataValues, // No es necesario usar JSON.stringify aquí
+            });
+        } else {
+            res.send('Por favor, inicia sesión primero.');
+        }
+    } catch (error) {
+        console.error('Error al ejecutar la consulta:', error);  // Imprime el error en la consola
+        res.status(500).send('Error conectando a la base de datos.');
+    }
 })
 
 // Opciones
@@ -524,10 +550,18 @@ app.post('/preguntaseli', async (req, res) => {
             message: '¡Registro Exitoso! BD'
         });
     } catch (error) {
-        res.json({
+        if (error.code === 'ER_ROW_IS_REFERENCED') {
+            return res.json({
+                status: 'error',
+                title: 'Borrado No Exitoso',
+                message: 'No se puede eliminar la pregunta porque tiene dependencia de OPCIONES.'
+            });
+        }
+        // Para cualquier otro tipo de error
+        return res.json({
             status: 'error',
-            title: 'Borrado de Preguta NO Exitoso',
-            message: `Error: ${error.message}`
+            title: 'Error de Borrado',
+            message: `Error: ${error.code}`
         });
     }
 });
