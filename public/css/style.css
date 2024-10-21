@@ -712,3 +712,91 @@ button:hover {
         display: none;
 }
 
+/* menus opc 1 */
+
+.dropbtn {
+    background-color: #4CAF50;
+    color: rgb(255, 255, 255);
+    padding: 8px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+.dropdown {
+    position: relative;
+    display: block; /* O inline-block, dependiendo de cómo quieras que se comporte */
+    width: 100px; /* Establecer el ancho deseado */
+}
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f6f7ca;
+    min-width: 10px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    border: 0px solid transparent;
+    font-size: 12px;
+  }
+  
+  .dropdown-content a:hover {
+    border: 1px solid #4CAF50;
+  }
+
+  
+
+  /* menu opc2 */
+
+  .menu, .submenu {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu > li {
+  display: inline-block;
+  position: relative;
+}
+
+.menu > li > a {
+  display: block;
+  padding: 10px;
+  background-color: #333;
+  color: white;
+  text-decoration: none;
+}
+
+.menu > li > a:hover {
+  background-color: #444;
+}
+
+.submenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #444;
+}
+
+.submenu > li > a {
+  padding: 10px;
+  display: block;
+  color: white;
+  text-decoration: none;
+}
+
+.submenu > li > a:hover {
+  background-color: #555;
+}
+
+.menu > li:hover .submenu {
+  display: block;
+}

@@ -16,8 +16,13 @@ import { pool } from './db.js';
 import { PORT } from './config.js';		
 import path from 'path';		
 import { fileURLToPath } from 'url';		
-import { Console } from 'console';		
-		
+//console.log('Hello, world!');
+
+// menus 
+ 
+// src/app.js
+import { toggleSubmenu } from './menu.js';
+
 // Configuración de rutas y variables		
 const __filename = fileURLToPath(import.meta.url);		
 const __dirname = path.dirname(__filename);		
@@ -60,8 +65,10 @@ function showAlert() {
         timer: 1500 // Duración en milisegundos (1500 ms = 1.5 segundos)		
     });		
 }		
-		
+
+
 // Rutas		
+
 app.get('/', async (req, res) => {		
     try {		
         res.render('inicio');		
@@ -91,6 +98,17 @@ app.get('/register', (req, res) => {
     }
 });
 
+app.get('/menuDropdown', (req, res) => {
+    if (req.session.loggedin) {
+        const { user, name } = req.session;
+        res.render('menuDropdown', { user, name });
+    } else {
+        res.send('Por favor, inicia sesión primero.');
+    }
+});
+
+
+
 // ajuste const
 
 app.get('/preguntas', (req, res)=>{
@@ -108,6 +126,16 @@ app.get('/cargas', (req, res)=>{
         const userUser = req.session.user;
         const userName = req.session.name;
         res.render('cargas', { user: userUser, name: userName });
+    } else {
+        res.send('Por favor, inicia sesión primero.');
+    }
+})
+
+app.get('/cargascol', (req, res)=>{
+    if (req.session.loggedin) {
+        const userUser = req.session.user;
+        const userName = req.session.name;
+        res.render('cargascol', { user: userUser, name: userName });
     } else {
         res.send('Por favor, inicia sesión primero.');
     }
@@ -155,10 +183,6 @@ app.get('/modopc', (req, res) => {
     const idvlrprg = req.query.idvlrprg; // variable ej> idvlrprg, que se debe usar en modopc idprg
     const respuesta = req.query.respuesta;
     res.render('modopc', { idvlrprg, respuesta});
-/*
-    idp= id 
-    pgp= texto
-*/
 
 });
 
@@ -181,8 +205,6 @@ app.get('/seleccion', async (req, res) => {
 
 app.get('/opcbtn', async (req, res) => {
     try {
-//        console.log('Conexión exitosa, respuesta de la base de datos:', rows);
-
         const [rows] = await pool.execute("select * from preguntas");
         // Verifica si se están obteniendo los datos correctamente
         res.render('opcbtn', { data: rows });
@@ -197,7 +219,6 @@ app.get('/opc1', async (req, res) => {
         if (req.session.loggedin) {
             const userUser = req.session.user;
             const userName = req.session.name;
-//            const [rows] = await pool.execute("select a.texto,a.estado,b.respuesta,b.estado from preguntas a inner join pgtaresp b on a.id=b.idprg where a.estado=0");
             const [rows] = await pool.execute("select a.id as idp,a.texto,a.estado,a.activo as prgact,b.id,b.respuesta,b.estado from preguntas a inner join pgtaresp b on a.id=b.idprg where a.estado=1");
             res.render('opc1', { preguntas: rows, user: userUser, name: userName });
         } else {
@@ -221,7 +242,6 @@ app.get('/ingpreguntas', async (req, res) => {
     try {
         const tableName = "preguntas";
         const [rows] = await pool.execute(`select * from ${tableName}`);
-//        const [rows] = await pool.execute("select * from preguntas where estado=0");
         if (req.session.loggedin) {
             const userUser = req.session.user;
             const userName = req.session.name;
@@ -338,6 +358,14 @@ app.get('/opciones', async(req, res) => {
         res.status(500).send('Error conectando a la base de datos.?????');
         }
     });
+
+// crgas CSV
+
+app.get('/cargascsv', (req, res) => {
+    const id = req.query.id;
+    const texto = req.query.texto;
+    res.render('cargascsv', { id, texto });
+});
 
 // 11. Autenticacion 
 
@@ -568,19 +596,11 @@ app.post('/preguntaseli', async (req, res) => {
 
 /* voto opc1 pgtaresp pgtaresp pgtaresp */   
 app.post('/procesarseleccion', async (req, res) => {
-//    console.log('Datos recibidos:', req.body); // Asegúrate de que esto imprima correctamente
-//    const selectedValue = req.body.preguntas; // Esto debe contener el valor seleccionado
-//    console.log('Valor seleccionado:', selectedValue);
     try {
         const userUser = req.session.user;
         const userName = req.session.name;
         const selectedValue = req.body.preguntas; // Obtén el valor seleccionado
         const [id, texto, idp, respuesta] = selectedValue.split('|');
-//        const id = req.body.id;
-
-
-        //        console.log(selectedValue);
-//        console.log(userUser);
 
         // EVALUA SI YA VOTO
         const pgtas = req.body.pgtas;
@@ -656,44 +676,7 @@ app.post('/procesar-seleccion', async (req, res) => {
         }
     });
     
-// Ruta para procesar los datos del formulario
-/*
-app.post('/procesar-preguntas-opciones', async (req, res) => {
-    const preguntas = [];
-    const c1 = 1;
-    const c2 = Date;
-    const c3 = 0;
-
-    // Recorremos cada pregunta y sus opciones
-    for (let key in req.body) {
-        if (key.startsWith('pregunta')) {
-            const index = key.replace('pregunta', '');
-            const pregunta = req.body[key];
-            const opciones = req.body['opcionPregunta' + index] || []; // Capturamos las opciones como array
-            preguntas.push({
-                pregunta: pregunta,
-                opciones: Array.isArray(opciones) ? opciones : [opciones] // Si es una sola opción, la convertimos en array
-            });
-        }
-    }
     
-    // Procesar cada pregunta y sus opciones usando una función interna
-    preguntas.forEach((item, index) => {
-        item.opciones.forEach((opcion, opcionIndex) => {
-            // Función interna para manejar cada pregunta y opción
-            const procesar = () => {
-                // Aquí puedes insertar lógica adicional para procesar cada opción
-                grabar(item.pregunta, opcion);
-            };
-            procesar();
-        });
-    });
-
-    const [result] = await pool.execute('INSERT INTO preguntas (id, texto, tipo, fecha, estado) VALUES (?, ?, ?, ?, ?)', [c1, `${item.pregunta}`, `${opcion}`, c2, c3]);
-    res.send('Preguntas y opciones capturadas correctamente');
-});
-*/
-   
 // modifica usuarios - post
 
 app.post('/usuariomod', async (req, res) => {
@@ -702,9 +685,9 @@ app.post('/usuariomod', async (req, res) => {
         const name = req.body.name;
         const rol = req.body.rol;
         const estado = req.body.estado;
-//        console.log(estado);
+
         // Insertar nuevo usuario
-        await pool.execute('UPDATE users SET name = ?, rol= ? WHERE estado is null AND user = ?', [name, rol, user]);
+        await pool.execute('UPDATE users SET name = ?, rol = ? WHERE (estado IS NULL OR estado = 0) AND user = ?', [name, rol, user]);
         if (estado !== '1') {
             return res.json({
                 status: 'success',
@@ -720,7 +703,6 @@ app.post('/usuariomod', async (req, res) => {
             });
         }
     } catch (error) {
-//        console.log(error);
         res.json({
             status: 'success',
             title: 'Registro de Preguta NO Exitoso...',
@@ -737,7 +719,7 @@ app.post('/usuarioeli', async (req, res) => {
 
         // Log para depuración delete
 
-        const [result] = await pool.execute('DELETE FROM users WHERE estado is null AND user = ?', [ids]);
+        const [result] = await pool.execute('DELETE FROM users WHERE (estado IS NULL OR estado = 0) AND user = ?', [ids]);
         if (result.affectedRows > 0) {
             // El registro fue eliminado con éxito
             return res.json({
@@ -812,7 +794,6 @@ async function processCSV(filePath) {
                 for (const { name, age } of data) {
                     await connection.execute('INSERT INTO my_table (name, age) VALUES (?, ?)', [name, age]);
                 }
-                console.log('Datos insertados con éxito');
             });
     } catch (error) {
         console.error('Error procesando CSV:', error);
@@ -822,7 +803,7 @@ async function processCSV(filePath) {
 }
 
 // Ruta para guardar datos en la tabla
-app.post('/save-table-data', async (req, res) => {
+app.post('/save-table-data2', async (req, res) => {
     const data = req.body;
 
     if (!Array.isArray(data) || data.length === 0) {
@@ -832,13 +813,18 @@ app.post('/save-table-data', async (req, res) => {
     const connection = await pool.getConnection();
     try {
         await connection.beginTransaction();
-        await connection.execute('DELETE FROM my_table2');
-
-        for (const { codigo } of data) {
-            if (codigo) {
-                await connection.execute('INSERT INTO my_table2 (codigo) VALUES (?)', [codigo]);
+        await connection.execute('DELETE FROM my_tableCol2');
+        for (const { user, name, rol } of data) {
+            if (user && name && rol) {
+                await connection.execute('INSERT INTO my_tableCol2 (user, name, rol) VALUES (?, ?, ?)', [user, name, rol]);
             }
         }
+
+        // Llamada al procedimiento almacenado
+        await connection.execute('CALL SP_Valida_ImportarColumnas()'); // Reemplaza 'nombre_del_procedimiento_almacenado' con el nombre real de tu SP
+        // Llamar a la función para ejecutar el proceso
+        updatePasswords();
+
         await connection.commit();
         res.json({
             status: 'success',
@@ -854,6 +840,69 @@ app.post('/save-table-data', async (req, res) => {
     }
 });
 
+
+// Ruta para guardar datos en la tabla
+app.post('/save-table-data', async (req, res) => {
+    const data = req.body;
+    console.log('paso 1');
+    if (!Array.isArray(data) || data.length === 0) {
+        return res.status(400).json({ message: 'No data provided' });
+    }
+
+    const connection = await pool.getConnection();
+    try {
+        await connection.beginTransaction();
+        await connection.execute('DELETE FROM my_table2');
+
+        for (const { codigo } of data) {
+            if (codigo) {
+                await connection.execute('INSERT INTO my_table2 (codigo) VALUES (?)', [codigo]);
+            }
+        }
+        console.log('ingresa');
+        // Llamada al procedimiento almacenado
+        await connection.execute('CALL SP_Valida_ImportarColumnas()');
+        console.log('actualiza')
+        // Llamar a la función para ejecutar el proceso
+        await updatePasswords();  // Asegúrate de usar await aquí
+
+        await connection.commit();
+        res.json({
+            status: 'success',
+            title: 'Registro Exitoso',
+            message: '¡Registrado correctamente!'
+        });
+    } catch (error) {
+        console.error('Error saving data:', error);
+        await connection.rollback();
+        res.status(500).json({ message: 'Internal server error' });
+    } finally {
+        connection.release();
+    }
+});
+
+// Función para generar y actualizar la contraseña en la tabla
+async function updatePasswords() {
+    try {
+        const [rows] = await pool.execute('SELECT Id, user FROM my_tableCol2');
+        if (rows.length === 0) {
+            console.log('No hay usuarios para actualizar.');
+            return; // Salir si no hay registros
+        }
+        for (const row of rows) {
+            try {
+                const transformedPassword = `${row.user.charAt(0).toUpperCase()}${row.user.slice(1)}24%`;
+                const hashedPassword = await bcryptjs.hash(transformedPassword, 8);
+                await pool.execute('UPDATE my_tableCol2 SET pass = ? WHERE user = ?', [hashedPassword, row.user]);
+            } catch (updateError) {
+                console.error(`Error actualizando la contraseña para el usuario ${row.user}:`, updateError);
+            }
+        }
+    } catch (error) {
+        console.error('Error en updatePasswords:', error);
+    }
+}
+  
 // ejecutar
 
 app.listen(PORT, () => {

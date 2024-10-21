@@ -1,5 +1,4 @@
 import {createPool} from 'mysql2';
-//import {createConnection} from 'mysql2/promise';
 import mysql from 'mysql2/promise';
 import {
     DB_HOST,

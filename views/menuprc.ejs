@@ -54,6 +54,18 @@
                         <input type="submit" id="btnCargar" class="btn-salir" value="Cargar">
                         <br><br>    
                     </div>
+
+                    <div style="display: inline;">
+                        <h5></h5>
+                        <input type="submit" id="btnCargar2" class="btn-salir" value="Cargar col2">
+                        <br><br>    
+                    </div>
+
+                    <div style="display: inline;">
+                        <h5></h5>
+                        <input type="submit" id="btnCargarCSV" class="btn-salir" value="Cargar CSV">
+                        <br><br>    
+                    </div>
 -->
                     <div style="display: inline;">
                         <h5></h5>
@@ -105,12 +117,23 @@
             window.location.href = '/opc1'; // Redirige a la página de votaciones
         });
 
-        /*
+/*
         document.getElementById('btnCargar').addEventListener('click', function() {
             // Acción para el botón "Cargas"
             window.location.href = '/cargas'; // opc2 Redirige a la página de votaciones
         });
+
+        document.getElementById('btnCargar2').addEventListener('click', function() {
+            // Acción para el botón "Cargas"
+            window.location.href = '/cargascol'; // opc2 Redirige a la página de votaciones
+        });
+
+        document.getElementById('btnCargarCSV').addEventListener('click', function() {
+            // Acción para el botón "Cargas"
+            window.location.href = '/cargascsv'; // opc2 Redirige a la página de votaciones
+        });
 */
+
         document.getElementById('btnGraficoBar').addEventListener('click', function() {
             // Acción para el botón "Votaciones"
             window.location.href = '/bar'; // opc2 Redirige a la página de votaciones
