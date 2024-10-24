@@ -130,7 +130,6 @@ form{
     margin: 0 auto;
     padding: 20px 20px 20px 20px;  /* Espacio : Sup, der, inf, izq */
     margin-top: 35px;
-    font-family: roboto;
     text-align: left !important;
     box-shadow: 0 19px 30px rgba(0, 0, 0, 0.5), 0 15px 12px rgba(0, 0, 0, 0.22); /* Sombras */
     border-radius: 8px; /* Añadir bordes redondeados para mejorar el diseño */
@@ -158,6 +157,7 @@ form{
     font-size: 8px; 
     text-align:  center;
     box-shadow: 0 19px 30px rgb(0,0,0,0.50), 0 15px 12px rgb(0,0,0,0.22) ; /* sombras */ 
+    border-radius: 18px; /* Añadir bordes redondeados para mejorar el diseño */
 }
 
 .register-formPgta{
@@ -299,6 +299,26 @@ form button{
     color: #ffffff;
     border-radius: 10px;
     }
+
+.btn-salirP:hover, .btn-salirP:active{
+        color: #fff;
+        background-color: #089733;
+        border-color: #040668;
+        border-radius: 15px;
+    }
+    
+.btn-salirP{
+        width: 100%;
+        padding: 2px;
+        background-color: #13055abe;
+        border: 0;
+        box-sizing: border-box;
+        cursor: pointer;
+        font-size: 15px;    
+        color: #ffffff;
+        border-radius: 10px;
+        }
+    
 
 /* Estilos normales del botón 
 .btn-hover-effect {
@@ -732,15 +752,16 @@ button:hover {
   .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #f6f7ca;
-    min-width: 10px;
+    background-color: #cce0e7;
+    min-width: 200px; /* Ajusta el ancho mínimo según tus necesidades *
+    width: 200px; /* Establece un ancho fijo */
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
   }
   
   .dropdown-content a {
     color: black;
-    padding: 12px 16px;
+    padding: 6px 10px;
     text-decoration: none;
     display: block;
     border: 0px solid transparent;
@@ -751,7 +772,9 @@ button:hover {
     border: 1px solid #4CAF50;
   }
 
-  
+  .dropdown:hover .dropdown-content {
+    display: block; /* Mostrar al pasar el mouse sobre el contenedor */
+  }  
 
   /* menu opc2 */
 
@@ -800,3 +823,4 @@ button:hover {
 .menu > li:hover .submenu {
   display: block;
 }
+

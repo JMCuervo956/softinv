@@ -8,21 +8,27 @@
       <!-- menu -->
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto">
-
-          
-          <div class="dropdown">
-            <button class="dropbtn" id="menuBtn">Usuarios</button>
-            <div class="dropdown-content" id="dropdown">
-              <a href="/usuarios">Actualizar</a>
-              <a href="/cargascsv">Cargar Usuarios (csv)</a>
-            </div>
+          <div class="dropdown" >
+              <button class="dropbtn">Usuarios</button>
+              <div class="dropdown-content" id="dropdown">
+                <a href="/usuarios">Actualizar</a>
+                <a href="/cargascsv">Usuarios (csv)</a>
+                <a href="/usuariosreset">Resetear Contraseña</a>
+              </div>
           </div>
-          <li class="nav-item">
-            <a class="nav-link" href="/ingpreguntas" style="color: rgb(239, 245, 240); font-weight: bold;">Preguntas</a>
-          </li> 
-          <li class="nav-item">
-            <a class="nav-link" href="/opc2" style="color: rgb(239, 245, 240); font-weight: bold;">Voto(Habilitar)</a>
-          </li>           
+          <div class="dropdown">
+            <li class="nav-item" >
+              <a class="nav-link" href="/ingpreguntas" style="color: rgb(239, 245, 240); font-weight: bold;">Preguntas</a>
+            </li> 
+          </div>
+          <div>
+            <h6 style="color: transparent;">h</h6>
+          </div>
+          <div class="dropdown">
+            <li class="nav-item" >
+              <a class="nav-link" href="/opc2" style="color: rgb(239, 245, 240); font-weight: bold;">Votos</a>
+            </li>           
+          </div>
         </ul>
       </div>          
     </div>

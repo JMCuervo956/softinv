@@ -22,13 +22,15 @@ import { fileURLToPath } from 'url';
  
 // src/app.js
 import { toggleSubmenu } from './menu.js';
+import { Console, log } from 'console';
 
 // Configuración de rutas y variables		
 const __filename = fileURLToPath(import.meta.url);		
 const __dirname = path.dirname(__filename);		
 const app = express();		
 const upload = multer({ dest: 'uploads/' });		
-		
+app.use(bodyParser.urlencoded({ extended: true }));
+
 // Configuración de sesiones		
 app.use(session({		
     secret: 'tu_secreto_aqui', // Cambia esto por una cadena secreta		
@@ -161,6 +163,13 @@ app.get('/moduser', (req, res) => {
     res.render('moduser', { user, name, rol, estado });
 });
 
+app.get('/moduserpass', (req, res) => {
+    const user = req.session.user;
+    const name = req.session.name;
+    const pass = req.session.pass 
+    res.render('moduserpass', { user, name, pass });
+});
+
 app.get('/eliuser', (req, res) => {
     const user = req.query.user;
     const name = req.query.name;
@@ -276,6 +285,34 @@ app.get('/usuarios', async (req, res) => {
             }
     });
 
+// Usuarios -Resetear CONTRASEÑAS
+
+app.get('/usuariosreset', async (req, res) => {
+    try {
+        const tableName = "users";
+        const [rows] = await pool.execute(`select * from ${tableName}`);
+        if (req.session.loggedin) {
+            const userUser = req.session.user;
+            const userName = req.session.name;
+            res.render('usuariosreset', { data: rows, user: userUser, name: userName });
+
+        } else {
+            res.send('Por favor, inicia sesión primero.');
+        }
+    } catch (error) {
+                console.error('Error conectando a la base de datos....????:', error);
+                res.status(500).send('Error conectando a la base de datos.?????');
+            }
+    });
+
+// resetuser - eliuser
+
+app.get('/resetuser', (req, res) => {
+    const user = req.query.user;
+    const name = req.query.name;
+    res.render('resetuser', { user, name });
+});
+
 // Graficos
 
 app.get('/bar', async (req, res) => {
@@ -367,6 +404,7 @@ app.get('/cargascsv', (req, res) => {
     res.render('cargascsv', { id, texto });
 });
 
+
 // 11. Autenticacion 
 
 app.post('/auth', async (req, res) => {
@@ -377,18 +415,18 @@ app.post('/auth', async (req, res) => {
     if (rows.length === 0) {
         return res.json({ status: 'error', message: 'Usuario no encontrado' });
     }
-
     const userRecord = rows[0];
     const passwordMatch = await bcryptjs.compare(pass, userRecord.pass);
-    
+
     if (!passwordMatch) {
         return res.json({ status: 'error', message: 'Contraseña incorrecta' });
     }
 
     req.session.loggedin = true;
-    req.session.user = userRecord.user;
-    req.session.name = userRecord.name;
+    req.session.user = userRecord.user; // mantener la información del usuario entre diferentes solicitudes durante su sesión (COMPARTIR).
+    req.session.name = userRecord.name; // mantener la información del usuario entre diferentes solicitudes durante su sesión (COMPARTIR).
     req.session.rol = userRecord.rol;
+    req.session.pass = userRecord.pass;
 
     return res.json({ status: 'success', message: '!LOGIN Correcto!' });
 });
@@ -711,6 +749,35 @@ app.post('/usuariomod', async (req, res) => {
     }
 });
 
+// modifica usuarios - post
+
+app.post('/usuariomodpass', async (req, res) => {
+    try {
+        const user = req.body.user;
+        const pass = req.body.pass;
+        const current_password = req.body.current_password;
+        const passt = req.body.passt;
+        const passwordHash = await bcryptjs.hash(passt, 8);
+        const passwordMatch = await bcryptjs.compare(current_password, pass);
+        if (!passwordMatch) {
+            return res.json({ status: 'error', message: 'Contraseña Actual Incorrecta' });
+        }else{
+            await pool.execute('UPDATE users SET pass = ? WHERE  user = ?', [passwordHash, user]);
+            return res.json({
+                status: 'success',
+                title: 'Se Actualiza Contraseña',
+                message: 'Actualizada'
+            });
+        };
+    } catch (error) {
+        res.json({
+            status: 'success',
+            title: 'Registro de Preguta NO Exitoso...',
+            message: '¡Error en el servidor! BD'
+        });
+    }
+});
+
 /* Eliminar usuarios */
 
 app.post('/usuarioeli', async (req, res) => {
@@ -742,6 +809,28 @@ app.post('/usuarioeli', async (req, res) => {
             message: `Error: ${error.message}`
         });
     }
+});
+
+/* Resetear pass usuarios */  
+
+app.post('/usuariosrespass', async (req, res) => {
+    try {
+        const user = req.body.user;
+        const transformedPassword = `${user.charAt(0).toUpperCase()}${user.slice(1)}24%`;
+        const passwordHash = await bcryptjs.hash(transformedPassword, 8);
+        await pool.execute('UPDATE users SET pass = ? WHERE  user = ?', [passwordHash, user]);
+        return res.json({
+            status: 'success',
+            title: 'Se Actualiza Contraseña',
+            message: 'Actualizada'
+        });
+    } catch (error) {
+        res.json({
+            status: 'error',
+            title: 'Restaurar Contraseña NO Exitoso...',
+            message: '¡Error en el servidor! BD'
+        });
+    }    
 });
 
 

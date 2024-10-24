@@ -14,7 +14,7 @@
     <%- include('partials/navigation') %>  
     <div class="content">
         <div class="register-formcda" > 
-            <h5 style="font-size: 24px; color: #5f14b6; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">modificar USUARIO</h5>
+            <h5 style="font-size: 24px; color: #5f14b6; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">Resetear Contraseña</h5>
         </div>
         <div class="register-formpgt"> 
             <form id="registerForm"> 
@@ -29,23 +29,11 @@
                     </p>
                     <br>
                     <!-- Campo oculto con el mismo valor -->
-                    <input type="hidden" name="user" value="<%= user %>">
-<!--                    <input type="text" name="rol" value="<%= rol %>">  -->
-
-                    <span style="color: #518b05; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Modificar Usuario  :</span> 
-                    <h1></h1>
-                    <input type="text" name="name" value="<%= name %>" style="width: 100%; max-width: 600px; height: 30px; padding: 10px; font-size: 16px;">
-                    <h1></h1>
-                    <input type="hidden" name="estado" value="<%= estado %>" style="width: 100%; max-width: 600px; height: 30px; padding: 10px; font-size: 16px;">
-                    <h1></h1>
-                    <label for="rol">Rol</label>           
-                    <select name="rol" id="rol" class="select-css">
-                        <option value="Usuario" <%= rol === 'Usuario' ? 'selected' : '' %>>Usuario</option>
-                        <option value="Administrador" <%= rol === 'Administrador' ? 'selected' : '' %>>Administrador</option>
-                    </select>
+                    <input type="hidden" name="user" value="<%= user%>">
+                    <input type="hidden" name="name" value="<%= name %>">
                     <div style="display: inline;">
-                        <br><br>
-                        <a href="/usuarios" class="btn-cancel"> Regresar </a>   
+                        <h5></h5>
+                        <a href="/usuariosreset" class="btn-cancel"> Regresar </a>   
                     </div>
                     <input type="submit" class="btn-save" value=" Confirmar ">
                 </div>       
@@ -54,11 +42,10 @@
     </div>
 
     <script>
-        console.log('Script cargado');
         document.getElementById('registerForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
             const formData = new FormData(this);
-            const response = await fetch('/usuariomod', {
+            const response = await fetch('/usuariosrespass', {
                 method: 'POST',
                 body: new URLSearchParams(formData)
             });
@@ -68,10 +55,10 @@
                 text: result.message || 'Hubo un problema',
                 icon: result.status,
                 showConfirmButton: true,
-                timer: result.status === 'success' ? 2500 : null // Timer solo para éxito
+                timer: result.status === 'success' ? 1000 : null // Timer solo para éxito
             }).then(() => {
                 if (result.status === 'success') {
-                    window.location.href = '/usuarios'; // Redirigir al usuario si es necesario
+                    window.location.href = '/usuariosreset'; // Redirigir al usuario si es necesario
                 }
             });
         });
@@ -79,4 +66,3 @@
     <%- include('partials/footer') %>  
 </body>
 </html>
-

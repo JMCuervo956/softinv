@@ -84,16 +84,22 @@
                         <input type="submit" id="btnSalir" class="btn-salir" value="Salir">
                         <br><br>    
                     </div>
-
+                   
                 </div>
         </div> 
-        <div class="container mt-4">
-            <div>
-<!--                <h1></h1>
-                <img src="img/edificios3.jpg" alt="Banner" class="img-fluid">    -->          
-            </div>  
-        </div>
-     </div>   
+        <br>
+        <% if (rol!='Administrador') { %>
+            <div class="register-formIzq">
+                <div>
+                        <div style="display: inline;">
+                            <a href="/moduserpass?user=<%= user %>&name=<%= name %>" class="btn btn-light btn-sm ">Cambiar Contraseña</a>
+                            <br><br>    
+                        </div>
+                </div>  
+            </div>
+        <% } %>    
+    </div>   
+
     <script>
 
 /*
@@ -144,10 +150,13 @@
             window.location.href = '/pie'; // opc2 Redirige a la página de votaciones
         });
 
+
         document.getElementById('btnSalir').addEventListener('click', function() {
             // Acción para el botón "Salir"
             window.location.href = '/'; // Redirige a la página de logout o cerrar sesión
         });
+
+       
     </script>
 
     <%- include('partials/footer') %>  

@@ -55,7 +55,7 @@
                 text: result.message || 'Hubo un problema',
                 icon: result.status,
                 showConfirmButton: true,
-                timer: result.status === 'success' ? 2500 : null // Timer solo para éxito
+                timer: result.status === 'success' ? 1000 : null // Timer solo para éxito
             }).then(() => {
                 if (result.status === 'success') {
                     window.location.href = '/usuarios'; // Redirigir al usuario si es necesario
