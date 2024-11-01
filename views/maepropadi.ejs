@@ -1,4 +1,4 @@
-<!-- register.html -->
+<!-- maepropadi.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -14,38 +14,22 @@
 <body>
     <script src="app.js"></script>
     <%- include('partials/navigation') %>  
+    <br>
     <div class="content">
-        <h4>Registro de Usuarios</h4>
-        <div class="register-form30"> 
-            <form id="registerForm" action="/register" method="POST"> 
+        <div class="register-formIzq1"> 
+            <h5>Registros de Propiedades</h5>
+            <br>
+            <form id="registerForm"> 
                 <div class="contenedor__login-register">
+                    <input type="text" name="descripcion" class="input-small" placeholder="Propiedad" required maxlength="30" style="display: inline;">
                     <h1></h1>
-                    <input type="text" name="UsuarioNew" class="input-small" placeholder="Usuario" required autocomplete="off">
-                    <h1></h1>
-                    <input type="text" name="UsuarioNom" class="input-small" placeholder="Nombre" required autocomplete="off">
-                    <h1></h1>
-                    <input type="password" name="PassNew" class="input-small" placeholder="Contraseña" required autocomplete="off">
-                    <h1></h1>
-                    <input type="text" name="numpropNew" class="input-small" placeholder="Numero Propiedad" required autocomplete="off">
-                    <h1></h1>
-                    <input type="text" name="areapropNew" class="input-small" placeholder="Area Propiedad" required autocomplete="off">
-                    <h1></h1>
-                    <input type="text" name="areaparqNew" class="input-small" placeholder="Area Parqueadero" required autocomplete="off">
-
-                    <h1></h1>
-                    <label for="rol">rol</label>           
-                    <select name="rol" id="rol" class="select-css">
-                        <option value="Usuario" selected>Usuario</option>
-                        <option value="Administrador">Administrador</option>
-                    </select>
                     <div style="display: inline;">
-                        <h5></h5>
-                        <a href="/usuarios" class="btn-cancel">Regresar</a>
+                        <br>
+                        <a href="/maeprop" class="btn-cancel">Regresar</a>
                         <input type="submit" class="btn-save" value="Registrar">
                     </div>
                 </div>       
-            </form>
-
+            </form>    
         </div>
     </div>
 
@@ -54,7 +38,7 @@
             event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
 
             const formData = new FormData(this);
-            const response = await fetch('/register', {
+            const response = await fetch('/maepropadi', {
                 method: 'POST',
                 body: new URLSearchParams(formData)
             });
@@ -67,9 +51,9 @@
                     text: result.message,
                     icon: result.status,
                     showConfirmButton: false,
-                    timer: false
-                }).then(() => { 
-                    window.location.href = '/usuarios'; // Redirigir al usuario si es necesario
+                    timer: 1500
+                }).then(() => {
+                    window.location.href = '/maeprop'; // Redirigir al usuario si es necesario
                 });
             } else {
                 Swal.fire({

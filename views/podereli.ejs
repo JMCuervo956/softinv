@@ -13,25 +13,28 @@
 <body>
     <%- include('partials/navigation') %>  
     <div class="content">
-        <h5 style="font-size: 24px; color: #5f14b6; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">Eliminar USUARIO</h5>
-        <div class="register-form30"> 
+            <h5 style="font-size: 24px; color: #5f14b6; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">Poderes</h5>
+            <div class="register-form30"> 
+            <br>        
             <form id="registerForm"> 
                 <div class="contenedor__login-register">
                     <p style="font-size: 20px;">
-                        <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Usuario:</span> 
-                        <span style="color: #d11b33; text-shadow: 3px 1px 2px rgba(0, 0, 0, 0.3);"><%= user %></span>
-                    </p>
-                    <p style="font-size: 20px;">
-                        <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Nombre:</span> 
-                        <span style="color: #d11b33; text-shadow: 2px 1px 2px rgba(0, 0, 0, 0.3);"><%= name %></span>
+                        <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); ">Otorga</span> 
+                        <br>
+                        <span style="color: #d11b33; text-shadow: 3px 1px 2px rgba(0, 0, 0, 0.3);"><%= numprop %></span>
+                        <span style="color: #d11b33; text-shadow: 3px 1px 2px rgba(0, 0, 0, 0.3);"><%= name %></span>
+                        <br><br>
+                        <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); ">Recibe</span> 
+                        <br>
+                        <span style="color: #d11b33; text-shadow: 3px 1px 2px rgba(0, 0, 0, 0.3);"><%= propoder %></span>
+                        <span style="color: #d11b33; text-shadow: 3px 1px 2px rgba(0, 0, 0, 0.3);"><%= proname %></span>
                     </p>
                     <br>
                     <!-- Campo oculto con el mismo valor -->
-                    <input type="hidden" name="ids" value="<%= user%>">
-                    <input type="hidden" name="pgtas" value="<%= name %>">
+                    <input type="hidden" name="id" value="<%= id %>"> 
                     <div style="display: inline;">
                         <h5></h5>
-                        <a href="/usuarios" class="btn-cancel"> Regresar </a>   
+                        <a href="/poderes" class="btn-cancel"> Regresar </a>   
                     </div>
                     <input type="submit" class="btn-save" value=" Confirmar ">
                 </div>       
@@ -43,7 +46,7 @@
         document.getElementById('registerForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
             const formData = new FormData(this);
-            const response = await fetch('/usuarioeli', {
+            const response = await fetch('/podereli', {
                 method: 'POST',
                 body: new URLSearchParams(formData)
             });
@@ -56,7 +59,7 @@
                 timer: result.status === 'success' ? 1000 : null // Timer solo para éxito
             }).then(() => {
                 if (result.status === 'success') {
-                    window.location.href = '/usuarios'; // Redirigir al usuario si es necesario
+                    window.location.href = '/poderes'; // Redirigir al usuario si es necesario
                 }
             });
         });

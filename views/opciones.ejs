@@ -11,7 +11,6 @@
     <!-- cabecera -->
     <%- include('partials/head') %> <!-- <link rel="stylesheet" href="main.css"> /// partial para repetir en cada una de las paginas -->
     <style>
-
             th {
             border: 1px solid rgb(247, 244, 244);
             padding: 8px;
@@ -31,12 +30,13 @@
 <body>
     <%- include('partials/navigation') %>  
     <br><br>
-    <div style="text-align: left;">
-        <h5 style="color: #e04010c7; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); display: inline; margin-right: 30px; margin-left: 80px;">Pregunta :</h5>
-        <h6 style="display: inline;">&nbsp;&nbsp;&nbsp;&nbsp;<%= texto %></h6>
-    </div>    
     <div class="content">
-        <div>    
+        <div style="text-align: center;">
+            <h5 style="color: #e04010c7; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); display: inline; margin-right: 30px; margin-left: 80px;">Pregunta :</h5>
+            <h6 style="display: inline;">&nbsp;&nbsp;&nbsp;&nbsp;<%= texto %></h6>
+        </div>    
+        <div class="register-form30">    
+            <h5 style="color: #5a6904c7; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); text-align: center;">Opciones de respuesta</h5>
             <div class="container mt-1">
                 <table class="table table-bordered table-hover">
                     <thead>
@@ -47,7 +47,6 @@
                     </thead>        
                 </table>
             </div>
-            <h5 style="color: #5a6904c7; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); text-align: center;">Opciones de respuesta</h5>
             <div class="container mt-1">
                         <table class="table table-bordered table-hover">
                             <thead></thead>        

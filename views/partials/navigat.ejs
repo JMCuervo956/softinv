@@ -1,41 +1,71 @@
+<style>
+  .navbar-nav .nav-item {
+    margin: 0 15px; /* Ajusta la distancia horizontal entre los elementos */
+  }
+
+  .dropdown {
+    display: inline-block; /* Permite que se comporte como un elemento en línea */
+    margin: 0 15px; /* Igualar la distancia con los otros elementos */
+  }
+
+  .dropbtn {
+    background-color: transparent; /* Opcional: para eliminar el fondo de los botones */
+    border: none; /* Opcional: para eliminar el borde */
+    color: rgb(239, 245, 240); /* Color del texto */
+    font-weight: bold; /* Peso de la fuente */
+    cursor: pointer; /* Cambiar cursor al pasar por encima */
+    padding: 10px; /* Espaciado interno */
+  }
+
+  .dropdown-content {
+    display: none; /* Oculta el contenido del dropdown */
+    position: absolute; /* Posicionamiento absoluto */
+    background-color: white; /* Color de fondo del dropdown */
+    min-width: 160px; /* Ancho mínimo del dropdown */
+    z-index: 1; /* Para asegurarse de que esté sobre otros elementos */
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block; /* Muestra el contenido al pasar el mouse */
+  }
+</style>
+
 <nav class="navbar navbar-expand-lg custom-navbar-bg navbar-dark">
-   <div class="container">
-      <a class="navbar-brand" href="/">A S A M B L E A  - <span style="padding-left: 10px;" id="year"></span></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-      </button>
+  <div class="container">
+    <a class="navbar-brand" href="/">A S A M B L E A - <span id="year"></span></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <!-- menu -->
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ms-auto">
-          <div class="dropdown" >
-              <button class="dropbtn">Usuarios</button>
-              <div class="dropdown-content" id="dropdown">
-                <a href="/usuarios">Actualizar</a>
-                <a href="/cargascsv">Usuarios (csv)</a>
-                <a href="/usuariosreset">Resetear Contraseña</a>
-              </div>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <button class="dropbtn">Usuarios</button>
+          <div class="dropdown-content">
+            <a href="/usuarios">Actualizar</a>
+            <a href="/cargascsv">Usuarios (csv)</a>
+            <a href="/cargascol">cargascol</a>
+            <a href="/cargapoder">Cargar Poder</a>
+            <a href="/usuariosreset">Resetear Contraseña</a>
           </div>
-          <div class="dropdown">
-            <li class="nav-item" >
-              <a class="nav-link" href="/ingpreguntas" style="color: rgb(239, 245, 240); font-weight: bold;">Preguntas</a>
-            </li> 
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/ingpreguntas">Preguntas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/opc2">Votos</a>
+        </li>
+        <li class="nav-item dropdown">
+          <button class="dropbtn">Configuración</button>
+          <div class="dropdown-content">
+            <a href="/maeprop">Tipo Propiedad</a>
           </div>
-          <div>
-            <h6 style="color: transparent;">h</h6>
-          </div>
-          <div class="dropdown">
-            <li class="nav-item" >
-              <a class="nav-link" href="/opc2" style="color: rgb(239, 245, 240); font-weight: bold;">Votos</a>
-            </li>           
-          </div>
-        </ul>
-      </div>          
+        </li>
+      </ul>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
-
- <script type="module" src="./script.js"></script>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>

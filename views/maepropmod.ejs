@@ -13,25 +13,24 @@
 <body>
     <%- include('partials/navigation') %>  
     <div class="content">
-        <h5 style="font-size: 24px; color: #5f14b6; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">Eliminar USUARIO</h5>
-        <div class="register-form30"> 
+        <h5 style="font-size: 24px; color: #5f14b6; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">Tipo Propiedad</h5>
+        <div class="register-form30">    
             <form id="registerForm"> 
                 <div class="contenedor__login-register">
                     <p style="font-size: 20px;">
-                        <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Usuario:</span> 
-                        <span style="color: #d11b33; text-shadow: 3px 1px 2px rgba(0, 0, 0, 0.3);"><%= user %></span>
-                    </p>
-                    <p style="font-size: 20px;">
-                        <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Nombre:</span> 
-                        <span style="color: #d11b33; text-shadow: 2px 1px 2px rgba(0, 0, 0, 0.3);"><%= name %></span>
+                        <span style="color: #3498db; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Descripcion:</span> 
+                        <span style="color: #d11b33; text-shadow: 3px 1px 2px rgba(0, 0, 0, 0.3);"><%= descripcion %></span>
                     </p>
                     <br>
-                    <!-- Campo oculto con el mismo valor -->
-                    <input type="hidden" name="ids" value="<%= user%>">
-                    <input type="hidden" name="pgtas" value="<%= name %>">
+                    <!-- Campo oculto con el mismo valor --> 
+                    <input type="hidden" name="id" value="<%= id %>"> 
+                    <span style="color: #518b05; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Modificar</span> 
+                    <h1></h1>
+                    <input type="text" name="descripcion" value="<%= descripcion %>" required maxlength="30" style="display: inline; width: 100%; max-width: 600px; height: 30px; padding: 10px; font-size: 16px;" id="descripcionInput">
+                    <h1></h1>
                     <div style="display: inline;">
-                        <h5></h5>
-                        <a href="/usuarios" class="btn-cancel"> Regresar </a>   
+                        <br><br>
+                        <a href="/maeprop" class="btn-cancel"> Regresar </a>   
                     </div>
                     <input type="submit" class="btn-save" value=" Confirmar ">
                 </div>       
@@ -40,10 +39,20 @@
     </div>
 
     <script>
+        // Espera a que el DOM esté completamente cargado
+        document.addEventListener("DOMContentLoaded", function() {
+            const input = document.getElementById("descripcionInput");
+            input.focus(); // Establece el foco en el input
+            input.select(); // Selecciona todo el contenido del input
+        });
+    </script>
+
+    <script>
+        console.log('Script cargado');
         document.getElementById('registerForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
-            const formData = new FormData(this);
-            const response = await fetch('/usuarioeli', {
+            const formData = new FormData(this); 
+            const response = await fetch('/maepropmod', {
                 method: 'POST',
                 body: new URLSearchParams(formData)
             });
@@ -56,11 +65,12 @@
                 timer: result.status === 'success' ? 1000 : null // Timer solo para éxito
             }).then(() => {
                 if (result.status === 'success') {
-                    window.location.href = '/usuarios'; // Redirigir al usuario si es necesario
+                    window.location.href = '/maeprop'; // Redirigir al usuario si es necesario
                 }
             });
         });
     </script>
+
     <%- include('partials/footer') %>  
 </body>
 </html>

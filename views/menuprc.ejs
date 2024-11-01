@@ -8,6 +8,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <%- include('partials/head') %> <!-- <link rel="stylesheet" href="main.css"> /// partial para repetir en cada una de las paginas -->
 
+    <style>
+        .dropdown {
+          position: relative; /* Necesario para el dropdown */
+        }
+      
+        .dropdown-content {
+          display: none; /* Ocultar el contenido del dropdown */
+          position: absolute; /* Posicionamiento absoluto */
+          left: 50px; /* Ajusta este valor para mover el submenú a la derecha */
+          background-color: #ffffcc; /* Color de fondo del dropdown */
+          min-width: 150px; /* Ancho mínimo para el dropdown */
+          z-index: 1; /* Para asegurarse de que esté sobre otros elementos */
+        }
+      
+        .dropdown:hover .dropdown-content {
+          display: block; /* Mostrar contenido al pasar el mouse */
+        }
+      </style>
+
 </head>
 <body class="body.imagen">
     <% if (rol==='Administrador') { %>
@@ -81,20 +100,38 @@
 
                     <div style="display: inline;">
                         <h5></h5>
+                        <input type="submit" id="btnGraficoPie" class="btn-salir" value="Resultado Pastel">
+                        <br><br>    
+                    </div>
+
+                    <div style="display: inline;">
+                        <h5></h5>
                         <input type="submit" id="btnSalir" class="btn-salir" value="Salir">
                         <br><br>    
                     </div>
                    
                 </div>
         </div> 
-        <br>
         <% if (rol!='Administrador') { %>
             <div class="register-formIzq">
                 <div>
-                        <div style="display: inline;">
-                            <a href="/moduserpass?user=<%= user %>&name=<%= name %>" class="btn btn-light btn-sm ">Cambiar Contraseña</a>
+
+                    <div style="display: inline;">
+                        <li class="nav-item dropdown">
+                            <h5></h5>
+                            <button class="btn btn-light btn-sm ">Poderes</button>
+                            <div class="dropdown-content">
+                            <a href="/poderes">Registrar Poder</a>
+                            <a href="/poderes">Descargar Formato</a>
+                            </div>
                             <br><br>    
-                        </div>
+                        </li>
+                    </div>
+
+                    <div style="display: inline;">
+                        <a href="/moduserpass?user=<%= user %>&name=<%= name %>" class="btn btn-light btn-sm ">Cambiar Contraseña</a>
+                        <br><br>    
+                    </div>
                 </div>  
             </div>
         <% } %>    

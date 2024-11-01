@@ -8,14 +8,52 @@ import fastcsv from 'fast-csv';
 import csv from 'csv-parser'; // CARGAR		
 import bcryptjs from 'bcryptjs';		
 import Swal from 'sweetalert2';		
-import fs from 'fs';		
-import { readFile } from 'fs/promises';		
-		
+import fs from 'fs/promises';
+
 // Importaciones de archivos locales		
 import { pool } from './db.js';		
 import { PORT } from './config.js';		
 import path from 'path';		
 import { fileURLToPath } from 'url';		
+
+// Configuración de rutas y variables		
+const __filename = fileURLToPath(import.meta.url);		
+const __dirname = path.dirname(__filename);		
+const app = express();		
+
+// Configura Multer para almacenar archivos - docx
+async function checkAndGetDirectory(dir) {
+    try {
+        await fs.access(dir);
+        return dir;
+    } catch {
+        throw new Error(`La carpeta no existe: ${dir}`);
+    }
+}
+
+const storage = multer.diskStorage({
+    destination: async (req, file, cb) => {
+        const empresaId = req.body.empresaId; // Asume que envías el ID de la empresa en el formulario
+        const dir = path.join(__dirname, '../uploads', empresaId);
+
+        try {
+            await checkAndGetDirectory(dir);
+            cb(null, dir);
+        } catch (err) {
+            cb(err);
+        }
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+
+const upload = multer({ storage });
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.set('view engine', 'ejs');  //  aqui
+app.set('views', path.join(__dirname, '../views'));
+
 //console.log('Hello, world!');
 
 // menus 
@@ -23,13 +61,6 @@ import { fileURLToPath } from 'url';
 // src/app.js
 import { toggleSubmenu } from './menu.js';
 import { Console, log } from 'console';
-
-// Configuración de rutas y variables		
-const __filename = fileURLToPath(import.meta.url);		
-const __dirname = path.dirname(__filename);		
-const app = express();		
-const upload = multer({ dest: 'uploads/' });		
-app.use(bodyParser.urlencoded({ extended: true }));
 
 // Configuración de sesiones		
 app.use(session({		
@@ -48,15 +79,15 @@ app.use((req, res, next) => {
 		
 // Middleware		
 app.use(express.static(path.join(__dirname, '../public')));		
-
 app.use(express.json());		
 app.use(express.urlencoded({ extended: true }));		
-		
+
+// Middleware para servir archivos estáticos - docx
+app.use(express.static('public')); 
+
 // Configuración de vistas		
-app.set('view engine', 'ejs');		
-app.set('views', path.join(__dirname, '../views'));		
 app.use(express.static(path.join(__dirname, 'src')));		
-		
+
 // Función de alerta		
 function showAlert() {		
     Swal.fire({		
@@ -80,8 +111,43 @@ app.get('/', async (req, res) => {
     }		
 });		
 
+// Ruta para cargar el archivo - docx uploads
+app.post('/upload', upload.single('file'), async (req, res) => {
+    try {
+        //const empresaId = req.body.empresaId; // Asume que envías el ID de la empresa en el formulario
+        //const filePath = path.join(__dirname, '../uploads', empresaId, req.file.filename);
+        //console.log("Ruta del archivo:", filePath);
+        res.send(`Archivo cargado y guardado `);
+
+        // Aquí continúa con la lógica para leer y procesar el archivo...
+    } catch (error) {
+        console.error('Error al cargar el archivo:', error);
+        res.status(500).send('Error al cargar el archivo.');
+    }
+});
+
+// Ruta para descargar archivos
+app.get('/download/:filename', (req, res) => {
+    const filename = req.params.filename;
+    const filePath = path.join(__dirname, '../uploads', filename);
+
+    // Usar express para enviar el archivo
+    res.download(filePath, (err) => {
+        if (err) {
+            console.error('Error al descargar el archivo:', err);
+            res.status(500).send('Error al descargar el archivo.');
+        }
+    });
+});
+
+// Ruta para cargar la vista de carga
+app.get('/cargapoder', (req, res) => {
+    res.render('cargapoder'); // Renderiza cargapoder.ejs
+});
+
 // Rutas de autenticación y registro
 app.get('/login', (req, res) => res.render('login'));
+
 app.get('/menuprc', (req, res) => {
     if (req.session.loggedin) {
         const { user, name, rol } = req.session;
@@ -93,8 +159,7 @@ app.get('/menuprc', (req, res) => {
 
 app.get('/register', (req, res) => {
     if (req.session.loggedin) {
-        const { user, name } = req.session;
-        res.render('register', { user, name });
+        res.render('register');
     } else {
         res.send('Por favor, inicia sesión primero.');
     }
@@ -109,8 +174,6 @@ app.get('/menuDropdown', (req, res) => {
     }
 });
 
-
-
 // ajuste const
 
 app.get('/preguntas', (req, res)=>{
@@ -122,6 +185,8 @@ app.get('/preguntas', (req, res)=>{
         res.send('Por favor, inicia sesión primero.');
     }
 })
+
+
 
 app.get('/cargas', (req, res)=>{
     if (req.session.loggedin) {
@@ -312,6 +377,258 @@ app.get('/resetuser', (req, res) => {
     const name = req.query.name;
     res.render('resetuser', { user, name });
 });
+
+// resetuser - eliuser
+
+app.get('/maeprop', async (req, res) => {
+    try {
+        const tableName = "tipropiedad";
+        const [rows] = await pool.execute(`select * from ${tableName}`);
+        if (req.session.loggedin) {
+            res.render('maeprop', { data: rows });
+        } else {
+            res.send('Por favor, inicia sesión primero.');
+        }
+    } catch (error) {
+                console.error('Error conectando a la base de datos....????:', error);
+                res.status(500).send('Error conectando a la base de datos.?????');
+            }
+});
+
+//  adicionar tipo propiedad
+
+app.get('/maepropadi', (req, res) => {
+    if (req.session.loggedin) {
+        const { user, name } = req.session;
+        res.render('maepropadi', { user, name });
+    } else {
+        res.send('Por favor, inicia sesión primero.');
+    }
+});
+
+app.get('/maepropmod', (req, res) => {
+    const id = req.query.id;
+    const descripcion = req.query.descripcion;
+    res.render('maepropmod', { id, descripcion });
+});
+
+app.get('/maepropeli', (req, res) => {
+    const id = req.query.id;
+    const descripcion = req.query.descripcion;
+    res.render('maepropeli', { id, descripcion });
+});
+
+// maepropadi - post
+
+app.post('/maepropadi', async (req, res) => {
+    try {
+        const { descripcion } = req.body;
+
+        if (!descripcion ) {
+            return res.status(400).json({ status: 'error', message: 'Todos los campos son obligatorios' });
+        }
+
+        const [rows] = await pool.execute('SELECT * FROM tipropiedad WHERE descripcion = ?', [descripcion]);
+        if (rows.length > 0) {
+            return res.status(400).json({ status: 'error', message: 'Descripcion ya Existe' });
+        }
+
+        // Insertar nuevo usuario
+        await pool.execute('INSERT INTO tipropiedad (descripcion) VALUES (?)', [descripcion]);
+        res.json({ status: 'success', message: '¡Tipo Propiedad registrada correctamente!' });
+    } catch (error) {
+        console.error('Error en registro:', error);
+        res.status(500).json({ status: 'error', message: 'Error en el servidor' });
+    }
+});
+
+// modifica usuarios - post
+
+app.post('/maepropmod', async (req, res) => {
+    try {
+        const tableName = "tipropiedad";
+        const id = req.body.id;
+        const descripcion = req.body.descripcion;
+        await pool.execute(`UPDATE ${tableName} SET descripcion = ? WHERE id = ?`, [descripcion, id]);
+        return res.json({
+            status: 'success',
+            title: 'Actualizacion Exitosa',
+            message: '¡Registrado correctamente!'
+        });
+    } catch (error) {
+        res.json({
+            status: 'error',
+            title: 'Actualizacion Tipo Propiedad NO Exitoso...',
+            message: '¡Error en el servidor! BD'
+        });
+    }
+});
+
+/* Eliminar usuarios */
+           
+app.post('/maepropeli', async (req, res) => {
+    try {
+        const tableName = "tipropiedad";
+        const id = req.body.id;
+        // Log para depuración delete
+        const [result] = await pool.execute(`DELETE FROM ${tableName} WHERE id = ?`, [id]);
+        if (result.affectedRows > 0) {
+            // El registro fue eliminado con éxito
+            return res.json({
+                status: 'success',
+                title: 'Eliminado',
+                message: 'ha sido eliminado correctamente.'
+            });
+        }
+    } catch (error) {
+        res.json({
+            status: 'error',
+            title: 'Borrado de Usuario NO Exitoso',
+            message: `Error: ${error.message}`
+        });
+    }
+});
+
+// PODERES *************************************************
+
+app.get('/poderes', async (req, res) => {
+    try {
+        const tableName = "tbl_poderes";
+        const [rows] = await pool.execute(`select * from ${tableName}`);
+        if (req.session.loggedin) {
+            res.render('poderes', { data: rows });
+        } else {
+            res.send('Por favor, inicia sesión primero.');
+        }
+    } catch (error) {
+                console.error('Error conectando a la base de datos....????:', error);
+                res.status(500).send('Error conectando a la base de datos.?????');
+            }
+});
+
+//  adicionar poderes
+
+app.get('/poderadi', (req, res) => {
+    if (req.session.loggedin) {
+        const { user, name } = req.session;                 // revisar
+        res.render('poderadi', { user, name });
+    } else {
+        res.send('Por favor, inicia sesión primero.');
+    }
+});
+
+app.get('/podermod', (req, res) => {
+    const id = req.query.Id;
+    const numprop = req.query.numprop;
+    const name = req.query.name;
+    const propoder = req.query.propoder;
+    const proname = req.query.proname;
+    res.render('podermod', { id, numprop, name, propoder, proname });
+});
+
+app.get('/podereli', (req, res) => {
+    const id = req.query.Id;
+    const numprop = req.query.numprop;
+    const name = req.query.name;
+    const propoder = req.query.propoder;
+    const proname = req.query.proname;
+    res.render('podereli', { id, numprop, name, propoder, proname });
+});
+
+// adicionar - post
+
+app.post('/poderadi', async (req, res) => {
+    try {
+        const tableName = "tbl_poderes";
+        const date = new Date();
+        const numprop = req.body.numprop;
+        const name = req.body.name;
+        const propoder = req.body.propoder;
+        const proname = req.body.proname;
+        if (!numprop) {
+            return res.status(400).json({ status: 'error', message: 'Todos los campos son obligatorios' });
+        }
+        if (numprop==propoder) {
+            return res.status(400).json({ status: 'error', message: 'Quien Otorga no puede recibir' });
+        }
+        const [rows] = await pool.execute('SELECT * FROM tbl_poderes WHERE numprop = ?', [numprop]);
+        if (rows.length > 0) {
+            return res.status(400).json({ status: 'error', message: 'Poder ya Existe' });
+        }
+        const [rows2] = await pool.execute('SELECT * FROM tbl_poderes WHERE numprop = ?', [propoder]);
+        if (rows2.length > 0) {
+            return res.status(400).json({ status: 'error', message: 'Quien recibe ya otorgo poder' });
+        }
+        const [rows3] = await pool.execute('SELECT * FROM tbl_poderes WHERE propoder = ?', [numprop]);
+        if (rows3.length > 0) {
+            return res.status(400).json({ status: 'error', message: 'Quien Otorga ya tiene poderes recibidos' });
+        }
+
+        await pool.execute(`INSERT INTO ${tableName} (numprop,name,propoder,proname,fecha) VALUES (?,?,?,?,?)`, [numprop, name, propoder, proname, date]);
+        res.json({ status: 'success', message: '¡Registrado Correctamente!' });
+    } catch (error) {
+        console.error('Error en registro:', error);
+        res.status(500).json({ status: 'error', message: 'Error en el servidor' });
+    }
+});
+
+// modifica poder - post
+app.post('/podermod', async (req, res) => {
+    try {
+        const tableName = "tbl_poderes";
+        const date = new Date();
+        const id = req.body.id;
+        const numprop = req.body.numprop;
+        const name = req.body.name;
+        const propoder = req.body.propoder;
+        const proname = req.body.proname;
+        console.log(id);
+        await pool.execute(`UPDATE ${tableName} SET numprop = ?, name = ?, propoder = ?, proname = ?, Fecha = ? WHERE id = ?`, [numprop, name, propoder, proname, date, id]);
+        return res.json({
+            status: 'success',
+            title: 'Actualizacion Exitosa',
+            message: '¡Registrado correctamente!'
+        });
+    } catch (error) {
+        res.json({
+            status: 'error',
+            title: 'Actualizacion NO Exitosa...',
+            message: '¡Error en el servidor! BD'
+        });
+    }
+});
+
+/* Eliminar poder */
+           
+app.post('/podereli', async (req, res) => {
+    try {
+        const tableName = "tbl_poderes";
+        const id = req.body.id;
+        const numprop = req.body.numprop;
+        const name = req.body.name;
+        const propoder = req.body.propoder;
+        const proname = req.body.proname;
+        // Log para depuración delete
+        const [result] = await pool.execute(`DELETE FROM ${tableName} WHERE id = ?`, [id]);
+        if (result.affectedRows > 0) {
+            // El registro fue eliminado con éxito
+            return res.json({
+                status: 'success',
+                title: 'Eliminado',
+                message: 'ha sido eliminado correctamente.'
+            });
+        }
+    } catch (error) {
+        res.json({
+            status: 'error',
+            title: 'Borrado NO Exitoso.....PODER',
+            message: `Error: ${error.message}`
+        });
+    }
+});
+
+// FIN PODERES *************************************************
+
 
 // Graficos
 
@@ -577,22 +894,21 @@ app.post('/preguntaseliopc', async (req, res) => {
 app.post('/register', async (req, res) => {
     try {
         const rz = '1';
-        const id_rz = 'qwe';
+        const id_rz = 'Propiedad';
 
-        const { user, name, rol, pass } = req.body;
-
-        if (!user || !name || !rol || !pass) {
+        const { UsuarioNew, UsuarioNom, rol, PassNew } = req.body;
+        if (!UsuarioNew || !UsuarioNom || !rol || !PassNew) {
             return res.status(400).json({ status: 'error', message: 'Todos los campos son obligatorios' });
         }
 
-        const [rows] = await pool.execute('SELECT * FROM users WHERE user = ?', [user]);
+        const [rows] = await pool.execute('SELECT * FROM users WHERE user = ?', [UsuarioNew]);
         if (rows.length > 0) {
             return res.status(400).json({ status: 'error', message: 'Usuario ya Existe' });
         }
 
         // Insertar nuevo usuario
-        const passwordHash = await bcryptjs.hash(pass, 8);
-        await pool.execute('INSERT INTO users (rz, id_rz, user, name, rol, pass, estado) VALUES (?, ?, ?, ?, ?, ?, ?)', [rz, id_rz, user, name, rol, passwordHash, null]);
+        const passwordHash = await bcryptjs.hash(PassNew, 8);
+        await pool.execute('INSERT INTO users (rz, id_rz, user, name, pass, rol, estado ) VALUES (?, ?, ?, ?, ?, ?, ?)', [rz, id_rz, UsuarioNew, UsuarioNom, passwordHash, rol, null ]);
         res.json({ status: 'success', message: '¡Usuario registrado correctamente!' });
     } catch (error) {
         console.error('Error en registro:', error);

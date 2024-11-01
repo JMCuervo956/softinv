@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargar archivo .docx</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="text" name="empresaId" value="Emp2"> <!-- Cambia esto según la empresa -->
+        <input type="file" name="file" accept=".docx" required>
+        <button type="submit">Cargar</button>
+    </form>
+
+    <div class="doc-content" id="doc-content"></div>
+    <a href="/download/nuevos.docx">Descargar archivo</a>
+</body>
+</html>
