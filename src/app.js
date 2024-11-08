@@ -53,94 +53,6 @@ cargarPdf('uploads/poder.pdf').catch(console.error);
 const __filename = fileURLToPath(import.meta.url);		
 const __dirname = path.dirname(__filename);		
 const app = express();		
-
-
-// [cargapoder] - Configuración de Multer - Para Cargar Archivos 
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const { empresaId } = req.body; // Obtener el ID de la empresa del formulario
-        //const uploadDir = path.join('uploads', empresaId); // Crear ruta de la carpeta
-        const uploadDir = path.join(__dirname, '../', 'uploads', empresaId);
-        console.log(uploadDir);
-        // Crear la carpeta si no existe
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-        cb(null, uploadDir); // Establecer el destino
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.originalname); // Usar el nombre original del archivo
-    }
-});
-
-const upload = multer({ storage }); // Crear el middleware de Multer
-
-app.post('/upload', upload.single('file'), async (req, res) => {
-    try {
-        res.send(`Archivo cargado y guardado en ======= ${req.file.path}`);
-    } catch (error) {
-        console.error('Error al cargar el archivo:', error);
-        res.status(500).send('Error al cargar el archivo.');
-    }
-});
-
-//*********************************** */
-
-const storagepdf = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const { empresaId } = req.body; // Obtener el ID de la empresa del formulario
-        const uploadDir = path.join('uploads', empresaId); // Crear ruta de la carpeta
-        // Crear la carpeta si no existe
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-        cb(null, uploadDir); // Establecer el destino
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.originalname); // Usar el nombre original del archivo
-    }
-});
-
-const uploadpdf = multer({ storage: storagepdf }); 
-
-// Ruta para manejar la carga del archivo PDF
-
-app.post('/uploadpdf', uploadpdf.single('file'), async (req, res) => {
-    try {
-        // Lógica después de cargar el archivo (se asume que req.file contiene los datos del archivo)
-        // console.log('Archivo cargado correctamente:', req.file);
-        return res.json({
-            status: 'success',
-            title: `[ ${req.file.path} ]`,
-            message: (`Archivo cargado y guardado`)
-        });
-
-        // Redirigir a la página de confirmación o a una página donde se muestre el archivo
-//        return res.redirect('/documentos');  // Aquí 'cargarpdf' es la ruta a donde redirigirás
-
-    } catch (error) {
-        console.error('Error al cargar el archivo:', error);
-        res.status(500).send('Error al cargar el archivo.');
-    }
-});
-
-/*
-app.post('/uploadpdf', uploadpdf.single('file'), async (req, res) => {
-    try {
-        return res.json({ status: 'success', message: '¡Tipo Propiedad ok!' });
-        //        res.send(`Archivo cargado y guardado en ======= ${req.file.path}`);
-//        res.render('cargarpdf');
-    } catch (error) {
-
-        console.error('Error al cargar el archivo:', error);
-        res.status(500).send('Error al cargar el archivo.');
-    }
-});
-*/
-
-// End - [cargapoder] - Configuración de Multer - Para Cargar Archivos 
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs'); 
 app.set('views', path.join(__dirname, '../views'));
@@ -1668,6 +1580,95 @@ app.get('/cargarpdf', (req, res) => {
 app.get('/cargapoder', (req, res) => {
     res.render('cargapoder'); // Renderiza cargapoder.ejs
 });
+
+// [cargapoder] - Configuración de Multer - Para Cargar Archivos 
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const { empresaId } = req.body; // Obtener el ID de la empresa del formulario
+        const uploadDir = path.join(__dirname, 'uploads', empresaId);
+        console.log(uploadDir);
+        // Crear la carpeta si no existe
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir); // Establecer el destino
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname); // Usar el nombre original del archivo
+    }
+});
+
+const upload = multer({ storage }); // Crear el middleware de Multer
+
+app.post('/upload', upload.single('file'), async (req, res) => {
+    try {
+        res.send(`Archivo cargado y guardado en ======= ${req.file.path}`);
+    } catch (error) {
+        console.error('Error al cargar el archivo:', error);
+        res.status(500).send('Error al cargar el archivo.');
+    }
+});
+
+        //const uploadDir = path.join('uploads', empresaId); // Crear ruta de la carpeta
+        //const uploadDir = path.join(__dirname, '../', 'uploads', empresaId);
+
+//*********************************** */
+
+const storagepdf = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const { empresaId } = req.body; // Obtener el ID de la empresa del formulario
+        const uploadDir = path.join('uploads', empresaId); // Crear ruta de la carpeta
+        // Crear la carpeta si no existe
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir); // Establecer el destino
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname); // Usar el nombre original del archivo
+    }
+});
+
+const uploadpdf = multer({ storage: storagepdf }); 
+
+// Ruta para manejar la carga del archivo PDF
+
+app.post('/uploadpdf', uploadpdf.single('file'), async (req, res) => {
+    try {
+        // Lógica después de cargar el archivo (se asume que req.file contiene los datos del archivo)
+        // console.log('Archivo cargado correctamente:', req.file);
+        return res.json({
+            status: 'success',
+            title: `[ ${req.file.path} ]`,
+            message: (`Archivo cargado y guardado`)
+        });
+
+        // Redirigir a la página de confirmación o a una página donde se muestre el archivo
+//        return res.redirect('/documentos');  // Aquí 'cargarpdf' es la ruta a donde redirigirás
+
+    } catch (error) {
+        console.error('Error al cargar el archivo:', error);
+        res.status(500).send('Error al cargar el archivo.');
+    }
+});
+
+/*
+app.post('/uploadpdf', uploadpdf.single('file'), async (req, res) => {
+    try {
+        return res.json({ status: 'success', message: '¡Tipo Propiedad ok!' });
+        //        res.send(`Archivo cargado y guardado en ======= ${req.file.path}`);
+//        res.render('cargarpdf');
+    } catch (error) {
+
+        console.error('Error al cargar el archivo:', error);
+        res.status(500).send('Error al cargar el archivo.');
+    }
+});
+*/
+
+// End - [cargapoder] - Configuración de Multer - Para Cargar Archivos 
+
 
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
