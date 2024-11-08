@@ -60,7 +60,8 @@ const app = express();
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const { empresaId } = req.body; // Obtener el ID de la empresa del formulario
-        const uploadDir = path.join('uploads', empresaId); // Crear ruta de la carpeta
+        //const uploadDir = path.join('uploads', empresaId); // Crear ruta de la carpeta
+        const uploadDir = path.join(__dirname, 'uploads', empresaId);
         // Crear la carpeta si no existe
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
