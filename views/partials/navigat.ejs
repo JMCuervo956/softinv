@@ -17,22 +17,11 @@
     padding: 10px; /* Espaciado interno */
   }
 
-  .dropdown-content {
-    display: none; /* Oculta el contenido del dropdown */
-    position: absolute; /* Posicionamiento absoluto */
-    background-color: white; /* Color de fondo del dropdown */
-    min-width: 160px; /* Ancho mínimo del dropdown */
-    z-index: 1; /* Para asegurarse de que esté sobre otros elementos */
-  }
-
-  .dropdown:hover .dropdown-content {
-    display: block; /* Muestra el contenido al pasar el mouse */
-  }
 </style>
 
 <nav class="navbar navbar-expand-lg custom-navbar-bg navbar-dark">
   <div class="container">
-    <a class="navbar-brand" href="/">A S A M B L E A - <span id="year"></span></a>
+    <a class="navbar-brand" href="/">A S A M B L E A - &nbsp;<span id="year" ></span>  </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -47,6 +36,8 @@
             <a href="/cargascol">cargascol</a>
             <a href="/cargapoder">Cargar Poder</a>
             <a href="/usuariosreset">Resetear Contraseña</a>
+            <a href="/cargarpdf">Cargar PDF</a>
+            <a href="/ver-pdf">PDF</a>
           </div>
         </li>
         <li class="nav-item">
@@ -59,6 +50,7 @@
           <button class="dropbtn">Configuración</button>
           <div class="dropdown-content">
             <a href="/maeprop">Tipo Propiedad</a>
+            <a href="/documentos">Documentos Asamblea</a>
           </div>
         </li>
       </ul>

@@ -34,12 +34,14 @@
     <% } else { %> 
         <%- include('partials/navigation') %>  
     <% } %>
+    <br>    
     <div style="display: inline;">
-    <h5 style="font-size: 14px; color: blue; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); transition: color 0.3s ease;" 
-        onmouseover="this.style.color='darkblue';" 
-        onmouseout="this.style.color='blue';">
-        <span style="padding-left: 10px;"><%= name %></span>
-    </h5>
+        <h5 style="font-size: 14px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); transition: color 0.3s ease;" 
+            onmouseover="this.querySelector('.user').style.color='darkblue'; this.querySelector('.name').style.color='darkred';" 
+            onmouseout="this.querySelector('.user').style.color='blue'; this.querySelector('.name').style.color='green';">
+            <span class="user" style="color: blue; padding-left: 10px;"><%= userUser %></span>
+            <span class="name" style="color: green;"> - <%= name %></span>
+        </h5>
     </div>    
     <div class="content">
         <div class="register-formIzq">
@@ -100,7 +102,7 @@
 
                     <div style="display: inline;">
                         <h5></h5>
-                        <input type="submit" id="btnGraficoPie" class="btn-salir" value="Resultado Pastel">
+                        <input type="submit" id="btnVideo" class="btn-salir" value="video">
                         <br><br>    
                     </div>
 
@@ -115,7 +117,6 @@
         <% if (rol!='Administrador') { %>
             <div class="register-formIzq">
                 <div>
-
                     <div style="display: inline;">
                         <li class="nav-item dropdown">
                             <h5></h5>
@@ -134,7 +135,23 @@
                     </div>
                 </div>  
             </div>
-        <% } %>    
+        <% } else { %> 
+            <div class="register-formIzq">
+                <div style="display: inline;">
+                    <li class="nav-item dropdown">
+                        <h5></h5>
+                        <button class="btn btn-light btn-sm ">Poderes</button>
+                        <div class="dropdown-content">
+                        <a href="/poderes">Registrar Poder</a>
+                        <a href="/poderes">Descargar Formato</a>
+                        </div>
+                        <br><br>    
+                    </li>
+                </div>
+            </div>
+        <% } %>        
+
+        
     </div>   
 
     <script>
@@ -193,7 +210,11 @@
             window.location.href = '/'; // Redirige a la página de logout o cerrar sesión
         });
 
-       
+        document.getElementById('btnVideo').addEventListener('click', function() {
+            // Acción para el botón "Salir"
+            window.location.href = '/video'; // Redirige a la página de logout o cerrar sesión
+        });
+        
     </script>
 
     <%- include('partials/footer') %>  

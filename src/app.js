@@ -2,56 +2,145 @@
 import express, { Router } from 'express';		
 import session from 'express-session';		
 import mysql from 'mysql2/promise'; // Cambiado para usar mysql2 con promesas		
-import multer from 'multer';		
-import bodyParser from 'body-parser';		
+import multer from 'multer';
+import bodyParser from 'body-parser';
 import fastcsv from 'fast-csv';
 import csv from 'csv-parser'; // CARGAR		
 import bcryptjs from 'bcryptjs';		
-import Swal from 'sweetalert2';		
-import fs from 'fs/promises';
+import Swal from 'sweetalert2';
+//import fs from 'fs/promises';
+import fs from 'fs'; // Importación del módulo fs
+import crypto from 'crypto';
+//import * as pdfjsLib from 'pdfjs-dist/webpack';
 
 // Importaciones de archivos locales		
 import { pool } from './db.js';		
 import { PORT } from './config.js';		
 import path from 'path';		
-import { fileURLToPath } from 'url';		
+import { fileURLToPath } from 'url';	
+import mammoth from 'mammoth'; // docx a pdf
+import { PDFDocument } from 'pdf-lib'; // docx a pdf
+//import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'; // Importación correcta para ESM
+
+// Función para cargar y leer un archivo PDF
+/*
+async function cargarPdf(rutaArchivo) {
+    // Lee el archivo PDF
+    const pdfBytes = fs.readFileSync(rutaArchivo);
+  
+    // Crea un documento PDF con los bytes leídos
+    const pdfDoc = await PDFDocument.load(pdfBytes);
+  
+    // Obtiene el número de páginas en el documento
+    const totalPaginas = pdfDoc.getPageCount();
+  
+    console.log(`Este PDF tiene ${totalPaginas} página(s).`);
+  
+    // Opcional: Puedes hacer modificaciones en el PDF aquí (añadir texto, imágenes, etc.)
+  
+    // Guarda el documento modificado en un nuevo archivo
+    const pdfModificado = await pdfDoc.save();
+  
+    // Escribe el PDF modificado a un nuevo archivo
+    fs.writeFileSync('output.pdf', pdfModificado);
+  }
+
+ // Llama a la función con la ruta del archivo PDF que deseas cargar
+cargarPdf('uploads/poder.pdf').catch(console.error); 
+*/
 
 // Configuración de rutas y variables		
 const __filename = fileURLToPath(import.meta.url);		
 const __dirname = path.dirname(__filename);		
 const app = express();		
 
-// Configura Multer para almacenar archivos - docx
-async function checkAndGetDirectory(dir) {
-    try {
-        await fs.access(dir);
-        return dir;
-    } catch {
-        throw new Error(`La carpeta no existe: ${dir}`);
-    }
-}
+
+// [cargapoder] - Configuración de Multer - Para Cargar Archivos 
 
 const storage = multer.diskStorage({
-    destination: async (req, file, cb) => {
-        const empresaId = req.body.empresaId; // Asume que envías el ID de la empresa en el formulario
-        const dir = path.join(__dirname, '../uploads', empresaId);
-
-        try {
-            await checkAndGetDirectory(dir);
-            cb(null, dir);
-        } catch (err) {
-            cb(err);
+    destination: (req, file, cb) => {
+        const { empresaId } = req.body; // Obtener el ID de la empresa del formulario
+        const uploadDir = path.join('uploads', empresaId); // Crear ruta de la carpeta
+        // Crear la carpeta si no existe
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
         }
+        cb(null, uploadDir); // Establecer el destino
     },
     filename: (req, file, cb) => {
-        cb(null, file.originalname);
+        cb(null, file.originalname); // Usar el nombre original del archivo
     }
 });
 
-const upload = multer({ storage });
-app.use(bodyParser.urlencoded({ extended: true }));
+const upload = multer({ storage }); // Crear el middleware de Multer
 
-app.set('view engine', 'ejs');  //  aqui
+app.post('/upload', upload.single('file'), async (req, res) => {
+    try {
+        res.send(`Archivo cargado y guardado en ======= ${req.file.path}`);
+    } catch (error) {
+        console.error('Error al cargar el archivo:', error);
+        res.status(500).send('Error al cargar el archivo.');
+    }
+});
+
+//*********************************** */
+
+const storagepdf = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const { empresaId } = req.body; // Obtener el ID de la empresa del formulario
+        const uploadDir = path.join('uploads', empresaId); // Crear ruta de la carpeta
+        // Crear la carpeta si no existe
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir); // Establecer el destino
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname); // Usar el nombre original del archivo
+    }
+});
+
+const uploadpdf = multer({ storage: storagepdf }); 
+
+// Ruta para manejar la carga del archivo PDF
+
+app.post('/uploadpdf', uploadpdf.single('file'), async (req, res) => {
+    try {
+        // Lógica después de cargar el archivo (se asume que req.file contiene los datos del archivo)
+        // console.log('Archivo cargado correctamente:', req.file);
+        return res.json({
+            status: 'success',
+            title: `[ ${req.file.filename} ]`,
+            message: (`Archivo cargado y guardado`)
+        });
+
+        // Redirigir a la página de confirmación o a una página donde se muestre el archivo
+//        return res.redirect('/documentos');  // Aquí 'cargarpdf' es la ruta a donde redirigirás
+
+    } catch (error) {
+        console.error('Error al cargar el archivo:', error);
+        res.status(500).send('Error al cargar el archivo.');
+    }
+});
+
+/*
+app.post('/uploadpdf', uploadpdf.single('file'), async (req, res) => {
+    try {
+        return res.json({ status: 'success', message: '¡Tipo Propiedad ok!' });
+        //        res.send(`Archivo cargado y guardado en ======= ${req.file.path}`);
+//        res.render('cargarpdf');
+    } catch (error) {
+
+        console.error('Error al cargar el archivo:', error);
+        res.status(500).send('Error al cargar el archivo.');
+    }
+});
+*/
+
+// End - [cargapoder] - Configuración de Multer - Para Cargar Archivos 
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set('view engine', 'ejs'); 
 app.set('views', path.join(__dirname, '../views'));
 
 //console.log('Hello, world!');
@@ -78,15 +167,15 @@ app.use((req, res, next) => {
 });		
 		
 // Middleware		
-app.use(express.static(path.join(__dirname, '../public')));		
+app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.json());		
 app.use(express.urlencoded({ extended: true }));		
 
 // Middleware para servir archivos estáticos - docx
-app.use(express.static('public')); 
+//app.use(express.static('public')); 
 
 // Configuración de vistas		
-app.use(express.static(path.join(__dirname, 'src')));		
+app.use(express.static(path.join(__dirname, 'src')));	
 
 // Función de alerta		
 function showAlert() {		
@@ -100,38 +189,26 @@ function showAlert() {
 }		
 
 
-// Rutas		
+// Rutas 		
 
 app.get('/', async (req, res) => {		
     try {		
-        res.render('inicio');		
+        res.render('login');		
     } catch (error) {		
         console.error('Error al renderizar la plantilla:', error);		
         res.status(500).json({ error: 'Error interno del servidor' });		
     }		
 });		
 
-// Ruta para cargar el archivo - docx uploads
-app.post('/upload', upload.single('file'), async (req, res) => {
-    try {
-        //const empresaId = req.body.empresaId; // Asume que envías el ID de la empresa en el formulario
-        //const filePath = path.join(__dirname, '../uploads', empresaId, req.file.filename);
-        //console.log("Ruta del archivo:", filePath);
-        res.send(`Archivo cargado y guardado `);
-
-        // Aquí continúa con la lógica para leer y procesar el archivo...
-    } catch (error) {
-        console.error('Error al cargar el archivo:', error);
-        res.status(500).send('Error al cargar el archivo.');
-    }
-});
-
 // Ruta para descargar archivos
-app.get('/download/:filename', (req, res) => {
+app.get('/origen/:folder/:filename', (req, res) => {
+    const folder = req.params.folder;
     const filename = req.params.filename;
-    const filePath = path.join(__dirname, '../uploads', filename);
+//    console.log(`Carpeta: ${folder}, Archivo: ${filename}`);
+    const filePath = path.join(__dirname, `../uploads/${folder}/`, filename); // ruta de donde toma el archivo
 
     // Usar express para enviar el archivo
+//    console.log(filePath);
     res.download(filePath, (err) => {
         if (err) {
             console.error('Error al descargar el archivo:', err);
@@ -140,18 +217,37 @@ app.get('/download/:filename', (req, res) => {
     });
 });
 
-// Ruta para cargar la vista de carga
-app.get('/cargapoder', (req, res) => {
-    res.render('cargapoder'); // Renderiza cargapoder.ejs
-});
 
 // Rutas de autenticación y registro
-app.get('/login', (req, res) => res.render('login'));
+//app.get('/login', (req, res) => res.render('login'));
+
+app.get('/login', (req, res)=>{
+//    console.log(req.session.unidad);
+//    if (req.session.loggedin) {
+        const userUser = req.session.unidad;
+        res.render('login', { userUser });
+//    } else {
+//        res.send('Por favor, inicia sesión primero.');
+//    }
+})
+
+// [video]
+app.get('/video', (req, res) => {
+    res.render('video', { meetingLink: null });
+});
+
+app.post('/join-meet', (req, res) => {
+    const meetId = req.body.meetId;
+    const meetingLink = `https://meet.google.com/${meetId}`;
+    res.render('video', { meetingLink });
+});
+// End - [video]
 
 app.get('/menuprc', (req, res) => {
     if (req.session.loggedin) {
         const { user, name, rol } = req.session;
-        res.render('menuprc', { user, name, rol });
+        const userUser = req.session.unidad;
+        res.render('menuprc', { user, name, rol, userUser });
     } else {
         res.send('Por favor, inicia sesión primero.');
     }
@@ -378,7 +474,7 @@ app.get('/resetuser', (req, res) => {
     res.render('resetuser', { user, name });
 });
 
-// resetuser - eliuser
+// tipo propiedades
 
 app.get('/maeprop', async (req, res) => {
     try {
@@ -418,8 +514,80 @@ app.get('/maepropeli', (req, res) => {
     res.render('maepropeli', { id, descripcion });
 });
 
-// maepropadi - post
+// DOCUMENTOS
 
+app.get('/documentos', async (req, res) => {
+    try {
+        const tableName = "tbl_documentos";
+        const [rows] = await pool.execute(`select * from ${tableName}`);
+        if (req.session.loggedin) {
+            res.render('documentos', { data: rows });
+        } else {
+            console.log('5')
+            res.send('Por favor, inicia sesión primero.');
+        }
+    } catch (error) {
+                console.error('Error conectando a la base de datos....????:', error);
+                res.status(500).send('Error conectando a la base de datos.?????');
+            }
+});
+
+
+//  adicionar tipo propiedad
+
+app.get('/docadi', (req, res) => {
+    if (req.session.loggedin) {
+        const { user, name } = req.session;
+        res.render('docadi', { user, name });
+    } else {
+        res.send('Por favor, inicia sesión primero.');
+    }
+});
+
+app.get('/docmod', (req, res) => {
+    const id = req.query.id;
+    const documento = req.query.documento;
+    res.render('docmod', { id, documento });
+});
+
+app.get('/doceli', (req, res) => {
+    const id = req.query.id;
+    const documento = req.query.documento;
+    res.render('doceli', { id, documento });
+});
+
+app.get('/docpdf', (req, res) => {
+    const id = req.query.id;
+    const documento = req.query.documento;
+    res.render('docpdf', { id, documento });
+});
+
+// POSTS --------------------------------
+
+ // [inicio] 
+ app.post('/your-action-url', async (req, res) => {
+    const identificador = req.body.Identi; // Obtener el valor de "Identi"
+    if (!identificador) {
+        return res.status(400).json({ status: 'error', message: 'Todos los campos son obligatorios' });
+    }
+    // Valida Unidad
+    const [rows] = await pool.execute('SELECT * FROM tbl_propiedad WHERE id_rz = ?', [identificador]);
+    if (rows.length == 0) {
+        return res.status(400).json({ status: 'error', message: 'Unidad No Existe' });
+    }
+    const UdaRecord = rows[0];
+    req.session.unidad = UdaRecord.razonsocial; // mantener la información del usuario entre diferentes solicitudes durante su sesión (COMPARTIR).
+    // Aquí puedes realizar la evaluación necesaria
+    if (identificador) {
+        return res.json({ status: 'success', message: '¡Tipo Propiedad ok!' });
+    } else {
+        console.log('error')
+        return res.json({ status: 'error', message: '¡Codigo Unidad Incorrecta!' });
+    }
+});
+// End - [inicio] 
+
+// [maepropadi]
 app.post('/maepropadi', async (req, res) => {
     try {
         const { descripcion } = req.body;
@@ -441,8 +609,9 @@ app.post('/maepropadi', async (req, res) => {
         res.status(500).json({ status: 'error', message: 'Error en el servidor' });
     }
 });
+// End - [maepropadi] 
 
-// modifica usuarios - post
+// [maepropmod] - modifica usuarios
 
 app.post('/maepropmod', async (req, res) => {
     try {
@@ -464,7 +633,9 @@ app.post('/maepropmod', async (req, res) => {
     }
 });
 
-/* Eliminar usuarios */
+// End - [maepropmod]
+
+// [maepropeli] - Eliminar usuarios
            
 app.post('/maepropeli', async (req, res) => {
     try {
@@ -489,7 +660,89 @@ app.post('/maepropeli', async (req, res) => {
     }
 });
 
-// PODERES *************************************************
+// End - [maepropeli]
+
+// DOCUMENTOS DE ASAMBLEA
+
+app.post('/docadi', async (req, res) => {
+    try {
+        const { documento } = req.body;
+
+        if (!documento ) {
+            return res.status(400).json({ status: 'error', message: 'Todos los campos son obligatorios' });
+        }
+
+        const [rows] = await pool.execute('SELECT * FROM tbl_documentos WHERE documento = ?', [documento]);
+        if (rows.length > 0) {
+            return res.status(400).json({ status: 'error', message: 'Documento ya Existe' });
+        }
+
+        // Insertar nuevo usuario
+        await pool.execute('INSERT INTO tbl_documentos (documento) VALUES (?)', [documento]);
+        res.json({ status: 'success', message: '¡Documento registrado correctamente!' });
+    } catch (error) {
+        console.error('Error en registro:', error);
+        res.status(500).json({ status: 'error', message: 'Error en el servidor' });
+    }
+});
+// End - [maepropadi] 
+
+// [maepropmod] - modifica usuarios
+
+app.post('/docmod', async (req, res) => {
+    try {
+        const tableName = "tbl_documentos";
+        const id = req.body.id;
+        const documento = req.body.documento;
+        await pool.execute(`UPDATE ${tableName} SET documento = ? WHERE id = ?`, [documento, id]);
+        return res.json({
+            status: 'success',
+            title: 'Actualizacion Exitosa',
+            message: '¡Registrado correctamente!'
+        });
+    } catch (error) {
+        res.json({
+            status: 'error',
+            title: 'Actualizacion Tipo Propiedad NO Exitoso...',
+            message: '¡Error en el servidor! BD'
+        });
+    }
+});
+
+// End - [maepropmod]
+
+// [maepropeli] - Eliminar usuarios
+           
+app.post('/doceli', async (req, res) => {
+    try {
+        const tableName = "tbl_documentos";
+        const id = req.body.id;
+        // Log para depuración delete
+        const [result] = await pool.execute(`DELETE FROM ${tableName} WHERE id = ?`, [id]);
+        if (result.affectedRows > 0) {
+            // El registro fue eliminado con éxito
+            return res.json({
+                status: 'success',
+                title: 'Eliminado',
+                message: 'ha sido eliminado correctamente.'
+            });
+        }
+    } catch (error) {
+        res.json({
+            status: 'error',
+            title: 'Borrado de Usuario NO Exitoso',
+            message: `Error: ${error.message}`
+        });
+    }
+});
+
+// End - [maepropmod]
+
+
+// FIN - DOCUMENTOS DE ASAMBLEA
+
+
+// PODERES 
 
 app.get('/poderes', async (req, res) => {
     try {
@@ -535,7 +788,7 @@ app.get('/podereli', (req, res) => {
     res.render('podereli', { id, numprop, name, propoder, proname });
 });
 
-// adicionar - post
+// [poderadi] - adicionar
 
 app.post('/poderadi', async (req, res) => {
     try {
@@ -572,7 +825,10 @@ app.post('/poderadi', async (req, res) => {
     }
 });
 
-// modifica poder - post
+// End - [poderadi]
+
+// [podermod] - modifica poder
+
 app.post('/podermod', async (req, res) => {
     try {
         const tableName = "tbl_poderes";
@@ -582,7 +838,7 @@ app.post('/podermod', async (req, res) => {
         const name = req.body.name;
         const propoder = req.body.propoder;
         const proname = req.body.proname;
-        console.log(id);
+        //console.log(id);
         await pool.execute(`UPDATE ${tableName} SET numprop = ?, name = ?, propoder = ?, proname = ?, Fecha = ? WHERE id = ?`, [numprop, name, propoder, proname, date, id]);
         return res.json({
             status: 'success',
@@ -598,7 +854,9 @@ app.post('/podermod', async (req, res) => {
     }
 });
 
-/* Eliminar poder */
+// End - [podermod]
+
+// [podereli] - Eliminar poder
            
 app.post('/podereli', async (req, res) => {
     try {
@@ -627,8 +885,7 @@ app.post('/podereli', async (req, res) => {
     }
 });
 
-// FIN PODERES *************************************************
-
+// End - [podereli]
 
 // Graficos
 
@@ -722,10 +979,30 @@ app.get('/cargascsv', (req, res) => {
 });
 
 
-// 11. Autenticacion 
+// [login] - Autenticacion
 
 app.post('/auth', async (req, res) => {
-    const { user, pass } = req.body;
+    // variables de ejs
+    const { unidad, user, pass } = req.body;
+
+    // Valida Unidad
+    const tableProp = 'tbl_propiedad';
+    if (!unidad) {
+        return res.status(400).json({ status: 'error', message: 'Todos los campos son obligatorios' });
+    }
+    
+    // Hashear el nit ingresado
+    const nitInputHash = crypto.createHash('sha256').update(unidad).digest('hex'); // Usa crypto de Node.js
+    // Ahora, busca el registro en la base de datos usando el hash del nit
+    const [rowsud] = await pool.execute(`SELECT * FROM ${tableProp} WHERE nit = ?`, [nitInputHash]);
+    
+    if (rowsud.length === 0) {
+        return res.json({ status: 'error', message: 'Unidad no encontrada' });
+    }
+    const UdaRecord = rowsud[0];
+    req.session.unidad = UdaRecord.razonsocial; // mantener la información del usuario entre diferentes solicitudes durante su sesión (COMPARTIR).
+    //console.log(req.session.unidad);
+    // Valida Usuario
     const tableName = 'users';
     const [rows] = await pool.execute(`SELECT * FROM ${tableName} WHERE user = ?`, [user]);
     
@@ -748,7 +1025,9 @@ app.post('/auth', async (req, res) => {
     return res.json({ status: 'success', message: '!LOGIN Correcto!' });
 });
 
-// preguntas - post
+// End - [login]
+
+// [preguntas] 
 
 app.post('/preguntasreg', async (req, res) => {
     try {
@@ -766,44 +1045,10 @@ app.post('/preguntasreg', async (req, res) => {
     }
 });
 
-// preguntas - post
+// End - [preguntas]
 
-app.post('/preguntasregopc', async (req, res) => {
-    try {
-        const user = req.body.user;
-        const name = req.body.name;        
-        const pgtas = req.body.pgtas;
-        // Log para depuración
-        const tableName = "pgtaresp";
-        const [rows] = await pool.execute(`select * FROM ${tableName} WHERE texto = ?`, [pgtas]);
-        if (rows.length > 0) {
-            return res.json({
-                status: 'error',
-                title: 'Error',
-                message: 'Pregunta ya Existe'
-            });
-        }
+// [modificar]
 
-        const date = new Date();
-        const estado = 0; // Ejemplo de estado
-        await pool.execute(`INSERT INTO ${tableName} (texto, estado, fechacreacion) VALUES (?, ?, ?)`, [pgtas, estado, date]);
-        res.json({
-            status: 'success',
-            title: 'Registro Exitoso',
-            message: '¡Registrado correctamente!'
-
-        });
-    } catch (error) {
-        res.json({
-            status: 'success',
-            title: 'Registro de Preguta NO Exitoso',
-            message: '¡Error en el servidor! BD'
-        });
-
-    }
-});
-
-// modifica preguntas - post
 app.post('/preguntasmod', async (req, res) => {
     try {
         const ids = req.body.ids;
@@ -835,7 +1080,9 @@ app.post('/preguntasmod', async (req, res) => {
     }
 });
 
-// modificacion opciones - post
+// End - [modificar]
+
+// [modopc] - modificacion opciones
 app.post('/preguntasmodopc', async (req, res) => {
     try {
         const idp = req.body.idp;
@@ -867,7 +1114,9 @@ app.post('/preguntasmodopc', async (req, res) => {
     }
 });
 
-/* Eliminar opciones pregunta */
+// End - [modopc]
+
+// [eliopc] - Eliminar opciones pregunta 
 
 app.post('/preguntaseliopc', async (req, res) => {
     try {
@@ -890,7 +1139,10 @@ app.post('/preguntaseliopc', async (req, res) => {
     }
 });
 
-// register - post
+// End - [eliopc]
+
+// [register] - Adicionar Usuario
+
 app.post('/register', async (req, res) => {
     try {
         const rz = '1';
@@ -916,7 +1168,9 @@ app.post('/register', async (req, res) => {
     }
 });
 
-/* Eliminar pregunta */
+// End - [register]
+
+// [eliminar] - Eliminar preguntas
 
 app.post('/preguntaseli', async (req, res) => {
     try {
@@ -948,7 +1202,10 @@ app.post('/preguntaseli', async (req, res) => {
     }
 });
 
-/* voto opc1 pgtaresp pgtaresp pgtaresp */   
+// End - [eliminar]
+
+// [opc1] voto   
+
 app.post('/procesarseleccion', async (req, res) => {
     try {
         const userUser = req.session.user;
@@ -992,7 +1249,10 @@ app.post('/procesarseleccion', async (req, res) => {
     }
 });
 
-// opc 2 
+// End - [opc1] 
+
+// [opc2] activar voto   
+
 app.post('/procesar-seleccion', async (req, res) => {
         try {
             const userUser = req.session.user;
@@ -1002,7 +1262,7 @@ app.post('/procesar-seleccion', async (req, res) => {
 
             // Actualiza el estado y activo a 0 para todas las preguntas
             await pool.execute('UPDATE preguntas SET estado = 0, activo = 0');
-
+           
             // Verifica si hay valores seleccionados
             if (selectedValue && selectedValue.length > 0) {
                 for (const id of selectedValue) {
@@ -1030,8 +1290,9 @@ app.post('/procesar-seleccion', async (req, res) => {
         }
     });
     
+// End - [opc1]
     
-// modifica usuarios - post
+// [moduser] - modifica usuarios
 
 app.post('/usuariomod', async (req, res) => {
     try {
@@ -1065,7 +1326,9 @@ app.post('/usuariomod', async (req, res) => {
     }
 });
 
-// modifica usuarios - post
+// End - [moduser]
+
+// [moduserpass] - modifica contraseña usuarios
 
 app.post('/usuariomodpass', async (req, res) => {
     try {
@@ -1094,7 +1357,9 @@ app.post('/usuariomodpass', async (req, res) => {
     }
 });
 
-/* Eliminar usuarios */
+// End - [moduserpass]
+
+// [eliuser] - Eliminar usuarios
 
 app.post('/usuarioeli', async (req, res) => {
     try {
@@ -1127,7 +1392,10 @@ app.post('/usuarioeli', async (req, res) => {
     }
 });
 
-/* Resetear pass usuarios */  
+// End - [eliuser]
+
+
+// [usuariosreset] - Resetear pass usuarios */  
 
 app.post('/usuariosrespass', async (req, res) => {
     try {
@@ -1149,12 +1417,14 @@ app.post('/usuariosrespass', async (req, res) => {
     }    
 });
 
+// End - [usuariosreset]
 
- // opciones de preguntas - post   -  createPool
+ // [preguntasopc] - opciones de preguntas - createPool
 
  app.post('/opcionesreg', async (req, res) => {
     const { id, respuesta, pgtas } = req.body;
     try {
+        console.log('opcionesreg');
         const tableName = "pgtaresp";
         const [rows] = await pool.execute(`SELECT * FROM ${tableName} WHERE idprg= ? and respuesta = ?`, [id, pgtas]);
         if (rows.length > 0) {
@@ -1181,7 +1451,10 @@ app.post('/usuariosrespass', async (req, res) => {
     }
 });
 
+// End - [preguntasopc]
+
 // Ruta para procesar archivos CSV
+
 async function processCSV(filePath) {
     const connection = await mysql.createConnection(dbConfig);
     try {
@@ -1207,7 +1480,8 @@ async function processCSV(filePath) {
     }
 }
 
-// Ruta para guardar datos en la tabla
+// [cargascol] - Ruta para guardar datos en la tabla
+
 app.post('/save-table-data2', async (req, res) => {
     const data = req.body;
 
@@ -1245,8 +1519,10 @@ app.post('/save-table-data2', async (req, res) => {
     }
 });
 
+// End - [cargascol]
 
-// Ruta para guardar datos en la tabla
+// [cargas] - Ruta para guardar datos en la tabla 
+/*
 app.post('/save-table-data', async (req, res) => {
     const data = req.body;
     console.log('paso 1');
@@ -1285,6 +1561,8 @@ app.post('/save-table-data', async (req, res) => {
         connection.release();
     }
 });
+*/
+// End - [cargas]
 
 // Función para generar y actualizar la contraseña en la tabla
 async function updatePasswords() {
@@ -1307,8 +1585,87 @@ async function updatePasswords() {
         console.error('Error en updatePasswords:', error);
     }
 }
-  
-// ejecutar
+
+
+
+
+
+// [     V E R           A R C H I V O S        ]
+
+// ver archivos cargas docx o pdf //////////////////////////////
+
+// opc 1 docx
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+
+app.get('/ver-word', (req, res) => {
+    // Aquí usas la URL completa, que incluye el protocolo y el dominio (puede ser http://localhost:3000 o el dominio de producción)
+    const archivoWord = 'http://localhost:3009/uploads/poder.docx';  // Ruta absoluta del archivo Word
+    console.log('Archivo Word:', archivoWord);  // Log para verificar que archivoWord está definido
+    res.render('ver-word', { archivoWord });  // Pasar la variable 'archivoWord' al template EJS
+});
+
+// opc 2 docx a pdf
+/*
+// Ruta del archivo .docx y de salida
+const inputFilePath = path.join('uploads', 'poder.docx');
+const outputFilePath = path.join('uploads', 'poder.pdf');
+
+// Función para convertir .docx a PDF
+async function convertDocxToPdf(inputPath, outputPath) {
+    try {
+        // Leer el archivo .docx
+        const docxData = fs.readFileSync(inputPath);
+        const { value: docText } = await mammoth.extractRawText({ buffer: docxData });
+
+        // Crear un nuevo documento PDF usando pdf-lib
+        const pdfDoc = await PDFDocument.create();
+        const page = pdfDoc.addPage();
+        
+        // Usar la fuente estándar Helvetica de pdf-lib
+        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+        const { width, height } = page.getSize();
+        
+        // Añadir el texto del documento .docx al PDF
+        page.drawText(docText, {
+            x: 50,
+            y: height - 50,
+            font,
+            size: 12,
+            maxWidth: width - 100,
+            lineHeight: 14,
+        });
+
+        // Guardar el archivo PDF
+        const pdfBytes = await pdfDoc.save();
+        fs.writeFileSync(outputPath, pdfBytes);
+
+        console.log('Archivo convertido a PDF con éxito.');
+    } catch (error) {
+        console.error('Error al convertir .docx a PDF:', error);
+    }
+}
+
+  // Llamar a la función para convertir el archivo
+  convertDocxToPdf(inputFilePath, outputFilePath);
+*/
+
+// opc 3 pdf  
+
+// En tu ruta en Express:
+app.get('/ver-pdf', (req, res) => {
+    const archivoPDF = '/uploads/poder.pdf'; // Ruta al archivo PDF
+    res.render('ver-pdf', { pdfUrl: archivoPDF });
+  });
+
+// Cargar PDF
+app.get('/cargarpdf', (req, res) => {
+    res.render('cargarpdf');
+  });
+
+// Ruta para cargar la vista de carga
+app.get('/cargapoder', (req, res) => {
+    res.render('cargapoder'); // Renderiza cargapoder.ejs
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);

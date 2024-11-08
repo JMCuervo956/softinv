@@ -9,12 +9,22 @@
 </head>
 <body>
     <form action="/upload" method="POST" enctype="multipart/form-data">
-        <input type="text" name="empresaId" value="Emp2"> <!-- Cambia esto según la empresa -->
+        <input type="text" name="empresaId" value="Emp4" placeholder="Nombre de la empresa"> <!-- Cambia esto según la empresa -->
         <input type="file" name="file" accept=".docx" required>
         <button type="submit">Cargar</button>
-    </form>
+    </form>    
 
     <div class="doc-content" id="doc-content"></div>
-    <a href="/download/nuevos.docx">Descargar archivo</a>
+    <a href="" id="download-link">Descargar archivo</a>
+
+    <script>
+        // Cambia esto según la carpeta que necesites
+        const folderName = 'Emp3'; 
+        const fileName = 'poder.docx';
+        const downloadLink = `/origen/${folderName}/${fileName}`;
+
+        // Asignar el enlace de descarga al elemento
+        document.getElementById('download-link').href = downloadLink;
+    </script>
 </body>
 </html>

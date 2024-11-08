@@ -31,9 +31,9 @@
                     <table class="table table-bordered table-hover">
                         <thead>
                             <th>
-                                <h4>Tipo Propiedad</h4>
+                                <h4>Documentos Asamblea</h4>
                                 <a href="/menuprc" class="btn btn-success btn-sm btnind-hover-effect">Regresar</a>
-                                <a href="/maepropadi" class="btn btn-primary btn-sm btnind-hover-effect">Adicionar</a>
+                                <a href="/docadi" class="btn btn-primary btn-sm btnind-hover-effect">Adicionar</a>
                             </th>
                         </thead>        
                     </table>
@@ -49,20 +49,13 @@
                             <% if (data && data.length > 0) { %>
                                 <% data.forEach(function(item) { %>
                                     <tr>
-                                        <td class="tex-hover-effect" style="width: 100px;"><%= item.descripcion %></td>
-                                    
+                                        <td class="tex-hover-effect" style="width: 100px;"><%= item.documento %></td>
                                         <td style="width: 50px;">
-                                            <% if (item.descripcion !== "Apartamento" && item.descripcion !== "Casa" && item.descripcion !== "Edificio") { %>
-                                                <a href="/maepropmod?id=<%= item.id %>&descripcion=<%= item.descripcion %>" class="btn btn-warning btn-sm btn-hover-effect">Mod</a>
-                                            <% } %>
-                                        </td>
-                                        <td style="width: 50px;">
-                                            <% if (item.descripcion !== "Apartamento" && item.descripcion !== "Casa" && item.descripcion !== "Edificio") { %>
-                                                <a href="/maepropeli?id=<%= item.id %>&descripcion=<%= item.descripcion %>" class="btn btn-danger btn-sm btn-hover-effect">Ret</a>
-                                            <% } %>
+                                                <a href="/docmod?id=<%= item.Id %>&documento=<%= item.documento %>" class="btn btn-warning btn-sm btn-hover-effect">Mod</a>
+                                                <a href="/doceli?id=<%= item.Id %>&documento=<%= item.documento %>" class="btn btn-danger btn-sm btn-hover-effect">Ret</a>
+                                                <a href="/docpdf?id=<%= item.Id %>&documento=<%= item.documento %>" class="btn btn-primary btn-sm btn-hover-effect">Pdf</a>
                                         </td>
                                     </tr>
-
                                 <% }); %>
                             <% } else { %> 
                                 <tr>
@@ -81,7 +74,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
+
     <script>
         function checkValue(input) {
             console.log('imagen'); // Este mensaje debería aparecer
@@ -92,6 +85,6 @@
                 successImage.style.display = 'none'; // Ocultar imagen
             }
         }
-    </script>
+    </script>    
 </body>
 </html>
