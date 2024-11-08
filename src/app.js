@@ -110,7 +110,7 @@ app.post('/uploadpdf', uploadpdf.single('file'), async (req, res) => {
         // console.log('Archivo cargado correctamente:', req.file);
         return res.json({
             status: 'success',
-            title: `[ ${req.file.filename} ]`,
+            title: `[ ${req.file.path} ]`,
             message: (`Archivo cargado y guardado`)
         });
 
