@@ -115,11 +115,13 @@ app.get('/', async (req, res) => {
 });		
 
 // Ruta para descargar archivos
+app.use(express.static(path.join(__dirname, 'uploads')));	
+
 app.get('/origen/:folder/:filename', (req, res) => {
     const folder = req.params.folder;
     const filename = req.params.filename;
 //    console.log(`Carpeta: ${folder}, Archivo: ${filename}`);
-    const filePath = path.join(__dirname, `../uploads/${folder}/`, filename); // ruta de donde toma el archivo
+    const filePath = path.join(__dirname, `${folder}/`, filename); // ruta de donde toma el archivo
 
     // Usar express para enviar el archivo
 //    console.log(filePath);
@@ -1586,7 +1588,7 @@ app.get('/cargapoder', (req, res) => {
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const { empresaId } = req.body; // Obtener el ID de la empresa del formulario
-        const uploadDir = path.join(__dirname, '../', 'uploads', empresaId);
+        const uploadDir = path.join(__dirname, 'uploads', empresaId);
         console.log(uploadDir);
         // Crear la carpeta si no existe
         if (!fs.existsSync(uploadDir)) {
