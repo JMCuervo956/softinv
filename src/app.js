@@ -1,4 +1,4 @@
-// Importaciones de módulos de terceros		
+    // Importaciones de módulos de terceros		
 import express, { Router } from 'express';		
 import session from 'express-session';		
 import mysql from 'mysql2/promise'; // Cambiado para usar mysql2 con promesas		
@@ -22,7 +22,6 @@ import { PDFDocument } from 'pdf-lib'; // docx a pdf
 // Configuración de rutas y variables		
 const __filename = fileURLToPath(import.meta.url);		
 const __dirname = path.dirname(__filename);	
-console.log(__dirname);	
 const app = express();		
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs'); 
@@ -56,12 +55,6 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.json());		
 app.use(express.urlencoded({ extended: true }));		
 
-// Middleware para servir archivos estáticos - docx
-//app.use(express.static('public')); 
-
-// Configuración de vistas		
-app.use(express.static(path.join(__dirname, 'src')));	
-
 // Función de alerta		
 function showAlert() {		
     Swal.fire({		
@@ -87,7 +80,7 @@ app.get('/', async (req, res) => {
 
 
 // Ruta para descargar archivos
-app.use(express.static(path.join(__dirname, 'uploads')));	
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/origen/:folder/:filename', (req, res) => {
     const folder = req.params.folder;
@@ -1482,7 +1475,6 @@ async function updatePasswords() {
 // ver archivos cargas docx o pdf //////////////////////////////
 
 // opc 1 docx
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 app.get('/ver-word', (req, res) => {
     // Aquí usas la URL completa, que incluye el protocolo y el dominio (puede ser http://localhost:3000 o el dominio de producción)
@@ -1559,7 +1551,8 @@ app.get('/cargapoder', (req, res) => {
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const { empresaId } = req.body; // Obtener el ID de la empresa del formulario
-        const uploadDir = path.join(__dirname, 'uploads', empresaId);
+        const uploadDir = path.join(__dirname, '..', 'uploads', empresaId);
+        console-log(__dirname);
         console.log(uploadDir);
         // Crear la carpeta si no existe
         if (!fs.existsSync(uploadDir)) {
