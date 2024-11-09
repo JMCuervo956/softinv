@@ -8,10 +8,8 @@ import fastcsv from 'fast-csv';
 import csv from 'csv-parser'; // CARGAR		
 import bcryptjs from 'bcryptjs';		
 import Swal from 'sweetalert2';
-//import fs from 'fs/promises';
 import fs from 'fs'; // Importación del módulo fs
 import crypto from 'crypto';
-//import * as pdfjsLib from 'pdfjs-dist/webpack';
 
 // Importaciones de archivos locales		
 import { pool } from './db.js';		
@@ -20,38 +18,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';	
 import mammoth from 'mammoth'; // docx a pdf
 import { PDFDocument } from 'pdf-lib'; // docx a pdf
-//import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'; // Importación correcta para ESM
-
-// Función para cargar y leer un archivo PDF
-/*
-async function cargarPdf(rutaArchivo) {
-    // Lee el archivo PDF
-    const pdfBytes = fs.readFileSync(rutaArchivo);
-  
-    // Crea un documento PDF con los bytes leídos
-    const pdfDoc = await PDFDocument.load(pdfBytes);
-  
-    // Obtiene el número de páginas en el documento
-    const totalPaginas = pdfDoc.getPageCount();
-  
-    console.log(`Este PDF tiene ${totalPaginas} página(s).`);
-  
-    // Opcional: Puedes hacer modificaciones en el PDF aquí (añadir texto, imágenes, etc.)
-  
-    // Guarda el documento modificado en un nuevo archivo
-    const pdfModificado = await pdfDoc.save();
-  
-    // Escribe el PDF modificado a un nuevo archivo
-    fs.writeFileSync('output.pdf', pdfModificado);
-  }
-
- // Llama a la función con la ruta del archivo PDF que deseas cargar
-cargarPdf('uploads/poder.pdf').catch(console.error); 
-*/
 
 // Configuración de rutas y variables		
 const __filename = fileURLToPath(import.meta.url);		
-const __dirname = path.dirname(__filename);		
+const __dirname = path.dirname(__filename);	
+console.log(__dirname);	
 const app = express();		
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs'); 
@@ -113,6 +84,7 @@ app.get('/', async (req, res) => {
         res.status(500).json({ error: 'Error interno del servidor' });		
     }		
 });		
+
 
 // Ruta para descargar archivos
 app.use(express.static(path.join(__dirname, 'uploads')));	
@@ -439,7 +411,6 @@ app.get('/documentos', async (req, res) => {
         if (req.session.loggedin) {
             res.render('documentos', { data: rows });
         } else {
-            console.log('5')
             res.send('Por favor, inicia sesión primero.');
         }
     } catch (error) {
