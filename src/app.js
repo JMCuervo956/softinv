@@ -183,7 +183,7 @@ console.log('DB_PASSWORD:', process.env.DB_PASSWORD);  // Debería mostrar la co
 
 app.get('/', async (req, res) => {		
     try {		
-        res.render('login');		
+        res.render('inventario');		
     } catch (error) {		
         console.error('Error al renderizar la plantilla:', error);		
         res.status(500).json({ error: 'Error interno del servidor' });		
@@ -210,6 +210,15 @@ app.get('/origen/:folder/:filename', (req, res) => {
     });
 });
 
+// INVENTARIOS
+
+app.get('/inventario', (req, res) => {
+    if (req.session.loggedin) {
+        res.render('inventario');
+    } else {
+        res.send('Por favor, inicia sesión primero.');
+    }
+});
 
 // Rutas de autenticación y registro
 //app.get('/login', (req, res) => res.render('login'));
