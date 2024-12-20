@@ -62,8 +62,8 @@ const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const { empresaId } = req.body; // Obtener el ID de la empresa del formulario
         const uploadDir = path.join('uploads', empresaId); // Crear ruta de la carpeta
-        console.log('poder');
-        console.log(uploadDir)
+    //    console.log('poder');
+    //    console.log(uploadDir)
 
         // Crear la carpeta si no existe
         if (!fs.existsSync(uploadDir)) {
@@ -94,8 +94,8 @@ const storagepdf = multer.diskStorage({
     destination: (req, file, cb) => {
         const { empresaId } = req.body; // Obtener el ID de la empresa del formulario
         const uploadDir = path.join('uploads', empresaId); // Crear ruta de la carpeta
-        console.log('pdf');
-        console.log(uploadDir)
+    //    console.log('pdf');
+    //    console.log(uploadDir)
         // Crear la carpeta si no existe
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
@@ -114,7 +114,7 @@ const uploadpdf = multer({ storage: storagepdf });
 // Ruta para manejar la carga del archivo PDF
 app.post('/uploadpdf', uploadpdf.single('file'), async (req, res) => {
     try {
-        console.log(req.file); // Aquí puedes ver qué se ha cargado
+ //       console.log(req.file); // Aquí puedes ver qué se ha cargado
         res.send(`Archivo cargado y guardado en ======= ${req.file.path}`);
     } catch (error) {
 
@@ -177,9 +177,9 @@ function showAlert() {
 
 
 // Rutas 		
-console.log('DB_HOST:', process.env.DB_HOST);  // Debería mostrar la IP o hostname
-console.log('DB_USER:', process.env.DB_USER);  // Debería mostrar 'josema'
-console.log('DB_PASSWORD:', process.env.DB_PASSWORD);  // Debería mostrar la contraseña
+//console.log('DB_HOST:', process.env.DB_HOST);  // Debería mostrar la IP o hostname
+//console.log('DB_USER:', process.env.DB_USER);  // Debería mostrar 'josema'
+//console.log('DB_PASSWORD:', process.env.DB_PASSWORD);  // Debería mostrar la contraseña
 
 app.get('/', async (req, res) => {		
     try {		
@@ -191,8 +191,8 @@ app.get('/', async (req, res) => {
 });		
 
 // Ruta para descargar archivos
-console.log('aqui ');
-console.log(__dirname);
+//console.log('aqui ');
+//console.log(__dirname);
 app.use('uploads', express.static(path.join(__dirname, '../uploads')));
 app.get('/origen/:folder/:filename', (req, res) => {
     const folder = req.params.folder;
@@ -251,8 +251,39 @@ app.post('/inventarios', async (req, res) => {
     }
 });
 
+// inventarios ELIMINAR
+
+app.post('/inventeli', async (req, res) => {
+    try {
+        const ids = req.body.CodActivo;
+
+        // Log para depuración
+
+        const [rows] =  await pool.execute('delete from tbl_inventarios WHERE id_activo = ?', [ids]);
+        return res.json({
+            status: 'success',
+            title: 'Borrado Exitoso.',
+            message: '¡Registro Exitoso! BD'
+        });
+    } catch (error) {
+        if (error.code === 'ER_ROW_IS_REFERENCED') {
+            return res.json({
+                status: 'error',
+                title: 'Borrado No Exitoso',
+                message: 'No se puede eliminar la pregunta porque tiene dependencia de OPCIONES.'
+            });
+        }
+        // Para cualquier otro tipo de error
+        return res.json({
+            status: 'error',
+            title: 'Error de Borrado',
+            message: `Error: ${error.code}`
+        });
+    }
+});
 
 
+// fin inventarios PARQUEADEROS
 
 app.get('/inventario', (req, res) => {
     if (req.session.loggedin) {
@@ -1484,7 +1515,7 @@ async function updatePasswords() {
     try {
         const [rows] = await pool.execute('SELECT Id, user FROM my_tableCol2');
         if (rows.length === 0) {
-            console.log('No hay usuarios para actualizar.');
+            //console.log('No hay usuarios para actualizar.');
             return; // Salir si no hay registros
         }
         for (const row of rows) {
