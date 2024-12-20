@@ -183,7 +183,7 @@ console.log('DB_PASSWORD:', process.env.DB_PASSWORD);  // Debería mostrar la co
 
 app.get('/', async (req, res) => {		
     try {		
-        res.render('inventario');		
+        res.render('login');		
     } catch (error) {		
         console.error('Error al renderizar la plantilla:', error);		
         res.status(500).json({ error: 'Error interno del servidor' });		
@@ -1021,7 +1021,6 @@ app.post('/register', async (req, res) => {
     try {
         const rz = '1';
         const id_rz = 'Propiedad';
-
         const { UsuarioNew, UsuarioNom, rol, PassNew } = req.body;
         if (!UsuarioNew || !UsuarioNom || !rol || !PassNew) {
             return res.status(400).json({ status: 'error', message: 'Todos los campos son obligatorios' });
