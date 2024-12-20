@@ -221,9 +221,9 @@ app.post('/inventarios', async (req, res) => {
     try {
         const { CodActivo, DesGen, DesAct, observ, Estado, Propio } = req.body;
 
-        if (!CodActivo || !DesGen || !DesAct || !observ || !Estado || !Propio) {
-            return res.status(400).json({ status: 'error', message: 'Todos los campos son obligatorios' });
-        }
+//        if (!CodActivo || !DesGen || !DesAct || !observ || !Estado || !Propio) {
+//            return res.status(400).json({ status: 'error', message: 'Todos los campos son obligatorios' });
+//        }
 
         // Verificar si el activo ya existe
         const [rows] = await pool.execute('SELECT * FROM tbl_inventarios WHERE id_activo = ?', [CodActivo]);
@@ -251,37 +251,6 @@ app.post('/inventarios', async (req, res) => {
     }
 });
 
-// inventarios ELIMINAR
-
-app.post('/inventeli', async (req, res) => {
-    try {
-        console.log('holaaaaaaaaaaaaaaaaaaaaa eli ');
-        const ids = req.body.CodActivo;
-
-        // Log para depuración
-
-        const [rows] =  await pool.execute('delete from tbl_inventarios WHERE id_activo = ?', [ids]);
-        return res.json({
-            status: 'success',
-            title: 'Borrado Exitoso.',
-            message: '¡Registro Exitoso! BD'
-        });
-    } catch (error) {
-        if (error.code === 'ER_ROW_IS_REFERENCED') {
-            return res.json({
-                status: 'error',
-                title: 'Borrado No Exitoso',
-                message: 'No se puede eliminar la pregunta porque tiene dependencia de OPCIONES.'
-            });
-        }
-        // Para cualquier otro tipo de error
-        return res.json({
-            status: 'error',
-            title: 'Error de Borrado',
-            message: `Error: ${error.code}`
-        });
-    }
-});
 
 
 
