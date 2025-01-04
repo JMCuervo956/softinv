@@ -282,12 +282,8 @@ app.post('/inventeli', async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
 // INVENTARIOS
-=======
-
 // fin inventarios PARQUEADEROS
->>>>>>> 59b54628f9de96e3eb911ac2712a99e3c32c83f7
 
 app.get('/inventario', (req, res) => {
     if (req.session.loggedin) {
