@@ -212,6 +212,78 @@ app.get('/origen/:folder/:filename', (req, res) => {
 
 // INVENTARIOS
 
+app.get('/inventarios', (req, res)=>{
+    const userUser = req.session.unidad;
+    res.render('inventarios', { userUser });
+})
+
+app.post('/inventarios', async (req, res) => {
+    try {
+        const { CodActivo, DesGen, DesAct, observ, Estado, Propio } = req.body;
+
+//        if (!CodActivo || !DesGen || !DesAct || !observ || !Estado || !Propio) {
+//            return res.status(400).json({ status: 'error', message: 'Todos los campos son obligatorios' });
+//        }
+
+        // Verificar si el activo ya existe
+        const [rows] = await pool.execute('SELECT * FROM tbl_inventarios WHERE id_activo = ?', [CodActivo]);
+
+        if (rows.length > 0) {
+            // Si el registro ya existe, devolver mensaje y opciones
+            return res.json({ 
+                status: 'exists', 
+                message: 'El registro ya existe.',
+                codActivo: CodActivo ,
+                options: {
+                    delete: true,  // Opción para eliminar
+                    keep: true     // Opción para mantener
+                }
+            });
+        }
+
+        // Si el registro no existe, insertarlo en la base de datos
+        await pool.execute('INSERT INTO tbl_inventarios (id_activo, desgen, desact, desobs, estado, propio) VALUES (?, ?, ?, ?, ?, ?)', [CodActivo, DesGen, DesAct, observ, Estado, Propio ]);
+        res.json({ status: 'success', message: '¡Activo registrado correctamente!' });
+
+    } catch (error) {
+        console.error('Error en registro:', error);
+        res.status(500).json({ status: 'error', message: 'Error en el servidor' });
+    }
+});
+
+// inventarios ELIMINAR
+
+app.post('/inventeli', async (req, res) => {
+    try {
+        const ids = req.body.CodActivo;
+
+        // Log para depuración
+
+        const [rows] =  await pool.execute('delete from tbl_inventarios WHERE id_activo = ?', [ids]);
+        return res.json({
+            status: 'success',
+            title: 'Borrado Exitoso.',
+            message: '¡Registro Exitoso! BD'
+        });
+    } catch (error) {
+        if (error.code === 'ER_ROW_IS_REFERENCED') {
+            return res.json({
+                status: 'error',
+                title: 'Borrado No Exitoso',
+                message: 'No se puede eliminar la pregunta porque tiene dependencia de OPCIONES.'
+            });
+        }
+        // Para cualquier otro tipo de error
+        return res.json({
+            status: 'error',
+            title: 'Error de Borrado',
+            message: `Error: ${error.code}`
+        });
+    }
+});
+
+// INVENTARIOS
+
 app.get('/inventario', (req, res) => {
     if (req.session.loggedin) {
         res.render('inventario');
