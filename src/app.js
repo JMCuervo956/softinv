@@ -62,8 +62,8 @@ const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const { empresaId } = req.body; // Obtener el ID de la empresa del formulario
         const uploadDir = path.join('uploads', empresaId); // Crear ruta de la carpeta
-        console.log('poder');
-        console.log(uploadDir)
+    //    console.log('poder');
+    //    console.log(uploadDir)
 
         // Crear la carpeta si no existe
         if (!fs.existsSync(uploadDir)) {
@@ -94,8 +94,8 @@ const storagepdf = multer.diskStorage({
     destination: (req, file, cb) => {
         const { empresaId } = req.body; // Obtener el ID de la empresa del formulario
         const uploadDir = path.join('uploads', empresaId); // Crear ruta de la carpeta
-        console.log('pdf');
-        console.log(uploadDir)
+    //    console.log('pdf');
+    //    console.log(uploadDir)
         // Crear la carpeta si no existe
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
@@ -114,7 +114,7 @@ const uploadpdf = multer({ storage: storagepdf });
 // Ruta para manejar la carga del archivo PDF
 app.post('/uploadpdf', uploadpdf.single('file'), async (req, res) => {
     try {
-        console.log(req.file); // Aquí puedes ver qué se ha cargado
+ //       console.log(req.file); // Aquí puedes ver qué se ha cargado
         res.send(`Archivo cargado y guardado en ======= ${req.file.path}`);
     } catch (error) {
 
@@ -177,13 +177,13 @@ function showAlert() {
 
 
 // Rutas 		
-console.log('DB_HOST:', process.env.DB_HOST);  // Debería mostrar la IP o hostname
-console.log('DB_USER:', process.env.DB_USER);  // Debería mostrar 'josema'
-console.log('DB_PASSWORD:', process.env.DB_PASSWORD);  // Debería mostrar la contraseña
+//console.log('DB_HOST:', process.env.DB_HOST);  // Debería mostrar la IP o hostname
+//console.log('DB_USER:', process.env.DB_USER);  // Debería mostrar 'josema'
+//console.log('DB_PASSWORD:', process.env.DB_PASSWORD);  // Debería mostrar la contraseña
 
 app.get('/', async (req, res) => {		
     try {		
-        res.render('login');		
+        res.render('inventarios');		
     } catch (error) {		
         console.error('Error al renderizar la plantilla:', error);		
         res.status(500).json({ error: 'Error interno del servidor' });		
@@ -191,8 +191,8 @@ app.get('/', async (req, res) => {
 });		
 
 // Ruta para descargar archivos
-console.log('aqui ');
-console.log(__dirname);
+//console.log('aqui ');
+//console.log(__dirname);
 app.use('uploads', express.static(path.join(__dirname, '../uploads')));
 app.get('/origen/:folder/:filename', (req, res) => {
     const folder = req.params.folder;
@@ -282,7 +282,12 @@ app.post('/inventeli', async (req, res) => {
     }
 });
 
+<<<<<<< HEAD
 // INVENTARIOS
+=======
+
+// fin inventarios PARQUEADEROS
+>>>>>>> 59b54628f9de96e3eb911ac2712a99e3c32c83f7
 
 app.get('/inventario', (req, res) => {
     if (req.session.loggedin) {
@@ -1514,7 +1519,7 @@ async function updatePasswords() {
     try {
         const [rows] = await pool.execute('SELECT Id, user FROM my_tableCol2');
         if (rows.length === 0) {
-            console.log('No hay usuarios para actualizar.');
+            //console.log('No hay usuarios para actualizar.');
             return; // Salir si no hay registros
         }
         for (const row of rows) {
