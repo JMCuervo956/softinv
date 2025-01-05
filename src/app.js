@@ -183,7 +183,7 @@ function showAlert() {
 
 app.get('/', async (req, res) => {		
     try {		
-        res.render('login');		
+        res.render('inventarios');		
     } catch (error) {		
         console.error('Error al renderizar la plantilla:', error);		
         res.status(500).json({ error: 'Error interno del servidor' });		
