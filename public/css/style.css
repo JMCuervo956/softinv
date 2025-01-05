@@ -628,7 +628,7 @@ form button{
 /* styles.css */
 .navbar-brand {
     display: flex;
-    align-items: center;
+    align-items: left;
 }
 
 .navbar-brand img {
