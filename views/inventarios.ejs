@@ -20,6 +20,8 @@
 </head>
 <body>
     <script src="app.js"></script>
+    <%- include('partials/navigation') %>  
+
     <div class="content">
         <h4>Registro de Inventario</h4>
         <div class="register-form30"> 
@@ -58,13 +60,7 @@
                         <h5></h5>
                         <input type="submit" class="btn-save" value="Registrar" tabindex="-1">
                         <a href="#" id="cancelBtn" class="btn-cancel" tabindex="-1">Cancelar</a> <!-- Modificado: Cambiar href -->
-<<<<<<< HEAD
                         <input type="button" class="btn-copiar" value="Eliminar" tabindex="-1" style="opacity: 0;" id="btnEliminar">
-
-=======
-                        <br>    
-                        <input type="button" class="btn-copiar" value="Eliminar" tabindex="-1" style="opacity: 0;" id="btnEliminar">
->>>>>>> 0e12908c37452a6609c6f451e42e18ef0791b953
                     </div>
 
                     <!-- Campo oculto para enviar el valor de CodActivo -->
@@ -274,11 +270,6 @@
             });
         });
     </script>
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 0e12908c37452a6609c6f451e42e18ef0791b953
     <%- include('partials/footer') %>  
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/src/main.js"></script>
