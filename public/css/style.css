@@ -32,7 +32,7 @@ body {
 /*     background-image: url('/img/edificios.jpg');  */
 
 .custom-navbar-bg {
-    background-color: #4CAF50; /* Azul oscuro *  de encabezado "" */
+    background-color: #2f04ca; /* Azul oscuro *  color de encabezado "" */
 }
 
 /*     background: #b8b8bb ; */
@@ -754,7 +754,7 @@ img {
 }
 
 footer {
-    background-color: #4CAF50;  /* pie */
+    background-color: #4CAF50;  /* color de pie */
     color: white;
     text-align: center;
     padding: 0px;
