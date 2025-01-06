@@ -183,7 +183,7 @@ function showAlert() {
 
 app.get('/', async (req, res) => {		
     try {		
-        res.render('loginv');		
+        res.render('login');		
     } catch (error) {		
         console.error('Error al renderizar la plantilla:', error);		
         res.status(500).json({ error: 'Error interno del servidor' });		
@@ -213,8 +213,12 @@ app.get('/origen/:folder/:filename', (req, res) => {
 // INVENTARIOS
 
 app.get('/inventarios', (req, res)=>{
-    const userUser = req.session.unidad;
-    res.render('inventarios', { userUser });
+    if (req.session.loggedin) {
+        const userUser = req.session.unidad;
+        res.render('inventarios', { userUser });
+    } else {
+        res.send('Por favor, inicia sesión primero.');
+    }
 })
 
 app.post('/inventarios', async (req, res) => {
