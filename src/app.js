@@ -219,15 +219,12 @@ app.get('/inventarios', (req, res)=>{
 
 app.post('/inventarios', async (req, res) => {
     try {
-<<<<<<< HEAD
-=======
         console.log('DB_HOST:', process.env.DB_HOST);
         console.log('DB_USER:', process.env.DB_USER);
         console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
         console.log('Conectando a la base de datos con estos valores:');
         console.log(`Host: ${DB_HOST}, User: ${DB_USER}, DB: ${DB_NAME}, Port: ${DB_PORT}`);
   
->>>>>>> 0e12908c37452a6609c6f451e42e18ef0791b953
         const { CodActivo, DesGen, DesAct, observ, Estado, Propio } = req.body;
 
 //        if (!CodActivo || !DesGen || !DesAct || !observ || !Estado || !Propio) {
