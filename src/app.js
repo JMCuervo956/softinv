@@ -183,7 +183,7 @@ function showAlert() {
 
 app.get('/', async (req, res) => {		
     try {		
-        res.render('inventarios');		
+        res.render('loginv');		
     } catch (error) {		
         console.error('Error al renderizar la plantilla:', error);		
         res.status(500).json({ error: 'Error interno del servidor' });		
@@ -225,10 +225,6 @@ app.post('/inventarios', async (req, res) => {
         console.log('Conectando a la base de datos con estos valores:');
  
         const { CodActivo, DesGen, DesAct, observ, Estado, Propio } = req.body;
-
-//        if (!CodActivo || !DesGen || !DesAct || !observ || !Estado || !Propio) {
-//            return res.status(400).json({ status: 'error', message: 'Todos los campos son obligatorios' });
-//        }
 
         // Verificar si el activo ya existe
         const [rows] = await pool.execute('SELECT * FROM tbl_inventarios WHERE id_activo = ?', [CodActivo]);
@@ -929,6 +925,35 @@ app.get('/cargascsv', (req, res) => {
     res.render('cargascsv', { id, texto });
 });
 
+// loginv
+
+app.post('/loginv', async (req, res) => {
+    // variables de ejs
+    const { user, pass } = req.body;
+  
+    // Valida Usuario
+    const tableName = 'users';
+    const [rows] = await pool.execute(`SELECT * FROM ${tableName} WHERE user = ?`, [user]);
+    
+    if (rows.length === 0) {
+        return res.json({ status: 'error', message: 'Usuario no encontrado' });
+    }
+    const userRecord = rows[0];
+    const passwordMatch = await bcryptjs.compare(pass, userRecord.pass);
+  
+    if (!passwordMatch) {
+        return res.json({ status: 'error', message: 'Contraseña incorrecta' });
+    }
+  
+    req.session.loggedin = true;
+    req.session.user = userRecord.user; // mantener la información del usuario entre diferentes solicitudes durante su sesión (COMPARTIR).
+    req.session.name = userRecord.name; // mantener la información del usuario entre diferentes solicitudes durante su sesión (COMPARTIR).
+    req.session.rol = userRecord.rol;
+    req.session.pass = userRecord.pass;
+  
+    return res.json({ status: 'success', message: '!LOGIN Correcto!' });
+  });
+  
 
 // [login] - Autenticacion
 
@@ -939,7 +964,7 @@ app.post('/auth', async (req, res) => {
     // Valida Unidad
     const tableProp = 'tbl_propiedad';
     if (!unidad) {
-        return res.status(400).json({ status: 'error', message: 'Todos los campos son obligatorios' });
+        return res.status(400).json({ status: 'error', message: 'Todos los campos son obligatorios...AUTH' });
     }
     
     // Hashear el nit ingresado
