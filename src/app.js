@@ -223,7 +223,6 @@ app.post('/inventarios', async (req, res) => {
         console.log('DB_USER:', process.env.DB_USER);
         console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
         console.log('Conectando a la base de datos con estos valores:');
-        console.log(`Host: ${DB_HOST}, User: ${DB_USER}, DB: ${DB_NAME}, Port: ${DB_PORT}`);
   
         const { CodActivo, DesGen, DesAct, observ, Estado, Propio } = req.body;
 
