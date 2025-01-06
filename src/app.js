@@ -223,6 +223,10 @@ app.post('/inventarios', async (req, res) => {
         console.log('DB_USER:', process.env.DB_USER);
         console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
         console.log('Conectando a la base de datos con estos valores:');
+<<<<<<< HEAD
+=======
+//        console.log(`Host: ${DB_HOST}, User: ${DB_USER}, DB: ${DB_NAME}, Port: ${DB_PORT}`);
+>>>>>>> 7d2ed9a28fc8d2e317d982677ca3a622e692647c
   
         const { CodActivo, DesGen, DesAct, observ, Estado, Propio } = req.body;
 
@@ -288,7 +292,6 @@ app.post('/inventeli', async (req, res) => {
 });
 
 // INVENTARIOS
-// fin inventarios PARQUEADEROS
 
 app.get('/inventario', (req, res) => {
     if (req.session.loggedin) {
