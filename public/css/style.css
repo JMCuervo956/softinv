@@ -32,7 +32,11 @@ body {
 /*     background-image: url('/img/edificios.jpg');  */
 
 .custom-navbar-bg {
+<<<<<<< HEAD
     background-color: #2f04ca; /* Azul oscuro *  color de encabezado "" */
+=======
+    background-color: #21087a; /* Azul oscuro *  de encabezado "" */
+>>>>>>> 0e12908c37452a6609c6f451e42e18ef0791b953
 }
 
 /*     background: #b8b8bb ; */
@@ -628,7 +632,7 @@ form button{
 /* styles.css */
 .navbar-brand {
     display: flex;
-    align-items: center;
+    align-items: left;
 }
 
 .navbar-brand img {
