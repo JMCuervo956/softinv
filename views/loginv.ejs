@@ -1,35 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es"> <!-- Cambié el idioma a 'es' porque el contenido está en español -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
     <title>Asamblea</title>
-    <%- include('partials/head') %> <!-- <link rel="stylesheet" href="main.css"> /// partial para repetir en cada una de las paginas -->
+    <%- include('partials/head') %> <!-- partial para repetir en cada una de las páginas -->
 </head>
 <body>
-    <script src="server.js"></script>
-    <%- include('partials/navigation') %>
+    <%- include('partials/navigation') %> <!-- Navbar, si tienes -->
+
     <div class="content">
         <div class="background-container">
             <!-- Aquí se aplica el fondo -->
         </div>
-        <label for="user" >Ingresar</label>           
+        
+        <label for="user">Ingresar</label>           
         <div class="register-form"> 
-                <form onsubmit="clearFields()" id="loginForm" action="/loginv" method='POST'>
-                    <input type="text" class="simple-border" placeholder="Usuario" name="user" autocomplete="off" required autofocus>
-                    <input type="password" class="simple-border" placeholder="Contraseña" name="pass" autocomplete="off" required> 
-                    <hr class="divider">
-                    <input type="text" class="simple-border" placeholder="Ciudad" name="ciud" autocomplete="off" required>
-                    <input type="text" class="simple-border" placeholder="Parqueadero" name="parq" autocomplete="off" required>
-                    <br><br>
-                    <div style="display: inline;">
-                        <h5></h5>
-                        <input type="submit" class="btn-login" value="Login">
-                    </div>
-                </form>    
+            <form onsubmit="clearFields()" id="loginForm" action="/loginv" method="POST">
+                <input type="text" class="simple-border" placeholder="Usuario" name="user" autocomplete="off" required autofocus>
+                <input type="password" class="simple-border" placeholder="Contraseña" name="pass" autocomplete="off" required> 
+                <hr class="divider">
+
+                <!-- Campo Ciudad como Select -->
+                <select class="simple-border" name="ciud" id="ciudad" required>
+                    <option value="" disabled selected>Seleccione Ciudad</option>
+                    <!-- Las opciones de ciudad serán cargadas dinámicamente aquí -->
+                </select>
+
+                <!-- Campo Parqueadero como Select -->
+                <select class="simple-border" name="parq" id="parqueadero" required>
+                    <option value="" disabled selected>Seleccione Parqueadero</option>
+                    <!-- Las opciones de parqueadero serán cargadas dinámicamente aquí -->
+                </select>
+
+                <br><br>
+                <div style="display: inline;">
+                    <h5></h5>
+                    <input type="submit" class="btn-login" value="Login">
+                </div>
+                
+            </form>    
         </div>
-    </div>   
+    </div>
+
+    <script>
+        // Función para cargar los datos de ciudades y parqueaderos
+        async function cargarDatos() {
+            try {
+                const response = await fetch('/datos');
+                const data = await response.json();
+                if (data.status !== 'error') {
+                    const ciudadesSelect = document.getElementById('ciudad');
+                    const parqueaderosSelect = document.getElementById('parqueadero');
+
+                    // Llenar las opciones de Ciudad
+                    data.ciudades.forEach(ciudad => {
+                        const option = document.createElement('option');
+                        option.value = ciudad.id_ciudad;
+                        option.textContent = ciudad.ciudad;
+                        
+                        // Si el valor coincide con el seleccionado, marcar la opción como seleccionada
+                        if (ciudad.id_ciudad == '1') {  // Aquí pones el valor que debería estar seleccionado por defecto
+                            option.selected = true;
+                        }
+
+                        ciudadesSelect.appendChild(option);
+                    });
+
+                    // Llenar las opciones de Parqueadero
+                    data.parqueaderos.forEach(parqueadero => {
+                        const option = document.createElement('option');
+                        option.value = parqueadero.id_parq;
+                        option.textContent = parqueadero.parq;
+                        
+                        // Si el valor coincide con el seleccionado, marcar la opción como seleccionada
+                        if (parqueadero.id_parq == '2') {  // Aquí pones el valor que debería estar seleccionado por defecto
+                            option.selected = true;
+                        }
+
+                        parqueaderosSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error al cargar los datos:', error);
+            }
+        }
+
+        // Llamar a la función para cargar los datos cuando la página se carga
+        window.onload = cargarDatos;
+
+        // Verificar que el valor seleccionado se muestra en la consola
+        document.getElementById('ciudad').addEventListener('change', function() {
+            console.log('Ciudad seleccionada front:', this.value);
+        });
+
+        document.getElementById('parqueadero').addEventListener('change', function() {
+            console.log('Parqueadero seleccionado:', this.value);
+        });
+    </script>
 
     <script>
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
@@ -63,11 +132,12 @@
             }
         });
     </script>
-    <%- include('partials/footer') %>  
+
+
+    <%- include('partials/footer') %>  <!-- Footer, si tienes -->
+    
+    <!-- Librerías externas para notificaciones -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </body>
 </html>
-
-
-

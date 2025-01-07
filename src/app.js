@@ -184,7 +184,7 @@ function showAlert() {
 app.get('/', async (req, res) => {		
     try {		
         res.render('loginv');		
-    } catch (error) {		
+    } catch (error) {		loginv
         console.error('Error al renderizar la plantilla:', error);		
         res.status(500).json({ error: 'Error interno del servidor' });		
     }		
@@ -223,10 +223,10 @@ app.get('/inventarios', (req, res)=>{
 
 app.post('/inventarios', async (req, res) => {
     try {
-        console.log('DB_HOST:', process.env.DB_HOST);
-        console.log('DB_USER:', process.env.DB_USER);
-        console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
-        console.log('Conectando a la base de datos con estos valores:');
+//        console.log('DB_HOST:', process.env.DB_HOST);
+//        console.log('DB_USER:', process.env.DB_USER);
+//        console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
+//        console.log('Conectando a la base de datos con estos valores:');
  
         const { CodActivo, DesGen, DesAct, observ, Estado, Propio } = req.body;
 
@@ -309,6 +309,24 @@ app.get('/login', (req, res)=>{
 //        res.send('Por favor, inicia sesión primero.');
 //    }
 })
+
+// Ruta GET para obtener las ciudades y parqueaderos
+
+app.get('/datos', async (req, res) => {
+    try {
+        // Consultar ciudades
+        const [ciudades] = await pool.execute('SELECT id_ciudad, ciudad FROM tbl_ciudades');
+//        console.log(ciudades);
+        // Consultar parqueaderos
+        const [parqueaderos] = await pool.execute('SELECT id_parq, parq FROM tbl_parqueaderos');
+//        console.log(parqueaderos);        
+        // Enviar las ciudades y parqueaderos como respuesta JSON
+        res.json({ ciudades, parqueaderos});
+    } catch (error) {
+        console.error("Error al obtener los datos: ", error);
+        res.status(500).json({ status: 'error', message: 'Error del servidor' });
+    }
+});
 
 // [video]
 app.get('/video', (req, res) => {
@@ -929,35 +947,37 @@ app.get('/cargascsv', (req, res) => {
     res.render('cargascsv', { id, texto });
 });
 
-// loginv
-
 app.post('/loginv', async (req, res) => {
-    // variables de ejs
-    const { user, pass } = req.body;
-  
-    // Valida Usuario
+    const { user, pass, ciud, parq } = req.body;
+
+    // Validación de usuario
     const tableName = 'users';
     const [rows] = await pool.execute(`SELECT * FROM ${tableName} WHERE user = ?`, [user]);
-    
+
     if (rows.length === 0) {
         return res.json({ status: 'error', message: 'Usuario no encontrado' });
     }
+
     const userRecord = rows[0];
     const passwordMatch = await bcryptjs.compare(pass, userRecord.pass);
-  
+
     if (!passwordMatch) {
         return res.json({ status: 'error', message: 'Contraseña incorrecta' });
     }
-  
+
+    // Aquí puedes hacer algo con los valores de "ciud" y "parq"
+    // Por ejemplo, verificarlos en la base de datos o guardarlos en la sesión
+    //console.log(`Ciudad seleccionada server: ${ciud}, Parqueadero seleccionado: ${parq}`);
+
     req.session.loggedin = true;
-    req.session.user = userRecord.user; // mantener la información del usuario entre diferentes solicitudes durante su sesión (COMPARTIR).
-    req.session.name = userRecord.name; // mantener la información del usuario entre diferentes solicitudes durante su sesión (COMPARTIR).
+    req.session.user = userRecord.user;
+    req.session.name = userRecord.name;
     req.session.rol = userRecord.rol;
     req.session.pass = userRecord.pass;
   
-    return res.json({ status: 'success', message: '!LOGIN Correcto!' });
-  });
-  
+    return res.json({ status: 'success', message: '!LOGIN Correcto ingreso!' });
+});
+ 
 
 // [login] - Autenticacion
 
@@ -1403,7 +1423,7 @@ app.post('/usuariosrespass', async (req, res) => {
  app.post('/opcionesreg', async (req, res) => {
     const { id, respuesta, pgtas } = req.body;
     try {
-        console.log('opcionesreg');
+//        console.log('opcionesreg');
         const tableName = "pgtaresp";
         const [rows] = await pool.execute(`SELECT * FROM ${tableName} WHERE idprg= ? and respuesta = ?`, [id, pgtas]);
         if (rows.length > 0) {
