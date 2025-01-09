@@ -35,19 +35,15 @@
                     <input type="button" class="btn-copiar" value="Copiar" tabindex="-1">
                     <h1></h1>
                     <input type="text" name="CodActivo" class="input-small" placeholder="Activo" required autocomplete="off">
-<<<<<<< HEAD
-                    <h1></h1>   
-=======
-                    <select class="simple-border" name="ciud" id="des_codcont" required>
+                    <h1></h1>
+                    <input type="text" name="observ" class="input-small" placeholder="Observaciones"  autocomplete="off">
+                <select class="simple-border" name="ciud" id="des_codcont" required>
                         <option value="" selected>Seleccione Codigo Contable</option>
                         <!-- Las opciones de codigos contables serán cargados dinámicamente aquí -->
                     </select>                 
                     <h1></h1>   
                     <input type="text" name="DesAct" class="input-small" placeholder="Descripcion Activo" required autocomplete="off">
-                    <h1></h1>
->>>>>>> 79dcf289b559dc375665084bbced1f7c05d2e9e7
-                    <input type="text" name="observ" class="input-small" placeholder="Observaciones"  autocomplete="off">
-                    <h1></h1>
+                        <h1></h1>
                     <select class="simple-border" name="esta" id="des_estado" required>
                         <option value="" selected>Descripción del Activo</option>
                         <!-- Las opciones de estados serán cargados dinámicamente aquí -->
@@ -65,8 +61,6 @@
                     <h1></h1>
                     <input type="text" name="ActPrin" class="input-small" placeholder="Activo Principal" required autocomplete="off">
                     <h1></h1>
-<<<<<<< HEAD
-=======
                     <select class="simple-border" name="esta" id="des_estado" required>
                         <option value="" selected>Seleccione Estado</option>
                         <!-- Las opciones de estados serán cargados dinámicamente aquí -->
@@ -79,7 +73,6 @@
                     <h1></h1>
                     <input type="text" name="ActPrin" class="input-small" placeholder="Activo Principal" required autocomplete="off">
                     <h1></h1>
->>>>>>> 79dcf289b559dc375665084bbced1f7c05d2e9e7
 
                     <div style="display: inline;">
                         <h5></h5>
@@ -126,17 +119,14 @@
                 firstInput.value = clipboardText; // Pega el contenido del portapapeles
 
                 // Mover el foco al segundo campo de entrada
-<<<<<<< HEAD
                 document.querySelector('input[name="observ"]').focus();
 
                 // Mover el foco al segundo campo de entrada
 //                document.querySelector('input[name="DesGen"]').focus();
-=======
-                document.querySelector('input[name="CodCont"]').focus();
+//                document.querySelector('input[name="CodCont"]').focus();
 
                 // Mover el foco al segundo campo de entrada
-                document.querySelector('input[name="DesGen"]').focus();
->>>>>>> 79dcf289b559dc375665084bbced1f7c05d2e9e7
+//                document.querySelector('input[name="DesGen"]').focus();
 
                 // Deshabilitar el primer input y cambiar el estilo
                 firstInput.setAttribute('readonly', true);  // Cambiado: Usamos 'readonly' en lugar de 'disabled'
