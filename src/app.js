@@ -10,8 +10,10 @@ import csv from 'csv-parser'; // CARGAR
 import bcryptjs from 'bcryptjs';		
 import Swal from 'sweetalert2';
 //import fs from 'fs/promises';
-import fs from 'fs'; // Importación del módulo fs
 import crypto from 'crypto';
+import https from 'https';
+import fs from 'fs';
+
 //import * as pdfjsLib from 'pdfjs-dist/webpack';
 
 // Importaciones de archivos locales		
