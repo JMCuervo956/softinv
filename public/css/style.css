@@ -884,6 +884,28 @@ button:hover {
     padding: 10px;
     font-size: 16px;
     width: 100%;
+    border-radius: 4px; /* Bordes redondeados */
+}
+
+/* Reducir la altura y el tamaño de la fuente del select */
+#des_codcont {
+    width: 300px; /* Ajusta el ancho a 150px (puedes cambiar el valor según lo necesites) */
+    height: 30px; /* Ajusta la altura a 30px (puedes cambiar el valor según lo necesites) */
+    font-size: 12px; /* Ajusta el tamaño de la fuente a 12px (puedes cambiar el valor según lo necesites) */
+    padding: 4px; /* Ajusta el padding para dar espacio al texto dentro del select */
+}
+
+#des_estado {
+    width: 300px; /* Ajusta el ancho a 150px (puedes cambiar el valor según lo necesites) */
+    height: 30px; /* Ajusta la altura a 30px (puedes cambiar el valor según lo necesites) */
+    font-size: 12px; /* Ajusta el tamaño de la fuente a 12px (puedes cambiar el valor según lo necesites) */
+    padding: 4px; /* Ajusta el padding para dar espacio al texto dentro del select */
+}
+#des_propio {
+    width: 300px; /* Ajusta el ancho a 150px (puedes cambiar el valor según lo necesites) */
+    height: 30px; /* Ajusta la altura a 30px (puedes cambiar el valor según lo necesites) */
+    font-size: 12px; /* Ajusta el tamaño de la fuente a 12px (puedes cambiar el valor según lo necesites) */
+    padding: 4px; /* Ajusta el padding para dar espacio al texto dentro del select */
 }
 
 select {

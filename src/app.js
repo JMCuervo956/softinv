@@ -230,7 +230,7 @@ app.post('/inventarios', async (req, res) => {
 //        console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
 //        console.log('Conectando a la base de datos con estos valores:');
  
-        const { CodActivo, DesGen, DesAct, observ, Estado, Propio } = req.body;
+        const { CodActivo, CodCont, DesGen, DesAct, observ, Estado, Propio } = req.body;
 
         // Verificar si el activo ya existe
         const [rows] = await pool.execute('SELECT * FROM tbl_inventarios WHERE id_activo = ?', [CodActivo]);
@@ -318,12 +318,32 @@ app.get('/datos', async (req, res) => {
     try {
         // Consultar ciudades
         const [ciudades] = await pool.execute('SELECT id_ciudad, ciudad FROM tbl_ciudades');
-//        console.log(ciudades);
+
         // Consultar parqueaderos
         const [parqueaderos] = await pool.execute('SELECT id_parq, parq FROM tbl_parqueaderos');
-//        console.log(parqueaderos);        
+
         // Enviar las ciudades y parqueaderos como respuesta JSON
         res.json({ ciudades, parqueaderos});
+    } catch (error) {
+        console.error("Error al obtener los datos: ", error);
+        res.status(500).json({ status: 'error', message: 'Error del servidor' });
+    }
+});
+
+// Ruta GET para obtener las ciudades y parqueaderos
+
+app.get('/dataSelec', async (req, res) => {
+    try {
+        // Consultar ciudades
+        const [descontable] = await pool.execute('SELECT id_codcont, des_codcont FROM tbl_codcont');
+        // Consultar ciudades
+        const [desestado] = await pool.execute('SELECT id_codcont, des_codcont FROM tbl_estado');
+        // Consultar ciudades
+        const [despropio] = await pool.execute('SELECT id_codcont, des_codcont FROM tbl_propio');
+
+        // Enviar las ciudades y parqueaderos como respuesta JSON
+        
+        res.json({ descontable, desestado, despropio });
     } catch (error) {
         console.error("Error al obtener los datos: ", error);
         res.status(500).json({ status: 'error', message: 'Error del servidor' });
