@@ -895,6 +895,13 @@ button:hover {
     padding: 4px; /* Ajusta el padding para dar espacio al texto dentro del select */
 }
 
+#des_activo {
+    width: 300px; /* Ajusta el ancho a 150px (puedes cambiar el valor según lo necesites) */
+    height: 30px; /* Ajusta la altura a 30px (puedes cambiar el valor según lo necesites) */
+    font-size: 12px; /* Ajusta el tamaño de la fuente a 12px (puedes cambiar el valor según lo necesites) */
+    padding: 4px; /* Ajusta el padding para dar espacio al texto dentro del select */
+}
+
 #des_estado {
     width: 300px; /* Ajusta el ancho a 150px (puedes cambiar el valor según lo necesites) */
     height: 30px; /* Ajusta la altura a 30px (puedes cambiar el valor según lo necesites) */

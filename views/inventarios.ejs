@@ -41,18 +41,19 @@
                         <option value="" selected>Seleccione Codigo Contable</option>
                         <!-- Las opciones de codigos contables serán cargados dinámicamente aquí -->
                     </select>                 
-                    <h1></h1>   
-                    <input type="text" name="DesAct" class="input-small" placeholder="Descripcion Activo" required autocomplete="off">
-                        <h1></h1>
-                    <select class="simple-border" name="esta" id="des_estado" required>
-                        <option value="" selected>Descripción del Activo</option>
-                        <!-- Las opciones de estados serán cargados dinámicamente aquí -->
-                    </select>
                     <h1></h1>
+                    <select class="simple-border" name="acti" id="des_activo" required>
+                        <option value="" selected>Descripción del Activo....</option>
+                        <!-- Las opciones de estados serán cargados dinámicamente aquí -->
+                        </select>
+    
                     <select class="simple-border" name="esta" id="des_estado" required>
                         <option value="" selected>Seleccione Estado</option>
                         <!-- Las opciones de estados serán cargados dinámicamente aquí -->
-                    </select>                 
+                    </select>  
+                    <h1></h1>
+                    <h1></h1>
+               
                     <select class="simple-border" name="prop" id="des_propio" required>
                         <option value="" selected>Seleccione Propio</option>
                         <!-- Las opciones de estados propios serán cargados dinámicamente aquí -->
@@ -61,19 +62,6 @@
                     <h1></h1>
                     <input type="text" name="ActPrin" class="input-small" placeholder="Activo Principal" required autocomplete="off">
                     <h1></h1>
-                    <select class="simple-border" name="esta" id="des_estado" required>
-                        <option value="" selected>Seleccione Estado</option>
-                        <!-- Las opciones de estados serán cargados dinámicamente aquí -->
-                    </select>                 
-                    <select class="simple-border" name="prop" id="des_propio" required>
-                        <option value="" selected>Seleccione Propio</option>
-                        <!-- Las opciones de estados propios serán cargados dinámicamente aquí -->
-                    </select>                 
-                    <input type="text" name="CodResp" class="input-small" placeholder="Responsable" required autocomplete="off">
-                    <h1></h1>
-                    <input type="text" name="ActPrin" class="input-small" placeholder="Activo Principal" required autocomplete="off">
-                    <h1></h1>
-
                     <div style="display: inline;">
                         <h5></h5>
                         <input type="submit" class="btn-save" value="Registrar" tabindex="-1">
@@ -84,9 +72,7 @@
                 </div>       
                 <br>    
                 <input type="button" class="btn-copiar" value="Eliminar" tabindex="-1" style="opacity: 0;" id="btnEliminar">
-
                 <div style="display: inline;">
-                    <h5></h5>
                     <input type="submit" id="btnSalir" class="btn-salir" value="Salir">
                     <br><br>    
                 </div>
