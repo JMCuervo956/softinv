@@ -16,15 +16,36 @@
             color: white;  /* Texto blanco */
             cursor: not-allowed;  /* Cambiar el cursor para indicar que no es editable */
         }
-    </style>
+
+    .dropdown {
+      position: relative; /* Necesario para el dropdown */
+    }
+  
+    .dropdown-content {
+      display: none; /* Ocultar el contenido del dropdown */
+      position: absolute; /* Posicionamiento absoluto */
+      left: 50px; /* Ajusta este valor para mover el submenú a la derecha */
+      background-color: #ffffcc; /* Color de fondo del dropdown */
+      min-width: 150px; /* Ancho mínimo para el dropdown */
+      z-index: 1; /* Para asegurarse de que esté sobre otros elementos */
+    }
+  
+    .dropdown:hover .dropdown-content {
+      display: block; /* Mostrar contenido al pasar el mouse */
+    }
+  </style>    
 </head>
 <body>
     <script src="app.js"></script>
-    <%- include('partials/navigation') %>  
+    <% if (rol==='Administrador') { %>
+        <%- include('partials/navigat') %>  
+    <% } else { %> 
+        <%- include('partials/navigation') %>  
+    <% } %>
     <div style="display: inline;">
-        <h5 style="font-size: 14px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); transition: color 0.3s ease;" 
+        <h5 style="font-size: 14px; text-shadow: 2px 2px 4px rgba(223, 18, 18, 0.5); transition: color 0.3s ease;" 
             onmouseover="this.querySelector('.user').style.color='darkblue'; this.querySelector('.name').style.color='darkred';" 
-            <span class="user" style="color: rgb(211, 88, 17); padding-left: 10px;"><%= userUser %></span>
+            <span class="user" style="color: rgb(211, 88, 17); padding-left: 10px;"><%= name %></span>
         </h5>
     </div> 
     <div class="content">

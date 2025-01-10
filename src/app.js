@@ -185,8 +185,8 @@ function showAlert() {
 
 app.get('/', async (req, res) => {		
     try {		
-        res.render('loginv');		
-    } catch (error) {		loginv
+        res.render('loginv');
+    } catch (error) {
         console.error('Error al renderizar la plantilla:', error);		
         res.status(500).json({ error: 'Error interno del servidor' });		
     }		
@@ -216,8 +216,9 @@ app.get('/origen/:folder/:filename', (req, res) => {
 
 app.get('/inventarios', (req, res)=>{
     if (req.session.loggedin) {
+        const { user, name, rol } = req.session;
         const userUser = req.session.unidad;
-        res.render('inventarios', { userUser });
+        res.render('inventarios', { user, rol, name, userUser });
     } else {
         res.send('Por favor, inicia sesión primero.');
     }
@@ -549,7 +550,7 @@ app.get('/ingpreguntas', async (req, res) => {
 
 app.get('/usuarios', async (req, res) => {
     try {
-        const tableName = "users";
+        const tableName = "tbl_users";
         const [rows] = await pool.execute(`select * from ${tableName}`);
         if (req.session.loggedin) {
             const userUser = req.session.user;
@@ -569,7 +570,7 @@ app.get('/usuarios', async (req, res) => {
 
 app.get('/usuariosreset', async (req, res) => {
     try {
-        const tableName = "users";
+        const tableName = "tbl_users";
         const [rows] = await pool.execute(`select * from ${tableName}`);
         if (req.session.loggedin) {
             const userUser = req.session.user;
@@ -973,7 +974,7 @@ app.post('/loginv', async (req, res) => {
     const { user, pass, ciud, parq } = req.body;
 
     // Validación de usuario
-    const tableName = 'users';
+    const tableName = 'tbl_users';
     const [rows] = await pool.execute(`SELECT * FROM ${tableName} WHERE user = ?`, [user]);
 
     if (rows.length === 0) {
@@ -1025,7 +1026,7 @@ app.post('/auth', async (req, res) => {
     req.session.unidad = UdaRecord.razonsocial; // mantener la información del usuario entre diferentes solicitudes durante su sesión (COMPARTIR).
     //console.log(req.session.unidad);
     // Valida Usuario
-    const tableName = 'users';
+    const tableName = 'tbl_users';
     const [rows] = await pool.execute(`SELECT * FROM ${tableName} WHERE user = ?`, [user]);
     
     if (rows.length === 0) {
@@ -1174,14 +1175,14 @@ app.post('/register', async (req, res) => {
             return res.status(400).json({ status: 'error', message: 'Todos los campos son obligatorios' });
         }
 
-        const [rows] = await pool.execute('SELECT * FROM users WHERE user = ?', [UsuarioNew]);
+        const [rows] = await pool.execute('SELECT * FROM tbl_users WHERE user = ?', [UsuarioNew]);
         if (rows.length > 0) {
             return res.status(400).json({ status: 'error', message: 'Usuario ya Existe' });
         }
 
         // Insertar nuevo usuario
         const passwordHash = await bcryptjs.hash(PassNew, 8);
-        await pool.execute('INSERT INTO users (rz, id_rz, user, name, pass, rol, estado ) VALUES (?, ?, ?, ?, ?, ?, ?)', [rz, id_rz, UsuarioNew, UsuarioNom, passwordHash, rol, null ]);
+        await pool.execute('INSERT INTO tbl_users (rz, id_rz, user, name, pass, rol, estado ) VALUES (?, ?, ?, ?, ?, ?, ?)', [rz, id_rz, UsuarioNew, UsuarioNom, passwordHash, rol, null ]);
         res.json({ status: 'success', message: '¡Usuario registrado correctamente!' });
     } catch (error) {
         console.error('Error en registro:', error);
@@ -1323,7 +1324,7 @@ app.post('/usuariomod', async (req, res) => {
         const estado = req.body.estado;
 
         // Insertar nuevo usuario
-        await pool.execute('UPDATE users SET name = ?, rol = ? WHERE (estado IS NULL OR estado = 0) AND user = ?', [name, rol, user]);
+        await pool.execute('UPDATE tbl_users SET name = ?, rol = ? WHERE (estado IS NULL OR estado = 0) AND user = ?', [name, rol, user]);
         if (estado !== '1') {
             return res.json({
                 status: 'success',
@@ -1331,7 +1332,7 @@ app.post('/usuariomod', async (req, res) => {
                 message: '¡Registrado correctamente!'
             });
         } else {
-            await pool.execute('UPDATE users SET name = ? WHERE user = ?', [name, user]);
+            await pool.execute('UPDATE tbl_users SET name = ? WHERE user = ?', [name, user]);
             return res.json({
                 status: 'question',
                 title: 'Actualiza Nombre Usuario',
@@ -1362,7 +1363,7 @@ app.post('/usuariomodpass', async (req, res) => {
         if (!passwordMatch) {
             return res.json({ status: 'error', message: 'Contraseña Actual Incorrecta' });
         }else{
-            await pool.execute('UPDATE users SET pass = ? WHERE  user = ?', [passwordHash, user]);
+            await pool.execute('UPDATE tbl_users SET pass = ? WHERE  user = ?', [passwordHash, user]);
             return res.json({
                 status: 'success',
                 title: 'Se Actualiza Contraseña',
@@ -1388,7 +1389,7 @@ app.post('/usuarioeli', async (req, res) => {
 
         // Log para depuración delete
 
-        const [result] = await pool.execute('DELETE FROM users WHERE (estado IS NULL OR estado = 0) AND user = ?', [ids]);
+        const [result] = await pool.execute('DELETE FROM tbl_users WHERE (estado IS NULL OR estado = 0) AND user = ?', [ids]);
         if (result.affectedRows > 0) {
             // El registro fue eliminado con éxito
             return res.json({
@@ -1423,7 +1424,7 @@ app.post('/usuariosrespass', async (req, res) => {
         const user = req.body.user;
         const transformedPassword = `${user.charAt(0).toUpperCase()}${user.slice(1)}24%`;
         const passwordHash = await bcryptjs.hash(transformedPassword, 8);
-        await pool.execute('UPDATE users SET pass = ? WHERE  user = ?', [passwordHash, user]);
+        await pool.execute('UPDATE tbl_users SET pass = ? WHERE  user = ?', [passwordHash, user]);
         return res.json({
             status: 'success',
             title: 'Se Actualiza Contraseña',
