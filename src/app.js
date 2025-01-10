@@ -335,16 +335,21 @@ app.get('/datos', async (req, res) => {
 
 app.get('/dataSelec', async (req, res) => {
     try {
-        // Consultar ciudades
+        // Consultar codigos contables
         const [descontable] = await pool.execute('SELECT id_codcont, des_codcont FROM tbl_codcont');
-        // Consultar ciudades
+        // Consultar descripciones activos
+        const [desactivos] = await pool.execute('SELECT id_codcont, des_codcont FROM tbl_propio');
+        console.log('1');
+        console.log(desactivos);
+        console.log('2');
+        // Consultar estados
         const [desestado] = await pool.execute('SELECT id_codcont, des_codcont FROM tbl_estado');
-        // Consultar ciudades
+        // Consultar propio
         const [despropio] = await pool.execute('SELECT id_codcont, des_codcont FROM tbl_propio');
 
         // Enviar las ciudades y parqueaderos como respuesta JSON
         
-        res.json({ descontable, desestado, despropio });
+        res.json({ descontable, desactivos, desestado, despropio });
     } catch (error) {
         console.error("Error al obtener los datos: ", error);
         res.status(500).json({ status: 'error', message: 'Error del servidor' });

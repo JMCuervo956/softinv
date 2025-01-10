@@ -58,30 +58,34 @@
                     <input type="text" name="CodActivo" class="input-small" placeholder="Activo" required autocomplete="off">
                     <h1></h1>
                     <input type="text" name="observ" class="input-small" placeholder="Observaciones"  autocomplete="off">
-                <select class="simple-border" name="ciud" id="des_codcont" required>
+                    <h1></h1>
+                    <!-- Codigos contables -->
+                    <select class="simple-border" name="ciud" id="des_codcont" required>
                         <option value="" selected>Seleccione Codigo Contable</option>
                         <!-- Las opciones de codigos contables serán cargados dinámicamente aquí -->
-                    </select>                 
+                    </select>
                     <h1></h1>
+                    <!-- Codigos activos -->
                     <select class="simple-border" name="acti" id="des_activo" required>
                         <option value="" selected>Descripción del Activo....</option>
                         <!-- Las opciones de estados serán cargados dinámicamente aquí -->
-                        </select>
-    
+                    </select>
+                    <h1></h1>
+                    <!-- Codigos estado -->
                     <select class="simple-border" name="esta" id="des_estado" required>
                         <option value="" selected>Seleccione Estado</option>
                         <!-- Las opciones de estados serán cargados dinámicamente aquí -->
-                    </select>  
+                    </select>
                     <h1></h1>
-                    <h1></h1>
-               
+                    <!-- Codigos propio -->
                     <select class="simple-border" name="prop" id="des_propio" required>
                         <option value="" selected>Seleccione Propio</option>
                         <!-- Las opciones de estados propios serán cargados dinámicamente aquí -->
-                    </select>                 
+                    </select>
+                    <h1></h1>
                     <input type="text" name="CodResp" class="input-small" placeholder="Responsable" required autocomplete="off">
                     <h1></h1>
-                    <input type="text" name="ActPrin" class="input-small" placeholder="Activo Principal" required autocomplete="off">
+                    <input type="text" name="ActPrin" class="input-small" placeholder="Asignar Codigo Activo Principal" required autocomplete="off">
                     <h1></h1>
                     <div style="display: inline;">
                         <h5></h5>
@@ -326,6 +330,7 @@
                 const data = await response.json();
                 if (data.status !== 'error') {
                     const ciudadesSelect = document.getElementById('des_codcont');
+                    const activosSelect = document.getElementById('des_activo');
                     const estadosSelect = document.getElementById('des_estado');
                     const propiosSelect = document.getElementById('des_propio');
 
@@ -340,6 +345,19 @@
                             option.selected = true;
                         }
                         ciudadesSelect.appendChild(option);
+                    });
+
+                    // Llenar las opciones de Cod Estado
+                    data.desactivos.forEach(des_activo => {
+                        const option = document.createElement('option');
+                        option.value = des_activo.id_codcont;
+                        option.textContent = des_activo.des_activo;
+                        option.textContent = `${des_activo.id_codcont} - ${des_activo.des_codcont}`;
+                        // Si el valor coincide con el seleccionado, marcar la opción como seleccionada
+                        if (des_activo.id_codcont == '000') {  // Aquí pones el valor que debería estar seleccionado por defecto
+                            option.selected = true;
+                        }
+                        activosSelect.appendChild(option);
                     });
 
                     // Llenar las opciones de Cod Estado
