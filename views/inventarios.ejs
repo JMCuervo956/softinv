@@ -347,10 +347,13 @@
                         ciudadesSelect.appendChild(option);
                     });
 
-                    // Llenar las opciones de Cod Estado
+                    // Llenar las opciones descripcion del activo
+                    //const [desactivos] = await pool.execute('SELECT id_clsf, id_codcont, des_codcont FROM tbl_clsact');
+                    // Guardo codigo asignado en la clasificacion de activos
+
                     data.desactivos.forEach(des_activo => {
                         const option = document.createElement('option');
-                        option.value = des_activo.id_codcont;
+                        option.value = des_activo.id_clsf;
                         option.textContent = des_activo.des_activo;
                         option.textContent = `${des_activo.id_codcont} - ${des_activo.des_codcont}`;
                         // Si el valor coincide con el seleccionado, marcar la opción como seleccionada

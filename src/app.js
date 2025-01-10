@@ -231,7 +231,7 @@ app.post('/inventarios', async (req, res) => {
 //        console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
 //        console.log('Conectando a la base de datos con estos valores:');
  
-        const { CodActivo, CodCont, DesGen, DesAct, observ, Estado, Propio } = req.body;
+        const { CodActivo, observ, ciud, acti, esta, prop, CodResp, ActPrin } = req.body;
 
         // Verificar si el activo ya existe
         const [rows] = await pool.execute('SELECT * FROM tbl_inventarios WHERE id_activo = ?', [CodActivo]);
@@ -249,8 +249,17 @@ app.post('/inventarios', async (req, res) => {
             });
         }
 
+        // extrae descripcion del activo seleccionado
+        const [desact] = await pool.execute('SELECT des_codcont FROM tbl_clsact WHERE id_clsf = ?', [acti]);
+        //console.log(desact); // Imprime lo que contiene desact
+
+        // Ahora accedes a des_codcont
+        const codigoCont = desact && desact.length > 0 ? desact[0].des_codcont : null;
+        //console.log(codigoCont); // Verifica el valor de codigoCont
+
         // Si el registro no existe, insertarlo en la base de datos
-        await pool.execute('INSERT INTO tbl_inventarios (id_activo, desgen, desact, desobs, estado, propio) VALUES (?, ?, ?, ?, ?, ?)', [CodActivo, DesGen, DesAct, observ, Estado, Propio ]);
+        //await pool.execute('INSERT INTO tbl_inventarios (id_activo, desobs, codcont, desact, estado, propio, responsable, actprin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [CodActivo, observ, ciud, acti, esta, prop, CodResp, ActPrin ]);
+        await pool.execute('INSERT INTO tbl_inventarios (id_activo, desobs, codcont, codact, desact, estado, propio, responsable, actprin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [CodActivo, observ, ciud, acti, codigoCont, esta, prop, CodResp, ActPrin ]);
         res.json({ status: 'success', message: '¡Activo registrado correctamente!' });
 
     } catch (error) {
@@ -338,10 +347,8 @@ app.get('/dataSelec', async (req, res) => {
         // Consultar codigos contables
         const [descontable] = await pool.execute('SELECT id_codcont, des_codcont FROM tbl_codcont');
         // Consultar descripciones activos
-        const [desactivos] = await pool.execute('SELECT id_codcont, des_codcont FROM tbl_propio');
-        console.log('1');
-        console.log(desactivos);
-        console.log('2');
+        const [desactivos] = await pool.execute('SELECT id_clsf, id_codcont, des_codcont FROM tbl_clsact');
+
         // Consultar estados
         const [desestado] = await pool.execute('SELECT id_codcont, des_codcont FROM tbl_estado');
         // Consultar propio
