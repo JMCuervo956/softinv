@@ -9,31 +9,27 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <%- include('partials/head') %>
 
-    <!-- Agregar el estilo para el campo deshabilitado -->
     <style>
         .input-disabled {
-            background-color: blue;  /* Fondo azul */
-            color: white;  /* Texto blanco */
-            cursor: not-allowed;  /* Cambiar el cursor para indicar que no es editable */
+            background-color: blue;
+            color: white;
+            cursor: not-allowed;
         }
-
-    .dropdown {
-      position: relative; /* Necesario para el dropdown */
-    }
-  
-    .dropdown-content {
-      display: none; /* Ocultar el contenido del dropdown */
-      position: absolute; /* Posicionamiento absoluto */
-      left: 50px; /* Ajusta este valor para mover el submenú a la derecha */
-      background-color: #ffffcc; /* Color de fondo del dropdown */
-      min-width: 150px; /* Ancho mínimo para el dropdown */
-      z-index: 1; /* Para asegurarse de que esté sobre otros elementos */
-    }
-  
-    .dropdown:hover .dropdown-content {
-      display: block; /* Mostrar contenido al pasar el mouse */
-    }
-  </style>    
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            left: 50px;
+            background-color: #ffffcc;
+            min-width: 150px;
+            z-index: 1;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>    
 </head>
 <body>
     <script src="app.js"></script>
@@ -74,13 +70,11 @@
                     <!-- Codigos estado -->
                     <select class="simple-border" name="esta" id="des_estado" required>
                         <option value="" selected>Seleccione Estado</option>
-                        <!-- Las opciones de estados serán cargados dinámicamente aquí -->
                     </select>
                     <h1></h1>
                     <!-- Codigos propio -->
                     <select class="simple-border" name="prop" id="des_propio" required>
                         <option value="" selected>Seleccione Propio</option>
-                        <!-- Las opciones de estados propios serán cargados dinámicamente aquí -->
                     </select>
                     <h1></h1>
                     <input type="text" name="CodResp" class="input-small" placeholder="Responsable" required autocomplete="off">
@@ -90,9 +84,8 @@
                     <div style="display: inline;">
                         <h5></h5>
                         <input type="submit" class="btn-save" value="Registrar" tabindex="-1">
-                        <a href="#" id="cancelBtn" class="btn-cancel" tabindex="-1">Cancelar</a> <!-- Modificado: Cambiar href -->
+                        <a href="#" id="cancelBtn" class="btn-cancel" tabindex="-1">Cancelar</a> 
                     </div>
-                    <!-- Campo oculto para enviar el valor de CodActivo -->
                     <input type="hidden" name="CodActivoHidden" id="CodActivoHidden">
                 </div>       
                 <br>    
@@ -101,228 +94,228 @@
                     <input type="submit" id="btnSalir" class="btn-salir" value="Salir">
                     <br><br>    
                 </div>
-
-                
             </form>
         </div>
     </div>
 
+        <script>
+                // Establece el enfoque inicial en el primer campo de entrada
+                window.onload = function() {
+                    const firstInput = document.querySelector('input[name="CodActivo"]');
+                    firstInput.focus();
+                    // Deshabilitar la capacidad de escribir
+                    firstInput.addEventListener('keydown', (event) => {
+                        event.preventDefault(); // Bloquea cualquier tecla que se presione
+                    });
+                };
+        
+                // AQUI 
+                // Manejar el clic en el botón "Copiar"
+                document.querySelector('.btn-copiar').addEventListener('click', async function() {
+                    try {
+                        // Leer el contenido del portapapeles
+                        const clipboardText = await navigator.clipboard.readText();
+        
+                        // Asignar el valor del portapapeles al primer campo de entrada
+                        const firstInput = document.querySelector('input[name="CodActivo"]');
+                        firstInput.value = clipboardText; // Pega el contenido del portapapeles
+        
+                        // Mover el foco al segundo campo de entrada
+                        document.querySelector('input[name="observ"]').focus();
+        
+                        // Mover el foco al segundo campo de entrada
+        //                document.querySelector('input[name="DesGen"]').focus();
+        //                document.querySelector('input[name="CodCont"]').focus();
+        
+                        // Mover el foco al segundo campo de entrada
+        //                document.querySelector('input[name="DesGen"]').focus();
+        
+                        // Deshabilitar el primer input y cambiar el estilo
+                        firstInput.setAttribute('readonly', true);  // Cambiado: Usamos 'readonly' en lugar de 'disabled'
+                        firstInput.classList.add('input-disabled');
+                        
+                        // Deshabilitar el botón Copiar
+                        document.querySelector('.btn-copiar').disabled = true;
+        
+                        // Enviar el valor a un campo oculto para enviarlo al servidor
+                        document.querySelector('#CodActivoHidden').value = clipboardText;
+                        
+                    } catch (err) {
+                        console.error('Error al leer el portapapeles:', err);
+                        alert('Hubo un error al acceder al portapapeles.', err);
+                    }
+                });
+        
+                // Detectar cuando el valor es pegado en el primer input y saltar al segundo
+                document.querySelector('input[name="CodActivo"]').addEventListener('input', function() {
+                    // Verifica si el campo tiene un valor (indica que se pegó algo)
+                    if (this.value.trim() !== '') {
+                        // Mueve el foco al siguiente campo (segundo input)
+                        document.querySelector('input[name="CodCont"]').focus();
+                    }
+                });
+        
+                // Función para manejar el clic en el botón "Cancelar"
+                document.getElementById("cancelBtn").addEventListener("click", function(event) {
+                    event.preventDefault();  // Evitar la acción por defecto (ir a una URL)
+                    // Limpiar todos los campos del formulario
+                    const form = document.getElementById("registerForm");
+                    form.reset();
+        
+                    // Habilitar el primer input y remover el estilo de deshabilitado
+                    const firstInput = document.querySelector('input[name="CodActivo"]');
+                    firstInput.removeAttribute('readonly');
+                    firstInput.classList.remove('input-disabled');
+        
+                    // Habilitar el botón Copiar de nuevo
+                    document.querySelector('.btn-copiar').disabled = false;
+        
+                    // Colocar el foco en el primer input
+                    firstInput.focus();
+                });
+        
+                // Función para manejar el clic en el botón "Registrar"
+                document.querySelector('.btn-save').addEventListener("click", function() {
+                    // Habilitar el botón Copiar nuevamente si el formulario es registrado
+                    document.querySelector('.btn-copiar').disabled = false;
+                });
+        
+                // Validación del formulario antes de enviarlo
+                document.getElementById('registerForm').addEventListener('submit', async function(event) {
+                    event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
+        
+                    // Verificar si el campo CodActivo tiene un valor
+                    const codActivo = document.querySelector('input[name="CodActivo"]').value.trim();
+                    if (!codActivo) {
+                        alert('El campo CodActivo es obligatorio.');
+                        return;
+                    }
+        
+                    const formData = new FormData(this);
+                    const response = await fetch('/inventarios', {
+                        method: 'POST',
+                        body: new URLSearchParams(formData)
+                    });
+        
+                    const result = await response.json();
+        
+                    if (result.status === 'success') {
+                        Swal.fire({
+                            title: result.title,
+                            text: result.message,
+                            icon: result.status,
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            window.location.href = '/inventarios'; // Redirigir al usuario si es necesario
+                        });
+                    } else if (result.status === 'exists' && result.options) {
+                        // Si ya existe y hay opciones (eliminar o mantener)
+                        Swal.fire({
+                            title: result.title,
+                            text: result.message,
+                            icon: result.status,
+        //                    showCancelButton: true,
+         //                   confirmButtonText: 'Eliminar',
+         //                   cancelButtonText: 'Mantener',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Si el usuario elige eliminar
+                                //eliminarActivo(codActivo); // Llamada a la función para eliminar el activo
+        
+                                // Hacer visible el botón de eliminar
+                                document.getElementById('btnEliminar').style.opacity = '1'; // Cambia a visible
+                                //Swal.fire('Registro Eliminado.', '', 'info');
+                            } else {
+                                // Si el usuario elige mantener, no hacemos nada
+                                Swal.fire('El Activo se mantiene sin cambios.', '', 'info');
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: result.title,
+                            text: result.message,
+                            icon: result.status,
+                            showConfirmButton: true
+                        });
+                    }
+                });
+        
+                // Función para eliminar el activo
+                async function eliminarActivo(codActivo) {
+                    Swal.fire('Registro Eliminado 1.', '', 'info');
+                    const response = await fetch(`/inventarios/eliminar/${codActivo}`, {
+                        method: 'DELETE'
+                    });
+        
+                    const result = await response.json();
+        
+                    if (result.status === 'success') {
+                        Swal.fire({
+                            title: result.title,
+                            text: result.message,
+                            icon: result.status,
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            window.location.href = '/inventarios'; // Redirigir después de eliminar
+                        });
+                    } else {
+                        Swal.fire({
+                            title: result.title,
+                            text: result.message,
+                            icon: result.status,
+                            showConfirmButton: true
+                        });
+                    }
+                }
+            </script>
+        
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    console.log('DOM completamente cargado');
+        
+                    document.getElementById('btnEliminar').addEventListener('click', async function(event) {
+                        console.log('Botón clickeado');
+                        event.preventDefault(); // Evitar el comportamiento por defecto (enviar formulario)
+                        const form = document.getElementById('registerForm'); // Obtener el formulario
+                        const formData = new FormData(form);
+                        console.log('Datos del formulario: ', Array.from(formData.entries()));
+        
+                        const response = await fetch('/inventeli', {
+                            method: 'POST',
+                            body: new URLSearchParams(formData)
+                        });
+        
+                        console.log('Respuesta del servidor recibida');
+        
+                        const result = await response.json();
+                        Swal.fire({
+                            title: result.title || 'Error',
+                            text: result.message || 'Hubo un problema',
+                            icon: result.status,
+                            showConfirmButton: true,
+                            timer: result.status === 'success' ? 2500 : null // Timer solo para éxito
+                        }).then(() => {
+                            if (result.status === 'success') {
+                                console.log('Redirigiendo...');
+                                window.location.href = '/inventarios'; // Redirigir al usuario si es necesario
+                            }
+                        });
+                    });
+                });
+            </script>
+        
+            <script>
+                document.getElementById('btnSalir').addEventListener('click', function() {
+                    // Acción para el botón "Salir"
+                    window.location.href = '/'; // Redirige a la página de logout o cerrar sesión
+                });
+            </script>
+        
     <script>
-        // Establece el enfoque inicial en el primer campo de entrada
-        window.onload = function() {
-            const firstInput = document.querySelector('input[name="CodActivo"]');
-            firstInput.focus();
-            // Deshabilitar la capacidad de escribir
-            firstInput.addEventListener('keydown', (event) => {
-                event.preventDefault(); // Bloquea cualquier tecla que se presione
-            });
-        };
+        window.onload = cargarSeleccion;
 
-        // AQUI 
-        // Manejar el clic en el botón "Copiar"
-        document.querySelector('.btn-copiar').addEventListener('click', async function() {
-            try {
-                // Leer el contenido del portapapeles
-                const clipboardText = await navigator.clipboard.readText();
-
-                // Asignar el valor del portapapeles al primer campo de entrada
-                const firstInput = document.querySelector('input[name="CodActivo"]');
-                firstInput.value = clipboardText; // Pega el contenido del portapapeles
-
-                // Mover el foco al segundo campo de entrada
-                document.querySelector('input[name="observ"]').focus();
-
-                // Mover el foco al segundo campo de entrada
-//                document.querySelector('input[name="DesGen"]').focus();
-//                document.querySelector('input[name="CodCont"]').focus();
-
-                // Mover el foco al segundo campo de entrada
-//                document.querySelector('input[name="DesGen"]').focus();
-
-                // Deshabilitar el primer input y cambiar el estilo
-                firstInput.setAttribute('readonly', true);  // Cambiado: Usamos 'readonly' en lugar de 'disabled'
-                firstInput.classList.add('input-disabled');
-                
-                // Deshabilitar el botón Copiar
-                document.querySelector('.btn-copiar').disabled = true;
-
-                // Enviar el valor a un campo oculto para enviarlo al servidor
-                document.querySelector('#CodActivoHidden').value = clipboardText;
-                
-            } catch (err) {
-                console.error('Error al leer el portapapeles:', err);
-                alert('Hubo un error al acceder al portapapeles.', err);
-            }
-        });
-
-        // Detectar cuando el valor es pegado en el primer input y saltar al segundo
-        document.querySelector('input[name="CodActivo"]').addEventListener('input', function() {
-            // Verifica si el campo tiene un valor (indica que se pegó algo)
-            if (this.value.trim() !== '') {
-                // Mueve el foco al siguiente campo (segundo input)
-                document.querySelector('input[name="CodCont"]').focus();
-            }
-        });
-
-        // Función para manejar el clic en el botón "Cancelar"
-        document.getElementById("cancelBtn").addEventListener("click", function(event) {
-            event.preventDefault();  // Evitar la acción por defecto (ir a una URL)
-            // Limpiar todos los campos del formulario
-            const form = document.getElementById("registerForm");
-            form.reset();
-
-            // Habilitar el primer input y remover el estilo de deshabilitado
-            const firstInput = document.querySelector('input[name="CodActivo"]');
-            firstInput.removeAttribute('readonly');
-            firstInput.classList.remove('input-disabled');
-
-            // Habilitar el botón Copiar de nuevo
-            document.querySelector('.btn-copiar').disabled = false;
-
-            // Colocar el foco en el primer input
-            firstInput.focus();
-        });
-
-        // Función para manejar el clic en el botón "Registrar"
-        document.querySelector('.btn-save').addEventListener("click", function() {
-            // Habilitar el botón Copiar nuevamente si el formulario es registrado
-            document.querySelector('.btn-copiar').disabled = false;
-        });
-
-        // Validación del formulario antes de enviarlo
-        document.getElementById('registerForm').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
-
-            // Verificar si el campo CodActivo tiene un valor
-            const codActivo = document.querySelector('input[name="CodActivo"]').value.trim();
-            if (!codActivo) {
-                alert('El campo CodActivo es obligatorio.');
-                return;
-            }
-
-            const formData = new FormData(this);
-            const response = await fetch('/inventarios', {
-                method: 'POST',
-                body: new URLSearchParams(formData)
-            });
-
-            const result = await response.json();
-
-            if (result.status === 'success') {
-                Swal.fire({
-                    title: result.title,
-                    text: result.message,
-                    icon: result.status,
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(() => {
-                    window.location.href = '/inventarios'; // Redirigir al usuario si es necesario
-                });
-            } else if (result.status === 'exists' && result.options) {
-                // Si ya existe y hay opciones (eliminar o mantener)
-                Swal.fire({
-                    title: result.title,
-                    text: result.message,
-                    icon: result.status,
-//                    showCancelButton: true,
- //                   confirmButtonText: 'Eliminar',
- //                   cancelButtonText: 'Mantener',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Si el usuario elige eliminar
-                        //eliminarActivo(codActivo); // Llamada a la función para eliminar el activo
-
-                        // Hacer visible el botón de eliminar
-                        document.getElementById('btnEliminar').style.opacity = '1'; // Cambia a visible
-                        //Swal.fire('Registro Eliminado.', '', 'info');
-                    } else {
-                        // Si el usuario elige mantener, no hacemos nada
-                        Swal.fire('El Activo se mantiene sin cambios.', '', 'info');
-                    }
-                });
-            } else {
-                Swal.fire({
-                    title: result.title,
-                    text: result.message,
-                    icon: result.status,
-                    showConfirmButton: true
-                });
-            }
-        });
-
-        // Función para eliminar el activo
-        async function eliminarActivo(codActivo) {
-            Swal.fire('Registro Eliminado 1.', '', 'info');
-            const response = await fetch(`/inventarios/eliminar/${codActivo}`, {
-                method: 'DELETE'
-            });
-
-            const result = await response.json();
-
-            if (result.status === 'success') {
-                Swal.fire({
-                    title: result.title,
-                    text: result.message,
-                    icon: result.status,
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(() => {
-                    window.location.href = '/inventarios'; // Redirigir después de eliminar
-                });
-            } else {
-                Swal.fire({
-                    title: result.title,
-                    text: result.message,
-                    icon: result.status,
-                    showConfirmButton: true
-                });
-            }
-        }
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            console.log('DOM completamente cargado');
-
-            document.getElementById('btnEliminar').addEventListener('click', async function(event) {
-                console.log('Botón clickeado');
-                event.preventDefault(); // Evitar el comportamiento por defecto (enviar formulario)
-                const form = document.getElementById('registerForm'); // Obtener el formulario
-                const formData = new FormData(form);
-                console.log('Datos del formulario: ', Array.from(formData.entries()));
-
-                const response = await fetch('/inventeli', {
-                    method: 'POST',
-                    body: new URLSearchParams(formData)
-                });
-
-                console.log('Respuesta del servidor recibida');
-
-                const result = await response.json();
-                Swal.fire({
-                    title: result.title || 'Error',
-                    text: result.message || 'Hubo un problema',
-                    icon: result.status,
-                    showConfirmButton: true,
-                    timer: result.status === 'success' ? 2500 : null // Timer solo para éxito
-                }).then(() => {
-                    if (result.status === 'success') {
-                        console.log('Redirigiendo...');
-                        window.location.href = '/inventarios'; // Redirigir al usuario si es necesario
-                    }
-                });
-            });
-        });
-    </script>
-
-    <script>
-        document.getElementById('btnSalir').addEventListener('click', function() {
-            // Acción para el botón "Salir"
-            window.location.href = '/'; // Redirige a la página de logout o cerrar sesión
-        });
-    </script>
-
-    <script>
         // Función para cargar los datos de codigos contable
         async function cargarSeleccion() {
             try {
@@ -338,52 +331,55 @@
                     data.descontable.forEach(des_codcont => {
                         const option = document.createElement('option');
                         option.value = des_codcont.id_codcont;
-                        option.textContent = des_codcont.des_codcont;
                         option.textContent = `${des_codcont.id_codcont} - ${des_codcont.des_codcont}`;
-                        // Si el valor coincide con el seleccionado, marcar la opción como seleccionada
-                        if (des_codcont.id_codcont == '000') {  // Aquí pones el valor que debería estar seleccionado por defecto
+                        if (des_codcont.id_codcont == '000') {
                             option.selected = true;
                         }
                         ciudadesSelect.appendChild(option);
                     });
 
-                    // Llenar las opciones descripcion del activo
-                    //const [desactivos] = await pool.execute('SELECT id_clsf, id_codcont, des_codcont FROM tbl_clsact');
-                    // Guardo codigo asignado en la clasificacion de activos
-
-                    data.desactivos.forEach(des_activo => {
-                        const option = document.createElement('option');
-                        option.value = des_activo.id_clsf;
-                        option.textContent = des_activo.des_activo;
-                        option.textContent = `${des_activo.id_codcont} - ${des_activo.des_codcont}`;
-                        // Si el valor coincide con el seleccionado, marcar la opción como seleccionada
-                        if (des_activo.id_codcont == '000') {  // Aquí pones el valor que debería estar seleccionado por defecto
-                            option.selected = true;
-                        }
-                        activosSelect.appendChild(option);
+                    // Llenar las opciones de Descripción del Activo al cambiar el código contable
+                    document.getElementById('des_codcont').addEventListener('change', function() {
+                        const selectedCodCont = this.value;
+                        updateActivosOptions(selectedCodCont, data.desactivos);
                     });
+
+                    // Función para actualizar las opciones de los activos según el código contable seleccionado
+                    function updateActivosOptions(codContSeleccionado, desactivos) {
+                        const activosSelect = document.getElementById('des_activo');
+                        
+                        // Limpiar las opciones actuales
+                        activosSelect.innerHTML = '<option value="" selected>Descripción del Activo....</option>';
+                        
+                        // Filtrar los activos que corresponden al código contable seleccionado
+                        const activosFiltrados = desactivos.filter(activo => String(activo.id_codcont) === String(codContSeleccionado));
+                        
+                        // Agregar las nuevas opciones al select de activos
+                        activosFiltrados.forEach(activo => {
+                            const option = document.createElement('option');
+                            option.value = activo.id_clsf;
+                            option.textContent = `${activo.id_clsf} - ${activo.des_codcont}`;
+                            activosSelect.appendChild(option);
+                        });
+                    }
 
                     // Llenar las opciones de Cod Estado
                     data.desestado.forEach(des_estado => {
                         const option = document.createElement('option');
                         option.value = des_estado.id_codcont;
-                        option.textContent = des_estado.des_estado;
                         option.textContent = `${des_estado.id_codcont} - ${des_estado.des_codcont}`;
-                        // Si el valor coincide con el seleccionado, marcar la opción como seleccionada
-                        if (des_estado.id_codcont == '000') {  // Aquí pones el valor que debería estar seleccionado por defecto
+                        if (des_estado.id_codcont == '000') {
                             option.selected = true;
                         }
                         estadosSelect.appendChild(option);
                     });
 
-                    // Llenar las opciones de Cod propio
+                    // Llenar las opciones de Cod Propio
                     data.despropio.forEach(des_propio => {  
                         const option = document.createElement('option');
                         option.value = des_propio.id_codcont;
-                        option.textContent = des_propio.des_propio;
                         option.textContent = `${des_propio.id_codcont} - ${des_propio.des_codcont}`;
-                        // Si el valor coincide con el seleccionado, marcar la opción como seleccionada
-                        if (des_propio.id_codcont == '000') {  // Aquí pones el valor que debería estar seleccionado por defecto
+                        if (des_propio.id_codcont == '000') {
                             option.selected = true;
                         }
                         propiosSelect.appendChild(option);
@@ -394,15 +390,8 @@
                 console.error('Error al cargar Selecciones:', error);
             }
         }
-        // Llamar a la función para cargar los datos cuando la página se carga
-        window.onload = cargarSeleccion;
-
-        // Verificar que el valor seleccionado se muestra en la consola
-        document.getElementById('des_codcont').addEventListener('change', function() {
-            console.log('Contable seleccionado front:', this.value);
-        });
     </script>
-
+    
     <%- include('partials/footer') %>  
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
