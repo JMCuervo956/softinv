@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es"> <!-- Cambié el idioma a 'es' porque el contenido está en español -->
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -49,6 +49,7 @@
             try {
                 const response = await fetch('/datos');
                 const data = await response.json();
+
                 if (data.status !== 'error') {
                     const ciudadesSelect = document.getElementById('ciudad');
                     const parqueaderosSelect = document.getElementById('parqueadero');
@@ -58,27 +59,20 @@
                         const option = document.createElement('option');
                         option.value = ciudad.id_ciudad;
                         option.textContent = ciudad.ciudad;
-                        
+
                         // Si el valor coincide con el seleccionado, marcar la opción como seleccionada
-                        if (ciudad.id_ciudad == '000') {  // Aquí pones el valor que debería estar seleccionado por defecto
+                        if (ciudad.id_ciudad == '000') {
                             option.selected = true;
                         }
 
                         ciudadesSelect.appendChild(option);
                     });
 
-                    // Llenar las opciones de Parqueadero
-                    data.parqueaderos.forEach(parqueadero => {
-                        const option = document.createElement('option');
-                        option.value = parqueadero.id_parq;
-                        option.textContent = parqueadero.parq;
-                        
-                        // Si el valor coincide con el seleccionado, marcar la opción como seleccionada
-                        if (parqueadero.id_parq == '000') {  // Aquí pones el valor que debería estar seleccionado por defecto
-                            option.selected = true;
-                        }
-
-                        parqueaderosSelect.appendChild(option);
+                    // Escuchar el cambio en la ciudad y actualizar las opciones de parqueaderos
+                    document.getElementById('ciudad').addEventListener('change', function () {
+                        const ciudadSeleccionada = this.value;
+                        console.log('Ciudad seleccionada:', ciudadSeleccionada);  // Depuración
+                        actualizarParqueaderos(ciudadSeleccionada, data.parqueaderos);
                     });
                 }
             } catch (error) {
@@ -86,17 +80,42 @@
             }
         }
 
+        // Función para actualizar las opciones de parqueaderos según la ciudad seleccionada
+        function actualizarParqueaderos(ciudadSeleccionada, parqueaderos) {
+            const parqueaderosSelect = document.getElementById('parqueadero');
+
+            // Limpiar las opciones actuales
+            parqueaderosSelect.innerHTML = '<option value="" disabled selected>Seleccione Parqueadero</option>';
+
+            // Filtrar los parqueaderos por la ciudad seleccionada
+            const parqueaderosFiltrados = parqueaderos.filter(parqueadero => parqueadero.id_ciudad == ciudadSeleccionada);
+
+            // Si no se encuentran parqueaderos, mostrar un mensaje
+            if (parqueaderosFiltrados.length === 0) {
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = 'No hay parqueaderos disponibles para esta ciudad';
+                parqueaderosSelect.appendChild(option);
+                return;
+            }
+
+            // Llenar las opciones de parqueaderos
+            parqueaderosFiltrados.forEach(parqueadero => {
+                const option = document.createElement('option');
+                option.value = parqueadero.id_parq;
+                option.textContent = parqueadero.parq;
+
+                // Si el valor coincide con el seleccionado, marcar la opción como seleccionada
+                if (parqueadero.id_parq == '000') {
+                    option.selected = true;
+                }
+
+                parqueaderosSelect.appendChild(option);
+            });
+        }
+
         // Llamar a la función para cargar los datos cuando la página se carga
         window.onload = cargarDatos;
-
-        // Verificar que el valor seleccionado se muestra en la consola
-        document.getElementById('ciudad').addEventListener('change', function() {
-            console.log('Ciudad seleccionada front:', this.value);
-        });
-
-        document.getElementById('parqueadero').addEventListener('change', function() {
-            console.log('Parqueadero seleccionado:', this.value);
-        });
     </script>
 
     <script>
@@ -131,7 +150,6 @@
             }
         });
     </script>
-
 
     <%- include('partials/footer') %>  <!-- Footer, si tienes -->
     

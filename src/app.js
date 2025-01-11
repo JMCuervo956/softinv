@@ -330,7 +330,7 @@ app.get('/datos', async (req, res) => {
         const [ciudades] = await pool.execute('SELECT id_ciudad, ciudad FROM tbl_ciudades');
 
         // Consultar parqueaderos
-        const [parqueaderos] = await pool.execute('SELECT id_parq, parq FROM tbl_parqueaderos');
+        const [parqueaderos] = await pool.execute('SELECT id_parq, parq, id_ciudad FROM tbl_parqueaderos');
 
         // Enviar las ciudades y parqueaderos como respuesta JSON
         res.json({ ciudades, parqueaderos});
