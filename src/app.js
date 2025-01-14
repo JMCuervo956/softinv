@@ -259,7 +259,12 @@ app.post('/inventarios', async (req, res) => {
 
         // Si el registro no existe, insertarlo en la base de datos
         //await pool.execute('INSERT INTO tbl_inventarios (id_activo, desobs, codcont, desact, estado, propio, responsable, actprin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [CodActivo, observ, ciud, acti, esta, prop, CodResp, ActPrin ]);
-        
+        const options = { timeZone: 'America/Bogota', hour12: false };
+        const colombiaDate = new Date().toLocaleString('en-US', options);
+
+        //console.log(colombiaDate);
+
+
         await pool.execute('INSERT INTO tbl_inventarios (id_activo, desobs, codcont, codact, desact, estado, propio, responsable, actprin, usuario, ciudad, parqueadero, fecha) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())', [CodActivo, observ, ciud, acti, codigoCont, esta, prop, CodResp, ActPrin,req.session.user,req.session.ciudadSeleccionadaCodigo,req.session.parqueaderoSeleccionadoCodigo ]);
         res.json({ status: 'success', message: '¡Activo registrado correctamente!' });
 
