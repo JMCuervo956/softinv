@@ -264,8 +264,7 @@ app.post('/inventarios', async (req, res) => {
 
         //console.log(colombiaDate);
 
-
-        await pool.execute('INSERT INTO tbl_inventarios (id_activo, desobs, codcont, codact, desact, estado, propio, responsable, actprin, usuario, ciudad, parqueadero, fecha) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())', [CodActivo, observ, ciud, acti, codigoCont, esta, prop, CodResp, ActPrin,req.session.user,req.session.ciudadSeleccionadaCodigo,req.session.parqueaderoSeleccionadoCodigo ]);
+        await pool.execute('INSERT INTO tbl_inventarios (id_activo, desobs, codcont, codact, desact, estado, propio, responsable, actprin, usuario, ciudad, parqueadero, fecha) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )', [CodActivo, observ, ciud, acti, codigoCont, esta, prop, CodResp, ActPrin,req.session.user,req.session.ciudadSeleccionadaCodigo,req.session.parqueaderoSeleccionadoCodigo, colombiaDate ]);
         res.json({ status: 'success', message: '¡Activo registrado correctamente!' });
 
     } catch (error) {
