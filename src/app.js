@@ -216,9 +216,9 @@ app.get('/origen/:folder/:filename', (req, res) => {
 
 app.get('/inventarios', (req, res)=>{
     if (req.session.loggedin) {
-        const { user, name, rol } = req.session;
+        const { user, name, rol, ciudadSeleccionadaCodigo, ciudadSeleccionadaTexto, parqueaderoSeleccionadoCodigo,  parqueaderoSeleccionadoTexto} = req.session;
         const userUser = req.session.unidad;
-        res.render('inventarios', { user, rol, name, userUser });
+        res.render('inventarios', { user, rol, name, userUser, ciudadSeleccionadaTexto, ciudadSeleccionadaCodigo, parqueaderoSeleccionadoTexto,parqueaderoSeleccionadoCodigo });
     } else {
         res.send('Por favor, inicia sesión primero.');
     }
@@ -259,7 +259,8 @@ app.post('/inventarios', async (req, res) => {
 
         // Si el registro no existe, insertarlo en la base de datos
         //await pool.execute('INSERT INTO tbl_inventarios (id_activo, desobs, codcont, desact, estado, propio, responsable, actprin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [CodActivo, observ, ciud, acti, esta, prop, CodResp, ActPrin ]);
-        await pool.execute('INSERT INTO tbl_inventarios (id_activo, desobs, codcont, codact, desact, estado, propio, responsable, actprin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [CodActivo, observ, ciud, acti, codigoCont, esta, prop, CodResp, ActPrin ]);
+        
+        await pool.execute('INSERT INTO tbl_inventarios (id_activo, desobs, codcont, codact, desact, estado, propio, responsable, actprin, usuario, ciudad, parqueadero, fecha) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())', [CodActivo, observ, ciud, acti, codigoCont, esta, prop, CodResp, ActPrin,req.session.user,req.session.ciudadSeleccionadaCodigo,req.session.parqueaderoSeleccionadoCodigo ]);
         res.json({ status: 'success', message: '¡Activo registrado correctamente!' });
 
     } catch (error) {
@@ -983,7 +984,7 @@ app.get('/cargascsv', (req, res) => {
 });
 
 app.post('/loginv', async (req, res) => {
-    const { user, pass, ciud, parq } = req.body;
+    const { user, pass, ciud, parq, ciudadSeleccionada, ciudadSeleccionadaTexto, parqueaderoSeleccionado, parqueaderoSeleccionadoTexto  } = req.body;
 
     // Validación de usuario
     const tableName = 'tbl_users';
@@ -1009,7 +1010,13 @@ app.post('/loginv', async (req, res) => {
     req.session.name = userRecord.name;
     req.session.rol = userRecord.rol;
     req.session.pass = userRecord.pass;
-  
+
+    // Guardar las variables en la sesión
+    req.session.ciudadSeleccionadaCodigo = ciudadSeleccionada;
+    req.session.ciudadSeleccionadaTexto = ciudadSeleccionadaTexto;
+    req.session.parqueaderoSeleccionadoCodigo = parqueaderoSeleccionado;
+    req.session.parqueaderoSeleccionadoTexto = parqueaderoSeleccionadoTexto;
+
     return res.json({ status: 'success', message: '!LOGIN Correcto ingreso!' });
 });
  

@@ -122,7 +122,26 @@
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
 
+            // Obtener los valores seleccionados de los campos de ciudad y parqueadero
+            const ciudadSeleccionada = document.getElementById('ciudad').value;
+            const ciudadSeleccionadaTexto = document.getElementById('ciudad').options[document.getElementById('ciudad').selectedIndex].text;
+
+            const parqueaderoSeleccionado = document.getElementById('parqueadero').value;
+            const parqueaderoSeleccionadoTexto = document.getElementById('parqueadero').options[document.getElementById('parqueadero').selectedIndex].text;
+
+            // Mostrar los valores seleccionados (opcional, para depuración)
+            console.log('Ciudad seleccionada código:', ciudadSeleccionada);
+            console.log('Ciudad seleccionada texto:', ciudadSeleccionadaTexto);
+            console.log('Parqueadero seleccionado código:', parqueaderoSeleccionado);
+            console.log('Parqueadero seleccionado texto:', parqueaderoSeleccionadoTexto);
+
             const formData = new FormData(this);
+           
+            formData.append('ciudadSeleccionada', ciudadSeleccionada);
+            formData.append('ciudadSeleccionadaTexto', ciudadSeleccionadaTexto);
+            formData.append('parqueaderoSeleccionado', parqueaderoSeleccionado);
+            formData.append('parqueaderoSeleccionadoTexto', parqueaderoSeleccionadoTexto);
+
             const response = await fetch('/loginv', {
                 method: 'POST',
                 body: new URLSearchParams(formData)

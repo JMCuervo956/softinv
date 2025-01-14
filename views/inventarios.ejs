@@ -45,7 +45,20 @@
         </h5>
     </div> 
     <div class="content">
-        <h4>Registro de Inventario</h4>
+        <h1 style="font-size: 20px; text-shadow: 2px 2px 4px rgba(6, 4, 95, 0.5); transition: color 0.3s ease; text-decoration: underline" 
+            onmouseover="this.querySelector('.user').style.color='darkblue'; this.querySelector('.name').style.color='darkred';"  
+            <span><%= ciudadSeleccionadaTexto %></span>
+        </h1>
+        <div>
+            <h6 style="font-size: 14px; text-shadow: 2px 2px 4px rgba(6, 4, 95, 0.5); transition: color 0.3s ease; margin: 0;">Ubicación</h6>
+            <h1 style="font-size: 14px; text-shadow: 2px 2px 4px rgba(216, 29, 22, 0.5); transition: color 0.3s ease; margin: 0;" 
+                onmouseover="this.style.color='darkblue';" 
+                onmouseout="this.style.color='';">
+                <span><%= parqueaderoSeleccionadoTexto %></span>
+            </h1>
+        </div>
+
+        
         <div class="register-form30"> 
             <form id="registerForm" action="/inventarios" method="POST"> 
                 <div class="contenedor__login-register">
@@ -78,9 +91,9 @@
                         <option value="" selected>Seleccione Propio</option>
                     </select>
                     <h1></h1>
-                    <input type="text" name="CodResp" class="input-small" placeholder="Responsable" required autocomplete="off">
+                    <input type="text" name="CodResp" class="input-small" placeholder="Responsable" autocomplete="off">
                     <h1></h1>
-                    <input type="text" name="ActPrin" class="input-small" placeholder="Asignar Codigo Activo Principal" required autocomplete="off">
+                    <input type="text" name="ActPrin" class="input-small" placeholder="Escribir Codigo Activo Principal" autocomplete="off">
                     <h1></h1>
                     <div style="display: inline;">
                         <h5></h5>
