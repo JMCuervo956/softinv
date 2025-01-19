@@ -231,7 +231,7 @@ app.post('/inventarios', async (req, res) => {
 //        console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
 //        console.log('Conectando a la base de datos con estos valores:');
  
-        const { CodActivo, observ, ciud, acti, esta, prop, CodResp, ActPrin } = req.body;
+        const { CodActivo, observ, selcodcont, selclsf, seledes,descont, esta, prop, CodResp, ActPrin } = req.body;
 
         // Verificar si el activo ya existe
         const [rows] = await pool.execute('SELECT * FROM tbl_inventarios WHERE id_activo = ?', [CodActivo]);
@@ -250,11 +250,12 @@ app.post('/inventarios', async (req, res) => {
         }
 
         // extrae descripcion del activo seleccionado
-        const [desact] = await pool.execute('SELECT des_codcont FROM tbl_clsact WHERE id_clsf = ?', [acti]);
+        //const [desact] = await pool.execute('SELECT des_codcont FROM tbl_clsact WHERE id_clsf = ?', [acti]);
+        //const [desact] = await pool.execute('SELECT des_codcont FROM tbl_clsact');
         //console.log(desact); // Imprime lo que contiene desact
 
         // Ahora accedes a des_codcont
-        const codigoCont = desact && desact.length > 0 ? desact[0].des_codcont : null;
+        //const codigoCont = desact && desact.length > 0 ? desact[0].des_codcont : null;
         //console.log(codigoCont); // Verifica el valor de codigoCont
 
         // Si el registro no existe, insertarlo en la base de datos
@@ -264,12 +265,12 @@ app.post('/inventarios', async (req, res) => {
 
         //console.log(colombiaDate);
 
-        await pool.execute('INSERT INTO tbl_inventarios (id_activo, desobs, codcont, codact, desact, estado, propio, responsable, actprin, usuario, ciudad, parqueadero, fecha) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )', [CodActivo, observ, ciud, acti, codigoCont, esta, prop, CodResp, ActPrin,req.session.user,req.session.ciudadSeleccionadaCodigo,req.session.parqueaderoSeleccionadoCodigo, colombiaDate ]);
+        await pool.execute('INSERT INTO tbl_inventarios (id_activo, desobs, codcont, codact, desact, descont, estado, propio, responsable, actprin, usuario, ciudad, parqueadero, fecha) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )', [CodActivo, observ, selcodcont, selclsf, seledes, descont, esta, prop, CodResp, ActPrin,req.session.user,req.session.ciudadSeleccionadaCodigo,req.session.parqueaderoSeleccionadoCodigo, colombiaDate ]);
         res.json({ status: 'success', message: '¡Activo registrado correctamente!' });
 
     } catch (error) {
         console.error('Error en registro:', error);
-        res.status(500).json({ status: 'error', message: 'Error en el servidor' });
+        res.status(500).json({ status: 'error', message: `Error: ${error.code}` });
     }
 });
 
@@ -352,8 +353,7 @@ app.get('/dataSelec', async (req, res) => {
         // Consultar codigos contables
         const [descontable] = await pool.execute('SELECT id_codcont, des_codcont FROM tbl_codcont');
         // Consultar descripciones activos
-        const [desactivos] = await pool.execute('SELECT id_clsf, id_codcont, des_codcont FROM tbl_clsact');
-
+        const [desactivos] = await pool.execute('SELECT id_clsf, id_codcont, des_codcont, des_contable FROM tbl_clsact order by des_codcont');
         // Consultar estados
         const [desestado] = await pool.execute('SELECT id_codcont, des_codcont FROM tbl_estado');
         // Consultar propio

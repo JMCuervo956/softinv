@@ -66,20 +66,19 @@
                     <h1></h1>
                     <input type="text" name="CodActivo" class="input-small" placeholder="Activo" required autocomplete="off" readonly>
 
-                    <h1></h1>
-                    <input type="text" name="observ" class="input-small" placeholder="Observaciones"  autocomplete="off">
-                    <h1></h1>
-                    <!-- Codigos contables -->
-                    <select class="simple-border" name="ciud" id="des_codcont" required>
-                        <option value="" selected>Seleccione Codigo Contable</option>
-                        <!-- Las opciones de codigos contables serán cargados dinámicamente aquí -->
-                    </select>
-                    <h1></h1>
                     <!-- Codigos activos -->
-                    <select class="simple-border" name="acti" id="des_activo" required>
+                    <select class="simple-border" name="acti" id="des_activo" required onchange="actualizarDescont()">
                         <option value="" selected>Descripción del Activo....</option>
-                        <!-- Las opciones de estados serán cargados dinámicamente aquí -->
+                        <!-- Las opciones de estados serán cargados dinámicamente aquí // style="display: none;" -->
                     </select>
+                    <input type="text" name="selclsf" class="input-small" id="selclsf" readonly style="display: none;">
+                    <input type="text" name="selcodcont" class="input-small" id="selcodcont" readonly style="display: none;">
+                    <input type="text" name="seledes" class="input-small" id="seledes" readonly style="display: none;">
+                    <h6></h6>
+                    <h6 style="margin-bottom: 0;" >Descripción Contable</h6>
+                    <input type="text"  name="descont" class="input-small" id="descontAAA" readonly style="color: rgb(22, 18, 236);">
+                    
+
                     <h1></h1>
                     <!-- Codigos estado -->
                     <select class="simple-border" name="esta" id="des_estado" required>
@@ -90,10 +89,16 @@
                     <select class="simple-border" name="prop" id="des_propio" required>
                         <option value="" selected>Seleccione Propio</option>
                     </select>
+
                     <h1></h1>
-                    <input type="text" name="CodResp" class="input-small" placeholder="Responsable" autocomplete="off">
+                    <input type="text" name="observ" class="input-small" placeholder="Observaciones / marca"  autocomplete="off">
                     <h1></h1>
-                    <input type="text" name="ActPrin" class="input-small" placeholder="Escribir Codigo Activo Principal" autocomplete="off">
+
+                    <h1></h1>
+                    <input type="text" name="CodResp" class="input-small" placeholder="Responsable" autocomplete="off" hidden>
+                    <h1></h1>
+
+                    <input type="text" name="ActPrin" class="input-small" placeholder="Escribir Codigo Activo Principal" autocomplete="off" hidden>
                     <h1></h1>
                     <div style="display: inline;">
                         <h5></h5>
@@ -123,8 +128,6 @@
                     });
                 };
         
-                // AQUI 
-                // Manejar el clic en el botón "Copiar"
                 document.querySelector('.btn-copiar').addEventListener('click', async function() {
                     try {
                         // Leer el contenido del portapapeles
@@ -135,8 +138,8 @@
                         firstInput.value = clipboardText; // Pega el contenido del portapapeles
         
                         // Mover el foco al segundo campo de entrada
-                        document.querySelector('input[name="observ"]').focus();
-        
+                        document.querySelector('select[name="acti"]').focus();
+
                         // Mover el foco al segundo campo de entrada
         //                document.querySelector('input[name="DesGen"]').focus();
         //                document.querySelector('input[name="CodCont"]').focus();
@@ -287,22 +290,14 @@
         
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
-                    console.log('DOM completamente cargado');
-        
                     document.getElementById('btnEliminar').addEventListener('click', async function(event) {
-                        console.log('Botón clickeado');
                         event.preventDefault(); // Evitar el comportamiento por defecto (enviar formulario)
                         const form = document.getElementById('registerForm'); // Obtener el formulario
                         const formData = new FormData(form);
-                        console.log('Datos del formulario: ', Array.from(formData.entries()));
-        
                         const response = await fetch('/inventeli', {
                             method: 'POST',
                             body: new URLSearchParams(formData)
                         });
-        
-                        console.log('Respuesta del servidor recibida');
-        
                         const result = await response.json();
                         Swal.fire({
                             title: result.title || 'Error',
@@ -341,41 +336,16 @@
                     const estadosSelect = document.getElementById('des_estado');
                     const propiosSelect = document.getElementById('des_propio');
 
-                    // Llenar las opciones de Cod Contable
-                    data.descontable.forEach(des_codcont => {
+                    // Llenar las opciones de Cod Estado
+                    data.desactivos.forEach(des_activo => {
                         const option = document.createElement('option');
-                        option.value = des_codcont.id_codcont;
-                        option.textContent = `${des_codcont.id_codcont} - ${des_codcont.des_codcont}`;
-                        if (des_codcont.id_codcont == '000') {
+                        option.value = des_activo.id_clsf + '-' + des_activo.id_codcont + '-' + des_activo.des_codcont + '-' + des_activo.des_contable;
+                        option.textContent = `${des_activo.des_codcont}`;
+                        if (des_activo.id_codcont == '000') {
                             option.selected = true;
                         }
-                        ciudadesSelect.appendChild(option);
+                        activosSelect.appendChild(option);
                     });
-
-                    // Llenar las opciones de Descripción del Activo al cambiar el código contable
-                    document.getElementById('des_codcont').addEventListener('change', function() {
-                        const selectedCodCont = this.value;
-                        updateActivosOptions(selectedCodCont, data.desactivos);
-                    });
-
-                    // Función para actualizar las opciones de los activos según el código contable seleccionado
-                    function updateActivosOptions(codContSeleccionado, desactivos) {
-                        const activosSelect = document.getElementById('des_activo');
-                        
-                        // Limpiar las opciones actuales
-                        activosSelect.innerHTML = '<option value="" selected>Descripción del Activo....</option>';
-                        
-                        // Filtrar los activos que corresponden al código contable seleccionado
-                        const activosFiltrados = desactivos.filter(activo => String(activo.id_codcont) === String(codContSeleccionado));
-                        
-                        // Agregar las nuevas opciones al select de activos
-                        activosFiltrados.forEach(activo => {
-                            const option = document.createElement('option');
-                            option.value = activo.id_clsf;
-                            option.textContent = `${activo.id_clsf} - ${activo.des_codcont}`;
-                            activosSelect.appendChild(option);
-                        });
-                    }
 
                     // Llenar las opciones de Cod Estado
                     data.desestado.forEach(des_estado => {
@@ -405,7 +375,23 @@
             }
         }
     </script>
-    
+
+    <script>
+        function actualizarDescont() {
+            // Obtener el valor seleccionado en el select
+            var valorSeleccionado = document.getElementById('des_activo').value;
+            
+            // Separar el valor en cuatro partes usando el guion como delimitador
+            var valoresSeparados = valorSeleccionado.split('-');
+            
+            // Asignar cada valor a los inputs correspondientes
+            document.getElementById('selclsf').value = valoresSeparados[0];  // des_codcont
+            document.getElementById('selcodcont').value = valoresSeparados[1];  // des_contable
+            document.getElementById('seledes').value = valoresSeparados[2];  // des_codcont
+            document.getElementById('descontAAA').value = valoresSeparados[3];  // des_contable
+        }
+    </script>
+
     <%- include('partials/footer') %>  
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
