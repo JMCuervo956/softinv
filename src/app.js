@@ -1713,6 +1713,27 @@ app.get('/cargapoder', (req, res) => {
     res.render('cargapoder'); // Renderiza cargapoder.ejs
 });
 
+// Ruta para filtrar activos
+app.get('/buscarActivos', async (req, res) => {
+    const { query } = req.query;
+    try {
+        const [rows] = await pool.execute(
+            'SELECT id, descripcion FROM tbl_activos WHERE descripcion LIKE ?',
+            [`%${query}%`]
+        );
+
+        if (rows.length > 0) {
+            res.json({ status: 'success', activos: rows });
+        } else {
+            res.json({ status: 'no_results', message: 'No se encontraron resultados' });
+        }
+    } catch (error) {
+        console.error('Error al buscar activos:', error);
+        res.status(500).json({ status: 'error', message: `Error: ${error.code}` });
+    }
+});
+
+
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
 });

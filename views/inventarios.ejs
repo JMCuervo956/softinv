@@ -29,7 +29,94 @@
         .dropdown:hover .dropdown-content {
             display: block;
         }
-    </style>    
+
+        /* Ajusta el ancho del campo de texto */
+        #des_activo {
+            width: 200px; /* Ajusta el ancho del campo de búsqueda (puedes cambiar el valor) */
+            padding: 8px 12px; /* Ajusta el relleno dentro del campo */
+            font-size: 14px; /* Tamaño de la fuente */
+            border-radius: 5px; /* Bordes redondeados */
+            border: 1px solid #ccc; /* Borde gris claro */
+            box-sizing: border-box; /* Asegura que el padding y el borde estén incluidos en el tamaño total */
+        }
+
+        /* Ajusta el estilo de la lista de sugerencias */
+        #autocomplete-list {
+            position: absolute;
+            max-height: 200px; /* Limita la altura máxima de la lista */
+            overflow-y: auto; /* Permite desplazarse si hay más resultados */
+            width: 400px; /* Debe coincidir con el ancho del campo de búsqueda */
+            background-color: white; /* Fondo blanco */
+            border: 1px solid #ccc; /* Borde gris claro */
+            border-radius: 5px; /* Bordes redondeados */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+            font-size: 14px; /* Tamaño de la fuente */
+            padding: 0; /* Elimina el padding por defecto */
+            box-sizing: border-box; /* Asegura que el padding y el borde estén incluidos en el tamaño total */
+        }
+
+        /* Ajusta el espaciado entre los elementos de la lista */
+        .autocomplete-item {
+            padding-top: 1px;    /* Espacio arriba */
+            padding-bottom: 1px; /* Espacio abajo */
+            padding-left: 10px;  /* Espacio a la izquierda */
+            padding-right: 10px; /* Espacio a la derecha */
+            cursor: pointer;
+            transition: background-color 0.3s;
+            color: rgb(7, 17, 156); /* Cambia el color del texto a rojo */
+        }
+
+        /* Efecto al pasar el ratón por encima de las opciones */
+        .autocomplete-item:hover {
+            background-color: #f1f1f1; /* Color de fondo al pasar el ratón */
+        }
+
+</style>    
+
+
+<style>
+    /* Estilo para el contenedor de autocompletado */
+    .autocomplete-list {
+        position: absolute;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        width: 100%;
+        max-height: 150px;
+        overflow-y: auto;
+        z-index: 999;
+        display: none; /* Ocultar lista por defecto */
+    }
+
+    .autocomplete-item {
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .autocomplete-item:hover {
+        background-color: #f0f0f0;
+    }
+
+    /* Ajustes generales */
+    .form-container {
+        width: 50%;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+    }
+
+    .input-small {
+        width: 100%;
+        padding: 8px;
+        margin: 8px 0;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+
+</style>
+
+
 </head>
 <body>
     <script src="app.js"></script>
@@ -66,14 +153,17 @@
                     <h1></h1>
                     <input type="text" name="CodActivo" class="input-small" placeholder="Activo" required autocomplete="off" readonly>
 
-                    <!-- Codigos activos -->
-                    <select class="simple-border" name="acti" id="des_activo" required onchange="actualizarDescont()">
-                        <option value="" selected>Descripción del Activo....</option>
-                        <!-- Las opciones de estados serán cargados dinámicamente aquí // style="display: none;" -->
-                    </select>
-                    <input type="text" name="selclsf" class="input-small" id="selclsf" readonly style="display: none;">
-                    <input type="text" name="selcodcont" class="input-small" id="selcodcont" readonly style="display: none;">
-                    <input type="text" name="seledes" class="input-small" id="seledes" readonly style="display: none;">
+
+        <!-- Campo de Descripción del Activo -->
+        <input type="text" name="acti" id="des_activo" class="input-small" placeholder="Descripción del Activo" autocomplete="off" required>
+
+        <!-- Contenedor para las sugerencias de autocompletado -->
+        <div id="autocomplete-list" class="autocomplete-list"></div>
+
+                    <input type="text" name="selclsf" class="input-small" id="selclsf" readonly >
+                    <input type="text" name="selcodcont" class="input-small" id="selcodcont" readonly >
+                    <input type="text" name="seledes" class="input-small" id="seledes" readonly >
+                    
                     <h6></h6>
                     <h6 style="margin-bottom: 0;" >Descripción Contable</h6>
                     <input type="text"  name="descont" class="input-small" id="descontAAA" readonly style="color: rgb(22, 18, 236);">
@@ -134,12 +224,12 @@
                         const clipboardText = await navigator.clipboard.readText();
         
                         // Asignar el valor del portapapeles al primer campo de entrada
-                        const firstInput = document.querySelector('input[name="CodActivo"]');
+                        const firstInput = document.querySelector('input[name="CodActivo"]');   
                         firstInput.value = clipboardText; // Pega el contenido del portapapeles
         
                         // Mover el foco al segundo campo de entrada
-                        document.querySelector('select[name="acti"]').focus();
-
+       //                 document.querySelector('select[name="des_activo"]').focus();
+                        document.getElementById("des_activo").focus();
                         // Mover el foco al segundo campo de entrada
         //                document.querySelector('input[name="DesGen"]').focus();
         //                document.querySelector('input[name="CodCont"]').focus();
@@ -331,6 +421,8 @@
                 const response = await fetch('/dataSelec');
                 const data = await response.json();
                 if (data.status !== 'error') {
+
+                    activos = data.desactivos; // Guardamos los activos
                     const ciudadesSelect = document.getElementById('des_codcont');
                     const activosSelect = document.getElementById('des_activo');
                     const estadosSelect = document.getElementById('des_estado');
@@ -376,21 +468,75 @@
         }
     </script>
 
-    <script>
-        function actualizarDescont() {
-            // Obtener el valor seleccionado en el select
-            var valorSeleccionado = document.getElementById('des_activo').value;
-            
-            // Separar el valor en cuatro partes usando el guion como delimitador
-            var valoresSeparados = valorSeleccionado.split('-');
-            
-            // Asignar cada valor a los inputs correspondientes
-            document.getElementById('selclsf').value = valoresSeparados[0];  // des_codcont
-            document.getElementById('selcodcont').value = valoresSeparados[1];  // des_contable
-            document.getElementById('seledes').value = valoresSeparados[2];  // des_codcont
-            document.getElementById('descontAAA').value = valoresSeparados[3];  // des_contable
+<script>
+    let activos = []; // Almacenar los activos cargados desde el servidor
+
+    // Cargar las opciones de activos desde el servidor
+
+    // Filtrar los activos mientras se escribe
+    function filterActivo() {
+        let input = document.getElementById('des_activo');
+        let filter = input.value.toLowerCase(); // Obtener el valor del input y convertirlo a minúsculas
+        let autocompleteList = document.getElementById('autocomplete-list');
+        autocompleteList.innerHTML = ''; // Limpiar las sugerencias anteriores
+        autocompleteList.style.display = 'none'; // Ocultar la lista si el campo está vacío
+
+        console.log('Filtrando activos con el valor:', filter); // Verificamos qué valor se está usando para el filtro
+
+        // Si el campo no está vacío, se filtra la lista
+        if (filter) {
+            // Filtrar los activos según el valor que el usuario ha escrito
+            const filteredItems = activos.filter(activo => {
+                // Revisa si el valor del input está contenido en el principio de la descripción (no importa si es al inicio o en cualquier parte)
+                return activo.des_codcont.toLowerCase().indexOf(filter) === 0; // Esto asegura que solo coincidan si la palabra empieza con lo escrito
+            });
+
+            console.log('Elementos filtrados:', filteredItems); // Verificamos los elementos filtrados
+
+            if (filteredItems.length > 0) {
+                autocompleteList.style.display = 'block'; // Mostrar la lista si hay resultados
+            }
+
+            // Crear las sugerencias para el autocompletado
+            filteredItems.forEach(item => {
+                let div = document.createElement('div');
+                div.classList.add('autocomplete-item');
+                div.innerHTML = item.des_codcont;
+                div.addEventListener('click', function() {
+                    input.value = item.des_codcont; // Rellenar el campo de texto con la descripción del activo
+                    autocompleteList.innerHTML = ''; // Limpiar la lista de sugerencias
+                    autocompleteList.style.display = 'none'; // Ocultar la lista
+                });
+                autocompleteList.appendChild(div); // Añadir el nuevo item a la lista
+            });
         }
-    </script>
+    }
+
+    // Esperar hasta que el contenido de la página esté completamente cargado
+    window.onload = function() {
+        cargarSeleccion(); // Cargar los datos de la base de datos
+        const input = document.getElementById('des_activo');
+        input.addEventListener('input', filterActivo); // Aplicar la función filterActivo cuando el usuario escribe
+    };
+</script>
+
+<script>
+    function actualizarDescont() {
+        console.log('ingresa descont');
+        // Obtener el valor seleccionado en el select
+        var valorSeleccionado = document.getElementById('des_activo').value;
+        
+        // Separar el valor en cuatro partes usando el guion como delimitador
+        var valoresSeparados = valorSeleccionado.split('-');
+        
+        console.log(valoresSeparados);
+        // Asignar cada valor a los inputs correspondientes
+        document.getElementById('selclsf').value = valoresSeparados[0];  // des_codcont
+        document.getElementById('selcodcont').value = valoresSeparados[1];  // des_contable
+        document.getElementById('seledes').value = valoresSeparados[2];  // des_codcont
+        document.getElementById('descontAAA').value = valoresSeparados[3];  // des_contable
+    }
+</script>
 
     <%- include('partials/footer') %>  
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
