@@ -263,6 +263,12 @@ app.post('/inventarios', async (req, res) => {
         const options = { timeZone: 'America/Bogota', hour12: false };
         const colombiaDate = new Date().toLocaleString('en-US', options);
 
+        console.log(selclsf);
+        console.log(selcodcont);
+        console.log(seledes);
+        console.log(esta);
+        console.log(prop);
+
         //console.log(colombiaDate);
 
         await pool.execute('INSERT INTO tbl_inventarios (id_activo, desobs, codcont, codact, desact, descont, estado, propio, responsable, actprin, usuario, ciudad, parqueadero, fecha) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )', [CodActivo, observ, selcodcont, selclsf, seledes, descont, esta, prop, CodResp, ActPrin,req.session.user,req.session.ciudadSeleccionadaCodigo,req.session.parqueaderoSeleccionadoCodigo, colombiaDate ]);
