@@ -249,25 +249,8 @@ app.post('/inventarios', async (req, res) => {
             });
         }
 
-        // extrae descripcion del activo seleccionado
-        //const [desact] = await pool.execute('SELECT des_codcont FROM tbl_clsact WHERE id_clsf = ?', [acti]);
-        //const [desact] = await pool.execute('SELECT des_codcont FROM tbl_clsact');
-        //console.log(desact); // Imprime lo que contiene desact
-
-        // Ahora accedes a des_codcont
-        //const codigoCont = desact && desact.length > 0 ? desact[0].des_codcont : null;
-        //console.log(codigoCont); // Verifica el valor de codigoCont
-
-        // Si el registro no existe, insertarlo en la base de datos
-        //await pool.execute('INSERT INTO tbl_inventarios (id_activo, desobs, codcont, desact, estado, propio, responsable, actprin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [CodActivo, observ, ciud, acti, esta, prop, CodResp, ActPrin ]);
         const options = { timeZone: 'America/Bogota', hour12: false };
         const colombiaDate = new Date().toLocaleString('en-US', options);
-
-        console.log(selclsf);
-        console.log(selcodcont);
-        console.log(seledes);
-        console.log(esta);
-        console.log(prop);
 
         //console.log(colombiaDate);
 
