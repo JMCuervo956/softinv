@@ -23,7 +23,7 @@
 
                 <!-- Campo Ciudad como Select -->
                 <select class="simple-border" name="ciud" id="ciudad" required>
-                    <option value="" disabled selected>Seleccione Ciudad</option>
+                    <option value="" disabled selected>Seleccione Ciudad..</option>
                     <!-- Las opciones de ciudad serán cargadas dinámicamente aquí -->
                 </select>
 
@@ -121,7 +121,6 @@
     <script>
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
-
             // Obtener los valores seleccionados de los campos de ciudad y parqueadero
             const ciudadSeleccionada = document.getElementById('ciudad').value;
             const ciudadSeleccionadaTexto = document.getElementById('ciudad').options[document.getElementById('ciudad').selectedIndex].text;
